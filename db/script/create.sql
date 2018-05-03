@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/4/13 11:59:54                           */
+/* Created on:     2018/5/3 10:55:38                            */
 /*==============================================================*/
 
 
@@ -9,6 +9,10 @@ drop table if exists AFC_ACCOUNT;
 drop table if exists AFC_FLOW;
 
 drop table if exists AFC_PAY;
+
+drop table if exists AFC_PLATFORM;
+
+drop table if exists AFC_PLATFORM_FLOW;
 
 drop table if exists AFC_TRADE;
 
@@ -81,6 +85,37 @@ create table AFC_PAY
 );
 
 alter table AFC_PAY comment '支付信息';
+
+/*==============================================================*/
+/* Table: AFC_PLATFORM                                          */
+/*==============================================================*/
+create table AFC_PLATFORM
+(
+   ID                   bigint not null comment '平台信息ID',
+   BALANCE              decimal(18,4) not null default 0 comment '余额',
+   MODIFIED_TIME        timestamp not null comment '修改时间',
+   primary key (ID)
+);
+
+alter table AFC_PLATFORM comment '平台信息';
+
+/*==============================================================*/
+/* Table: AFC_PLATFORM_FLOW                                     */
+/*==============================================================*/
+create table AFC_PLATFORM_FLOW
+(
+   ID                   bigint not null comment '平台流水ID',
+   BALANCE              decimal(18,4) not null default 0 comment '余额',
+   ORDER_ID             bigint not null comment '销售订单ID',
+   FLOW_TYPE            tinyint not null comment '流水类型',
+   OLD_MODIFIED_TIMESTAMP bigint not null comment '旧修改时间戳',
+   SETTLE_BALANCE       decimal(18,4) not null default 0 comment '最后结算余额',
+   SETTLE_TIME          datetime not null comment '最后结算时间',
+   MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳(添加或更新本条记录时的时间戳)',
+   primary key (ID)
+);
+
+alter table AFC_PLATFORM_FLOW comment '平台流水';
 
 /*==============================================================*/
 /* Table: AFC_TRADE                                             */
