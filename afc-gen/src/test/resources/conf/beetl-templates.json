@@ -1,0 +1,14 @@
+[
+	{
+		"templateName": "svc.btl",
+		"targetDir": "../afc-api/src/main/java/${modulePath}/svc/",
+		"targetFile": "${entityName}Svc.java",
+		"backup": false
+	},
+	{
+		"templateName": "svc-impl.btl",
+		"targetDir": "../afc-bll/src/main/java/${modulePath}/svc/impl/",
+		"targetFile": "${entityName}SvcImpl.java",
+		"backup": false
+	}
+]

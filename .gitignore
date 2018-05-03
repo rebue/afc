@@ -1,0 +1,10 @@
+target
+.classpath
+.project
+.settings
+logs
+*.log
+app.properties
+*.pdb
+*.ldb
+.DS_Store
