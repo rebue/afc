@@ -41,7 +41,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.github.rebue.wxx</groupId>
-				<artifactId>wxx-api-svr-feign</artifactId>
+				<artifactId>wxx-api</artifactId>
 				<version>1.0.7</version>
 			</dependency>
 		</dependencies>
