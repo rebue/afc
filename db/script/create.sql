@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/4 9:55:48                             */
+/* Created on:     2018/5/4 16:39:53                            */
 /*==============================================================*/
 
 
@@ -210,7 +210,7 @@ alter table AFC_WITHDRAW_ACCOUNT comment '提现账户';
 create table VPAY_TRADE_TASK
 (
    ID                   bigint not null comment '任务ID',
-   EXECUTE_STATE        tinyint not null comment '执行状态(-1:取消；0-未执行；1-已执行)',
+   EXECUTE_STATE        tinyint not null comment '执行状态(-1:取消；0-未执行；1-执行中；2-已执行)',
    EXECUTE_PLAN_TIME    datetime not null comment '计划执行时间',
    EXECUTE_FACT_TIME    datetime comment '实际执行时间',
    ACCOUNT_ID           bigint not null comment '账户ID(账户ID也就是用户ID)',
@@ -220,8 +220,7 @@ create table VPAY_TRADE_TASK
    CHANGE_AMOUNT2       decimal(18,4) comment '交易改变金额2，在交易类型是支付时代表余额改变了多少',
    TRADE_TITLE          varchar(50) not null comment '交易标题',
    TRADE_DETAIL         varchar(150) comment '交易详情',
-   TRADE_TIME           datetime not null comment '交易时间',
-   ORDER_ID             varchar(150) not null comment '订单ID(业务订单ID)',
+   ORDER_ID             varchar(150) comment '订单ID(业务订单ID)',
    MAC                  varchar(30) not null comment 'MAC地址',
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID),
