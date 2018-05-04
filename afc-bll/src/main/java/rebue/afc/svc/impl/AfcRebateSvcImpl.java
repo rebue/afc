@@ -3,6 +3,8 @@ package rebue.afc.svc.impl;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -19,9 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import rebue.afc.dic.RebateResultDic;
 import rebue.afc.dic.TradeTypeDic;
+import rebue.afc.mapper.AfcPlatformFlowMapper;
+import rebue.afc.mapper.AfcPlatformMapper;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcFlowMo;
 import rebue.afc.mo.AfcPayMo;
+import rebue.afc.mo.AfcPlatformFlowMo;
+import rebue.afc.mo.AfcPlatformMo;
 import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.RebateRo;
 import rebue.afc.svc.AfcAccountSvc;
@@ -63,6 +69,11 @@ public class AfcRebateSvcImpl implements AfcRebateSvc {
     @Resource
     private Mapper              dozerMapper;
 
+    @Resource
+    private AfcPlatformMapper afcPlatformMapper;
+    @Resource
+    private AfcPlatformFlowMapper afcPlatformFlowMapper;
+    
     @Value("${appid:0}")
     private int                 _appid;
 
@@ -445,4 +456,98 @@ public class AfcRebateSvcImpl implements AfcRebateSvc {
         return ro;
     }
 
+    /**
+     * 返款至平台服务费
+     * Title: rebatePlatformServiceFee
+     * Description: 
+     * @param mo
+     * @return
+     * @date 2018年5月3日 下午12:54:55
+     */
+    @SuppressWarnings("null")
+	@Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public Map<String, Object>  rebatePlatformServiceFee(AfcPlatformFlowMo mo) {
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	// 订单ID
+    	Long orderId = mo.getOrderId();
+    	orderId = orderId == null ? orderId : 0L;
+    	// 流水类型（1：平台服务费  2：退款）
+    	Byte flowType = mo.getFlowType();
+    	flowType = flowType == null ? flowType : 0;
+    	
+    	BigDecimal bd = new BigDecimal("0");
+    	
+    	// 修改金额
+    	BigDecimal modifyAmount = mo.getModifyAmount();
+    	modifyAmount = modifyAmount == null ? modifyAmount : bd;
+    	
+    	if (orderId == 0 || flowType == 0 || modifyAmount.compareTo(bd) == 0) {
+			_log.error("返款至平台服务费出现参数不全，返款至平台失败");
+			throw new RuntimeException("参数有误");
+		}
+    	
+    	// 检查账户有没有支付过此销售单
+        AfcPayMo condition = new AfcPayMo();
+        condition.setOrderId(String.valueOf(mo.getOrderId()));
+        if (!paySvc.existSelective(condition)) {
+            _log.error("返款至平台服务费检查此销售单是否已支付时出现该订单未支付，订单编号为：{}", orderId);
+            throw new RuntimeException("该订单未支付");
+        }
+        
+        // 查询平台信息
+        List<AfcPlatformMo> platfromList = afcPlatformMapper.selectAll();
+        _log.info("返款至平台服务费查询平台信息的返回值为：{}", String.valueOf(platfromList));
+        
+        // 平台余额
+        BigDecimal balance = platfromList.get(0).getBalance();
+        balance = balance == null ? balance : bd;
+        
+        // 修改后的余额
+        double modifyBalance = balance.add(modifyAmount).doubleValue();
+        BigDecimal newBalance = new BigDecimal(modifyBalance);
+        
+        Date date = new Date();
+        long id = _idWorker.getId();
+        int platformResult = 0;
+        AfcPlatformMo platformMo = new AfcPlatformMo();
+        platformMo.setBalance(newBalance);
+        platformMo.setModifiedTime(date);
+        // 判断平台信息是否存在
+        if (platfromList.size() == 0) {
+        	platformMo.setId(id);
+        	_log.info("返款至平台服务费添加平台信息的参数为：{}", platformMo.toString());
+			// 添加平台信息
+        	platformResult = afcPlatformMapper.insert(platformMo);
+        	_log.info("返款至平台服务费添加平台信息的返回值为：{}", platformResult);
+		} else {
+			platformMo.setId(platfromList.get(0).getId());
+			_log.info("返款至平台服务费修改平台信息的参数为：{}", platformMo.toString());
+			// 修改平台信息
+			platformResult = afcPlatformMapper.updateByPrimaryKey(platformMo);
+			_log.info("返款至平台服务费修改平台信息 的返回值为：{}", platformResult);
+		}
+        
+        if (platformResult != 1) {
+			_log.error("返款至平台服务费时出现添加或修改平台信息失败，订单编号为：{}", orderId);
+			throw new RuntimeException("添加或修改平台信息失败");
+		}
+        
+        mo.setBalance(newBalance);
+        mo.setId(id);
+        mo.setModifiedTime(date);
+        _log.info("返款至平台服务费添加平台流水信息的参数为：{}", mo.toString());
+        // 添加平台流水信息
+        int platformFlowResult = afcPlatformFlowMapper.insert(mo);
+        _log.info("返款至平台服务费添加平台流水信息的返回值为：{}", platformFlowResult);
+        if (platformFlowResult != 1) {
+			_log.error("返款至平台服务费时出现添加平台流水信息出错，订单编号为：{}", orderId);
+			throw new RuntimeException("添加平台流水信息出错");
+		}
+        
+        _log.info("返款至平台服务费成功，订单编号为：{}", orderId);
+        resultMap.put("result", 1);
+        resultMap.put("msg", "返款至平台服务费成功");
+    	return resultMap;
+    }
 }

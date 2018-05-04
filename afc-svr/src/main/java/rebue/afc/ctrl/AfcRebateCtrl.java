@@ -1,5 +1,8 @@
 package rebue.afc.ctrl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import rebue.afc.mo.AfcPlatformFlowMo;
 import rebue.afc.ro.RebateRo;
 import rebue.afc.svc.AfcRebateSvc;
 import rebue.afc.to.RebateTo;
@@ -49,4 +53,38 @@ public class AfcRebateCtrl {
         return svc.rebateSellerBalance(to);
     }
 
+    /**
+     * 返款至平台服务费
+     * Title: rebatePlatformServiceFee
+     * Description: 
+     * @param mo
+     * @return
+     * @date 2018年5月3日 下午2:16:05
+     */
+    @PostMapping("/rebate/platform/depositused")
+    Map<String, Object> rebatePlatformServiceFee(AfcPlatformFlowMo mo) {
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	try {
+			return svc.rebatePlatformServiceFee(mo);
+		} catch (RuntimeException e) {
+			String msg = e.getMessage();
+			if (msg.equals("参数有误")) {
+				resultMap.put("result", -1);
+				resultMap.put("msg", msg);
+			} else if (msg.equals("该订单未支付")) {
+				resultMap.put("result", -2);
+				resultMap.put("msg", msg);
+			} else if (msg.equals("添加或修改平台信息失败")) {
+				resultMap.put("result", -3);
+				resultMap.put("msg", msg);
+			} else if (msg.equals("添加平台流水信息出错")) {
+				resultMap.put("result", -4);
+				resultMap.put("msg", msg);
+			} else {
+				resultMap.put("result", -5);
+				resultMap.put("msg", "返款至平台服务费失败");
+			}
+			return resultMap;
+		}
+    }
 }
