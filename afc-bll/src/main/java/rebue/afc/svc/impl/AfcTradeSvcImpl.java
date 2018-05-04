@@ -25,8 +25,7 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
  * </pre>
  */
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Long, AfcTradeMapper>
-        implements AfcTradeSvc {
+public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Long, AfcTradeMapper> implements AfcTradeSvc {
 
     /**
      * @mbg.generated
@@ -46,7 +45,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      */
     @Override
     public BigDecimal getReturnGoodsTotalAmountByOrder(String saleOrderId) {
-        return _mapper.getTotalAmountByTradeTypeAndOrder(TradeTypeDic.RETURN_GOODS_BY_BUYER.getCode(), saleOrderId+"||%");
+        return _mapper.getTotalAmountByTradeTypeAndOrder(TradeTypeDic.RETURN_GOODS_BY_BUYER.getCode(), saleOrderId + "||%");
     }
 
 }
