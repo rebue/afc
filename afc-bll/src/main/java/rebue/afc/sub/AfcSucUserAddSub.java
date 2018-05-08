@@ -23,17 +23,15 @@ import rebue.suc.msg.SucUserAddMsg;
  */
 @Service
 public class AfcSucUserAddSub implements ApplicationListener<ContextRefreshedEvent> {
-    private final static Logger _log       = LoggerFactory.getLogger(AfcSucUserAddSub.class);
+    private final static Logger _log = LoggerFactory.getLogger(AfcSucUserAddSub.class);
 
 //    private static AtomicInteger count      = new AtomicInteger();
 
-    private final static String QUEUE_NAME = "rebue.afc.sub.sucuser.add";
+    @Resource
+    private AfcAccountSvc  accountSvc;
 
     @Resource
-    private AfcAccountSvc       accountSvc;
-
-    @Resource
-    private RabbitConsumer      consumer;
+    private RabbitConsumer consumer;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -44,9 +42,9 @@ public class AfcSucUserAddSub implements ApplicationListener<ContextRefreshedEve
 //        if (count.incrementAndGet() > 1)
 //            return;
 
-        _log.info("绑定添加用户消息的队列: {}", QUEUE_NAME);
+        _log.info("绑定添加用户消息的队列: {}", SucExchangeCo.SUC_USER_ADD_QUEUE_NAME);
 
-        consumer.bind(SucExchangeCo.SUC_USER_ADD_EXCHANGE_NAME, QUEUE_NAME, SucUserAddMsg.class, (msg) -> {
+        consumer.bind(SucExchangeCo.SUC_USER_ADD_EXCHANGE_NAME, SucExchangeCo.SUC_USER_ADD_QUEUE_NAME, SucUserAddMsg.class, (msg) -> {
             try {
                 _log.info("接收到添加用户的消息: {}", msg);
                 // 添加用户的账户信息

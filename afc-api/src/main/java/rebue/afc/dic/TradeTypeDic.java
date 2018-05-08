@@ -23,8 +23,9 @@ import rebue.wheel.baseintf.EnumBase;
  * 51: 返款-返款到买家的返现金
  * 52: 返款-返款到加盟商的已占用保证金
  * 53: 返款-返款到加盟商的余额
- * TODO 返款-返款到平台的服务费
- * 60: 退货-买家退货
+ * 54: 返款-返款到平台的服务费
+ * 60: 退货-买家退货（退到买家的余额和返现金）
+ * 61: 退货-买家退货（扣减买家的返现金）
  */
 @ApiModel(value = "交易类型")
 public enum TradeTypeDic implements EnumBase {
@@ -94,10 +95,20 @@ public enum TradeTypeDic implements EnumBase {
     @ApiModelProperty(value = "返款到加盟商的余额")
     REBATE_SELLER_BALANCE(53),
     /**
-     * 60: 退货-买家退货
+     * 54: 返款到平台的服务费
      */
-    @ApiModelProperty(value = "退货-买家退货")
-    RETURN_GOODS_BY_BUYER(60);
+    @ApiModelProperty(value = "返款到平台的服务费")
+    REBATE_PLATFORM_SERVICE_CHANGE(54),
+    /**
+     * 60: 退货-买家退货（退到买家的余额和返现金）
+     */
+    @ApiModelProperty(value = "退货-买家退货（退到买家的余额和返现金）")
+    RETURN_GOODS_BY_BUYER(60),
+    /**
+     * 61: 退货-买家退货
+     */
+    @ApiModelProperty(value = "退货-买家退货（扣减买家的返现金）")
+    RETURN_GOODS_BY_BUYER_SUBTRACT_CASHBACK(61);
     /**
      * 枚举的所有项，注意这个变量是静态单例的
      */

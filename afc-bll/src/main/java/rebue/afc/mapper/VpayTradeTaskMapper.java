@@ -1,7 +1,9 @@
 package rebue.afc.mapper;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+
 import rebue.afc.mo.VpayTradeTaskMo;
 import rebue.robotech.mapper.MybatisBaseMapper;
 
@@ -86,4 +88,9 @@ public interface VpayTradeTaskMapper extends MybatisBaseMapper<VpayTradeTaskMo, 
      * @mbg.generated 2018-05-04 16:22:34
      */
     boolean existSelective(VpayTradeTaskMo record);
+
+    /**
+     * 获取计划执行时间在当前时间之前的任务列表
+     */
+    List<VpayTradeTaskMo> selectByExecutePlanTimeBeforeNow();
 }

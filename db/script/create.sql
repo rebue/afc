@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/4 16:39:53                            */
+/* Created on:     2018/5/5 17:23:34                            */
 /*==============================================================*/
 
 
@@ -132,7 +132,7 @@ create table AFC_TRADE
    TRADE_TITLE          varchar(50) not null comment '交易标题',
    TRADE_DETAIL         varchar(150) comment '交易详情',
    TRADE_TIME           datetime not null comment '交易时间',
-   ORDER_ID             varchar(150) not null comment '订单ID(业务订单ID)',
+   ORDER_ID             varchar(150) not null comment '订单ID(业务订单ID，返款其实是销售订单详情ID)',
    TRADE_VOUCHER_NO     varchar(150) comment '交易凭证号',
    OP_ID                bigint not null comment '操作人ID',
    MAC                  varchar(30) not null comment 'MAC地址',
@@ -220,7 +220,7 @@ create table VPAY_TRADE_TASK
    CHANGE_AMOUNT2       decimal(18,4) comment '交易改变金额2，在交易类型是支付时代表余额改变了多少',
    TRADE_TITLE          varchar(50) not null comment '交易标题',
    TRADE_DETAIL         varchar(150) comment '交易详情',
-   ORDER_ID             varchar(150) comment '订单ID(业务订单ID)',
+   ORDER_ID             varchar(150) comment '订单ID(返款其实是销售订单详情ID)',
    MAC                  varchar(30) not null comment 'MAC地址',
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID),
