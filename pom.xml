@@ -19,8 +19,8 @@
 		<module>afc-api</module>
 		<module>afc-bll</module>
 		<module>afc-svr</module>
-		<module>afc-schedule</module>
 		<module>afc-scheduler</module>
+		<module>afc-svr-feign</module>
 	</modules>
 
 	<dependencyManagement>
@@ -28,6 +28,11 @@
 			<dependency>
 				<groupId>com.github.rebue.afc</groupId>
 				<artifactId>afc-api</artifactId>
+				<version>1.0.7</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.rebue.afc</groupId>
+				<artifactId>afc-svr-feign</artifactId>
 				<version>1.0.7</version>
 			</dependency>
 
