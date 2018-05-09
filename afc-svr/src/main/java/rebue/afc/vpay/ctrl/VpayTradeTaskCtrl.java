@@ -10,7 +10,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rebue.afc.mo.VpayTradeTaskMo;
@@ -62,12 +61,12 @@ public class VpayTradeTaskCtrl {
     /**
      * 执行任务
      * 
-     * @param id
-     *            执行任务的ID
+     * @param taskMo
+     *            要执行的任务
      */
     @PostMapping("/task/execute")
-    Boolean executeTask(@RequestParam("id") Long id) {
-        return svc.executeTask(id);
+    void executeTask(@RequestBody VpayTradeTaskMo taskMo) {
+        svc.executeTask(taskMo);
     }
 
 }
