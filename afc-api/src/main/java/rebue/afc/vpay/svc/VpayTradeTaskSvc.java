@@ -21,8 +21,8 @@ public interface VpayTradeTaskSvc extends MybatisBaseSvc<VpayTradeTaskMo, java.l
     /**
      * 执行任务
      * 
-     * @param id
-     *            执行任务的ID
+     * @param taskMo
+     *            要执行的任务
      */
-    Boolean executeTask(Long id);
+    void executeTask(VpayTradeTaskMo taskMo);
 }

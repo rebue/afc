@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import rebue.afc.mo.VpayTradeTaskMo;
 import rebue.sbs.feign.FeignConfig;
@@ -15,4 +17,14 @@ public interface VpayTradeTaskSvc {
      */
     @GetMapping("/task/shouldexecute")
     List<VpayTradeTaskMo> getTasksThatShouldExecute();
+
+    /**
+     * 执行任务
+     * 
+     * @param taskMo
+     *            要执行的任务
+     */
+    @PostMapping("/task/execute")
+    void executeTask(@RequestBody VpayTradeTaskMo taskMo);
+
 }

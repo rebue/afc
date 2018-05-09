@@ -1,5 +1,6 @@
 package rebue.afc.vpay.svc.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,8 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.VpayTradeTaskMapper;
+import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.mo.VpayTradeTaskMo;
-import rebue.afc.svc.AfcPaySvc;
+import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.svc.impl.AfcRebateSvcImpl;
 import rebue.afc.vpay.dic.AddRebateTaskResultDic;
 import rebue.afc.vpay.ro.AddRebateTaskRo;
@@ -44,7 +46,7 @@ public class VpayTradeTaskSvcImpl extends MybatisBaseSvcImpl<VpayTradeTaskMo, ja
     @Resource
     private SucUserSvc          userSvc;
     @Resource
-    private AfcPaySvc           paySvc;
+    private AfcTradeSvc         tradeSvc;
 
     @Resource
     private Mapper              dozerMapper;
@@ -126,10 +128,39 @@ public class VpayTradeTaskSvcImpl extends MybatisBaseSvcImpl<VpayTradeTaskMo, ja
         return _mapper.selectByExecutePlanTimeBeforeNow();
     }
 
+    /**
+     * 执行任务
+     * 
+     * @param taskMo
+     *            要执行的任务
+     */
     @Override
-    public Boolean executeTask(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void executeTask(VpayTradeTaskMo taskMo) {
+        // 计算当前时间
+        Date now = new Date();
+
+        // 判断交易类型
+        switch (TradeTypeDic.getItem(taskMo.getTradeType())) {
+        // 返款到平台服务费
+        case REBATE_PLATFORM_SERVICE_CHANGE:
+//            AfcPlatformFlowMo mo=
+            break;
+        default:
+        }
+
+        // 先添加账户交易，以更早终止并发产生的重复数据(同一交易类型的业务订单不允许重复)
+        AfcTradeMo tradeMo = dozerMapper.map(taskMo, AfcTradeMo.class);
+//        tradeMo.setId(taskMo.getId());       // 交易ID使用任务ID
+        tradeMo.setTradeTime(now);
+        tradeMo.setOpId(0L);         // 操作人设为0表示系统自动产生的交易
+        try {
+            tradeSvc.add(tradeMo);
+        } catch (DuplicateKeyException e) {
+            _log.error("返款到买家的返现金重复提交");
+            throw new RuntimeException("返款到买家的返现金重复提交", e);
+        }
+
     }
 
 }
