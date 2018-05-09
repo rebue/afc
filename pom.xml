@@ -20,7 +20,7 @@
 		<module>afc-bll</module>
 		<module>afc-svr</module>
 		<module>afc-schedule</module>
-		<module>afc-scheduler</module>
+		<module>afc-scheduler</module> 
 	</modules>
 
 	<dependencyManagement>
