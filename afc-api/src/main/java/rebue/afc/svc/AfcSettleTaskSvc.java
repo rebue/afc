@@ -14,15 +14,15 @@ public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.l
     AddSettleTaskRo addSettleTask(AddSettleTaskTo to);
 
     /**
-     * 获取要执行的任务列表
+     * 获取要执行的任务ID列表
      */
-    List<AfcSettleTaskMo> getTasksThatShouldExecute();
+    List<Long> getTaskIdsThatShouldExecute();
 
     /**
      * 执行任务
      * 
-     * @param taskMo
-     *            要执行的任务
+     * @param id
+     *            要执行的任务ID
      */
-    void executeTask(AfcSettleTaskMo taskMo);
+    void executeTask(Long id);
 }

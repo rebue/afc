@@ -95,7 +95,7 @@ public interface AfcSettleTaskMapper extends MybatisBaseMapper<AfcSettleTaskMo, 
     /**
      * 获取计划执行时间在当前时间之前的任务列表
      */
-    List<AfcSettleTaskMo> selectByExecutePlanTimeBeforeNow();
+    List<Long> selectByExecutePlanTimeBeforeNow();
 
     /**
      * 执行任务完成

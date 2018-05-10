@@ -37,7 +37,8 @@
 			15:25:05. -->
 		ID, EXECUTE_STATE, EXECUTE_PLAN_TIME, EXECUTE_FACT_TIME, ACCOUNT_ID,
 		TRADE_TYPE,
-		TRADE_AMOUNT, CHANGE_AMOUNT1, CHANGE_AMOUNT2, TRADE_TITLE, TRADE_DETAIL, ORDER_ID,
+		TRADE_AMOUNT, CHANGE_AMOUNT1, CHANGE_AMOUNT2, TRADE_TITLE,
+		TRADE_DETAIL, ORDER_ID,
 		MAC, IP
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
@@ -63,17 +64,21 @@
 			15:25:05. -->
 		insert into AFC_SETTLE_TASK (ID, EXECUTE_STATE, EXECUTE_PLAN_TIME,
 		EXECUTE_FACT_TIME, ACCOUNT_ID, TRADE_TYPE,
-		TRADE_AMOUNT, CHANGE_AMOUNT1, CHANGE_AMOUNT2,
+		TRADE_AMOUNT,
+		CHANGE_AMOUNT1, CHANGE_AMOUNT2,
 		TRADE_TITLE, TRADE_DETAIL, ORDER_ID,
 		MAC, IP)
-		values (#{id,jdbcType=BIGINT}, #{executeState,jdbcType=TINYINT},
+		values (#{id,jdbcType=BIGINT},
+		#{executeState,jdbcType=TINYINT},
 		#{executePlanTime,jdbcType=TIMESTAMP},
 		#{executeFactTime,jdbcType=TIMESTAMP}, #{accountId,jdbcType=BIGINT},
 		#{tradeType,jdbcType=TINYINT},
-		#{tradeAmount,jdbcType=DECIMAL}, #{changeAmount1,jdbcType=DECIMAL}, #{changeAmount2,jdbcType=DECIMAL},
+		#{tradeAmount,jdbcType=DECIMAL},
+		#{changeAmount1,jdbcType=DECIMAL}, #{changeAmount2,jdbcType=DECIMAL},
 		#{tradeTitle,jdbcType=VARCHAR}, #{tradeDetail,jdbcType=VARCHAR},
 		#{orderId,jdbcType=VARCHAR},
-		#{mac,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR})
+		#{mac,jdbcType=VARCHAR},
+		#{ip,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective"
 		parameterType="rebue.afc.mo.AfcSettleTaskMo">
@@ -181,10 +186,12 @@
 				EXECUTE_STATE = #{executeState,jdbcType=TINYINT},
 			</if>
 			<if test="executePlanTime != null">
-				EXECUTE_PLAN_TIME = #{executePlanTime,jdbcType=TIMESTAMP},
+				EXECUTE_PLAN_TIME =
+				#{executePlanTime,jdbcType=TIMESTAMP},
 			</if>
 			<if test="executeFactTime != null">
-				EXECUTE_FACT_TIME = #{executeFactTime,jdbcType=TIMESTAMP},
+				EXECUTE_FACT_TIME =
+				#{executeFactTime,jdbcType=TIMESTAMP},
 			</if>
 			<if test="accountId != null">
 				ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
@@ -225,19 +232,31 @@
 			MyBatis Generator, do not modify. This element was generated on 2018-05-10 
 			15:25:05. -->
 		update AFC_SETTLE_TASK
-		set EXECUTE_STATE = #{executeState,jdbcType=TINYINT},
-		EXECUTE_PLAN_TIME = #{executePlanTime,jdbcType=TIMESTAMP},
-		EXECUTE_FACT_TIME = #{executeFactTime,jdbcType=TIMESTAMP},
-		ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
-		TRADE_TYPE = #{tradeType,jdbcType=TINYINT},
-		TRADE_AMOUNT = #{tradeAmount,jdbcType=DECIMAL},
-		CHANGE_AMOUNT1 = #{changeAmount1,jdbcType=DECIMAL},
-		CHANGE_AMOUNT2 = #{changeAmount2,jdbcType=DECIMAL},
-		TRADE_TITLE = #{tradeTitle,jdbcType=VARCHAR},
-		TRADE_DETAIL = #{tradeDetail,jdbcType=VARCHAR},
-		ORDER_ID = #{orderId,jdbcType=VARCHAR},
+		set EXECUTE_STATE =
+		#{executeState,jdbcType=TINYINT},
+		EXECUTE_PLAN_TIME =
+		#{executePlanTime,jdbcType=TIMESTAMP},
+		EXECUTE_FACT_TIME =
+		#{executeFactTime,jdbcType=TIMESTAMP},
+		ACCOUNT_ID =
+		#{accountId,jdbcType=BIGINT},
+		TRADE_TYPE =
+		#{tradeType,jdbcType=TINYINT},
+		TRADE_AMOUNT =
+		#{tradeAmount,jdbcType=DECIMAL},
+		CHANGE_AMOUNT1 =
+		#{changeAmount1,jdbcType=DECIMAL},
+		CHANGE_AMOUNT2 =
+		#{changeAmount2,jdbcType=DECIMAL},
+		TRADE_TITLE =
+		#{tradeTitle,jdbcType=VARCHAR},
+		TRADE_DETAIL =
+		#{tradeDetail,jdbcType=VARCHAR},
+		ORDER_ID =
+		#{orderId,jdbcType=VARCHAR},
 		MAC = #{mac,jdbcType=VARCHAR},
-		IP = #{ip,jdbcType=VARCHAR}
+		IP =
+		#{ip,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=BIGINT}
 	</update>
 	<select id="selectAll" resultMap="BaseResultMap">
@@ -246,7 +265,8 @@
 			15:25:05. -->
 		select ID, EXECUTE_STATE, EXECUTE_PLAN_TIME, EXECUTE_FACT_TIME,
 		ACCOUNT_ID, TRADE_TYPE,
-		TRADE_AMOUNT, CHANGE_AMOUNT1, CHANGE_AMOUNT2, TRADE_TITLE, TRADE_DETAIL, ORDER_ID,
+		TRADE_AMOUNT, CHANGE_AMOUNT1, CHANGE_AMOUNT2,
+		TRADE_TITLE, TRADE_DETAIL, ORDER_ID,
 		MAC, IP
 		from AFC_SETTLE_TASK
 	</select>
@@ -263,10 +283,12 @@
 				and EXECUTE_STATE = #{executeState,jdbcType=TINYINT}
 			</if>
 			<if test="executePlanTime != null">
-				and EXECUTE_PLAN_TIME = #{executePlanTime,jdbcType=TIMESTAMP}
+				and EXECUTE_PLAN_TIME =
+				#{executePlanTime,jdbcType=TIMESTAMP}
 			</if>
 			<if test="executeFactTime != null">
-				and EXECUTE_FACT_TIME = #{executeFactTime,jdbcType=TIMESTAMP}
+				and EXECUTE_FACT_TIME =
+				#{executeFactTime,jdbcType=TIMESTAMP}
 			</if>
 			<if test="accountId != null">
 				and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
@@ -324,10 +346,12 @@
 				and EXECUTE_STATE = #{executeState,jdbcType=TINYINT}
 			</if>
 			<if test="executePlanTime != null and executePlanTime != ''">
-				and EXECUTE_PLAN_TIME = #{executePlanTime,jdbcType=TIMESTAMP}
+				and EXECUTE_PLAN_TIME =
+				#{executePlanTime,jdbcType=TIMESTAMP}
 			</if>
 			<if test="executeFactTime != null and executeFactTime != ''">
-				and EXECUTE_FACT_TIME = #{executeFactTime,jdbcType=TIMESTAMP}
+				and EXECUTE_FACT_TIME =
+				#{executeFactTime,jdbcType=TIMESTAMP}
 			</if>
 			<if test="accountId != null and accountId != ''">
 				and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
@@ -362,11 +386,9 @@
 		</where>
 	</select>
 	<select id="selectByExecutePlanTimeBeforeNow"
-		resultMap="BaseResultMap">
+		resutType="java.lang.Long">
 		<!-- 获取计划执行时间在当前时间之前的任务列表 -->
-		select
-		<include refid="Base_Column_List" />
-		from VPAY_TRADE_TASK
+		select ID from VPAY_TRADE_TASK
 		<where>
 			EXECUTE_PLAN_TIME &lt;= SYSDATE()
 		</where>
