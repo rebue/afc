@@ -47,12 +47,21 @@ public class AfcReturnGoodsCtrl {
 			return svc.returnRefundAndSubtractCashback(to);
 		} catch (RuntimeException e) {
 			String msg = e.getMessage();
-			if (msg.equals("买家退货重复提交")) {
-				resultMap.put("result", -8);
+			if (msg.equals("添加账户交易信息失败")) {
+				resultMap.put("result", -10);
+				resultMap.put("msg", msg);
+			} else if (msg.equals("添加账户交易信息失败")) {
+				resultMap.put("result", -11);
+				resultMap.put("msg", msg);
+			} else if (msg.equals("修改账户信息出错")) {
+				resultMap.put("result", -12);
+				resultMap.put("msg", msg);
+			} else if (msg.equals("添加账户流水出错")) {
+				resultMap.put("result", -13);
 				resultMap.put("msg", msg);
 			} else {
 				e.printStackTrace();
-				resultMap.put("result", -9);
+				resultMap.put("result", -14);
 				resultMap.put("msg", "买家退货退款失败");
 			}
 			return resultMap;
