@@ -392,7 +392,7 @@
 		<include refid="Base_Column_List" />
 		from VPAY_TRADE_TASK
 		<where>
-			EXECUTE_PLAN_TIME &lt; SYSDATE()
+			EXECUTE_PLAN_TIME &lt;= SYSDATE()
 		</where>
 	</select>
 </mapper>

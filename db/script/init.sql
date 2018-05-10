@@ -1,0 +1,1 @@
+insert into AFC_PLATFORM (ID, MODIFIED_TIMESTAMP) value(0,0);

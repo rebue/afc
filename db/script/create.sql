@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/5 17:23:34                            */
+/* Created on:     2018/5/10 11:00:03                           */
 /*==============================================================*/
 
 
@@ -95,7 +95,7 @@ create table AFC_PLATFORM
 (
    ID                   bigint not null comment '平台信息ID',
    BALANCE              decimal(18,4) not null default 0 comment '余额',
-   MODIFIED_TIME        datetime not null comment '修改时间',
+   MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
    primary key (ID)
 );
 
@@ -107,13 +107,16 @@ alter table AFC_PLATFORM comment '平台信息';
 create table AFC_PLATFORM_FLOW
 (
    ID                   bigint not null comment '平台流水ID',
+   FLOW_TYPE            tinyint not null comment '流水类型（1：购买交易收取服务费  2：用户退款退回服务费）',
+   ORDER_ID             bigint not null comment '销售/退货单ID
+            流水类型是收取服务费，则填写销售订单ID
+            如果是退回服务费，则填写退货订单ID',
+   CHANGE_AMOUNT        decimal(18,4) not null comment '变化的金额',
    BALANCE              decimal(18,4) not null default 0 comment '余额（修改后）',
-   ORDER_ID             bigint not null comment '销售/退货单ID',
-   FLOW_TYPE            tinyint not null comment '流水类型（1：平台服务费  2：退款）',
-   MODIFY_AMOUNT        decimal(18,4) not null comment '修改金额',
-   MODIFIED_TIME        datetime not null comment '修改时间',
+   MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
    primary key (ID),
-   unique key AK_ORDER_ID_AND_FLOW_TYPE (ORDER_ID, FLOW_TYPE)
+   unique key AK_ORDER_ID_AND_FLOW_TYPE (ORDER_ID, FLOW_TYPE),
+   unique key AK_MODIFIED_TIMESTAMP (MODIFIED_TIMESTAMP)
 );
 
 alter table AFC_PLATFORM_FLOW comment '平台流水';
