@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,16 +82,10 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
 
         // 先添加账户交易，以更早终止并发产生的重复数据(同一交易类型的业务订单不允许重复)
         AfcTradeMo tradeMo = dozerMapper.map(taskMo, AfcTradeMo.class);
-//        tradeMo.setId(taskMo.getId());       // 交易ID使用复制过来的任务ID，防止一个任务多次结算
+        // tradeMo.setId(taskMo.getId());已克隆过来，交易ID=任务ID，防止一个任务多次结算
         tradeMo.setTradeTime(now);
-        tradeMo.setOpId(0L);         // 操作人设为0表示系统自动产生的交易
-        try {
-            tradeSvc.add(tradeMo);
-        } catch (DuplicateKeyException e) {
-            String msg = "结算此账户的费用重复提交";
-            _log.error("{}: {}", msg, taskMo);
-            throw new RuntimeException(msg, e);
-        }
+        tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
+        tradeSvc.add(tradeMo);                  // 如果重复提交，会抛出DuplicateKeyException运行时异常
 
         // 修改账户相应的金额字段
         HashMap<String, Object> map = new HashMap<>();
@@ -146,13 +139,13 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
             break;
         default:
             String msg = "不支持此结算类型";
-            _log.error(msg + ": {}", taskMo.getTradeType());
+            _log.error("{}: {}", msg, taskMo.getTradeType());
             throw new RuntimeException(msg);
         }
         // 执行sql
         if (accountSvc.trade(map) != 1) {
-            String msg = "结算此账户的费用重复提交";
-            _log.error("{}: {}", msg, taskMo);
+            String msg = "结算此账户的费用不成功: 出现并发问题";
+            _log.error("{}-{}", msg, taskMo);
             throw new RuntimeException(msg);
         }
 
@@ -162,7 +155,7 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
         flowMo.setId(tradeMo.getId());      // 流水ID=交易ID
         flowMo.setAccountId(accountId);
         flowMo.setOldModifiedTimestamp(oldAccountMo.getModifiedTimestamp());
-        flowSvc.add(flowMo);
+        flowSvc.add(flowMo);                // 如果重复提交，会抛出DuplicateKeyException运行时异常
     }
 
     /**
@@ -204,7 +197,7 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
         tradeMo.setChangeAmount(bdServiceFee);                                                  // 收取的服务费
         tradeMo.setBalance(newBalance);                                                         // 余额（修改后）
         tradeMo.setModifiedTimestamp(now.getTime());                                            // 修改时间戳
-        platformTradeSvc.add(tradeMo);
+        platformTradeSvc.add(tradeMo);      // 如果重复提交，会抛出DuplicateKeyException运行时异常
 
         // 修改平台余额
         platformSvc.modifyBalance(newBalance, now.getTime(), platfromMo.getBalance(), platfromMo.getModifiedTimestamp(), platfromMo.getId());

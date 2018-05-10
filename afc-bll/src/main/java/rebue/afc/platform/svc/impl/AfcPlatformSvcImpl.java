@@ -62,7 +62,7 @@ public class AfcPlatformSvcImpl extends MybatisBaseSvcImpl<AfcPlatformMo, java.l
         int rowCount = _mapper.modifyBalance(newBalance, newModifiedTimestamp, oldBalance, oldModifiedTimestamp, id);
         if (rowCount != 1) {
             String msg = "修改平台余额不成功: 出现并发问题";
-            _log.error(msg);
+            _log.error("{}-{}", msg, id);
             throw new RuntimeException(msg);
         }
     }

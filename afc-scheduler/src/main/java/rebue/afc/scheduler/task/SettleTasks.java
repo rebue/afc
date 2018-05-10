@@ -9,8 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import rebue.afc.mo.AfcSettleTaskMo;
-import rebue.afc.svc.AfcSettleTaskSvc;
+import rebue.afc.svr.feign.AfcSettleTaskSvc;
 
 /**
  * 定时结算的任务
@@ -27,13 +26,13 @@ public class SettleTasks {
         _log.info("定时执行需要结算的任务");
         try {
             _log.info("获取需要执行的任务列表");
-            List<AfcSettleTaskMo> tasks = taskSvc.getTasksThatShouldExecute();
+            List<Long> tasks = taskSvc.getTaskIdsThatShouldExecute();
             _log.info("需要执行的任务数有{}条", tasks.size());
-            for (AfcSettleTaskMo taskMo : tasks) {
+            for (Long id : tasks) {
                 try {
-                    taskSvc.executeTask(taskMo);
+                    taskSvc.executeTask(id);
                 } catch (RuntimeException e) {
-                    _log.error("执行需要结算的任务出现异常: " + taskMo, e);
+                    _log.error("执行需要结算的任务出现异常: " + id, e);
                 }
             }
         } catch (RuntimeException e) {

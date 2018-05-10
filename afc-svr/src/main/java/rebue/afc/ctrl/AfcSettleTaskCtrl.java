@@ -10,10 +10,10 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rebue.afc.dic.AddSettleTaskResultDic;
-import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTaskRo;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.to.AddSettleTaskTo;
@@ -32,12 +32,12 @@ public class AfcSettleTaskCtrl {
     private AfcSettleTaskSvc    svc;
 
     /**
-     * 添加返款任务
-     * 添加返款任务，任务调度器会定时检查当前要执行的任务
+     * 添加结算任务
+     * 任务调度器会定时检查当前要执行的任务
      */
     @PostMapping("/task/settle")
-    AddSettleTaskRo addSettleTast(@RequestBody AddSettleTaskTo to) {
-        _log.info("添加返款任务: {}", to);
+    AddSettleTaskRo addSettleTask(@RequestBody AddSettleTaskTo to) {
+        _log.info("添加结算任务: {}", to);
         try {
             return svc.addSettleTask(to);
         } catch (DuplicateKeyException e) {
@@ -54,8 +54,8 @@ public class AfcSettleTaskCtrl {
      * 获取将要执行的任务列表
      */
     @GetMapping("/task/shouldexecute")
-    List<AfcSettleTaskMo> getTasksThatShouldExecute() {
-        return svc.getTasksThatShouldExecute();
+    List<Long> getTasksThatShouldExecute() {
+        return svc.getTaskIdsThatShouldExecute();
     }
 
     /**
@@ -65,8 +65,8 @@ public class AfcSettleTaskCtrl {
      *            要执行的任务
      */
     @PostMapping("/task/execute")
-    void executeTask(@RequestBody AfcSettleTaskMo taskMo) {
-        svc.executeTask(taskMo);
+    void executeTask(@RequestParam("id") Long id) {
+        svc.executeTask(id);
     }
 
 }

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +15,6 @@ import rebue.afc.ro.PayOrderQueryRo;
 import rebue.afc.ro.PayRo;
 import rebue.afc.ro.PrepayRo;
 import rebue.wheel.OkhttpUtils;
-import rebue.wheel.RandomEx;
 import rebue.wheel.idworker.IdWorker3;
 
 public class AfcVpayTests {

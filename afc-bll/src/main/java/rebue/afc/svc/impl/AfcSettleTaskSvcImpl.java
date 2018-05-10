@@ -68,6 +68,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
 
     /**
      * 添加结算任务
+     * 任务调度器会定时检查当前要执行的任务
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -112,10 +113,10 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         AfcSettleTaskMo mo = dozerMapper.map(to, AfcSettleTaskMo.class);
         mo.setExecuteState((byte) 0);
         _log.info("添加结算任务记录");
-        add(mo);        // 如果交易类型+账户ID+销售订单详情ID如果重复，则抛出DuplicateKeyException异常
+        add(mo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
 
         // 返回成功
-        String msg = "添加返款任务成功";
+        String msg = "添加结算任务成功";
         _log.info("{}: {}", msg, to);
         AddSettleTaskRo ro = new AddSettleTaskRo();
         ro.setResult(AddSettleTaskResultDic.SUCCESS);
@@ -127,7 +128,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      * 获取将要执行的任务列表
      */
     @Override
-    public List<AfcSettleTaskMo> getTasksThatShouldExecute() {
+    public List<Long> getTaskIdsThatShouldExecute() {
         return _mapper.selectByExecutePlanTimeBeforeNow();
     }
 
@@ -139,7 +140,17 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void executeTask(AfcSettleTaskMo taskMo) {
+    public void executeTask(Long id) {
+        _log.info("执行任务: {}", id);
+        AfcSettleTaskMo taskMo = getById(id);
+        if (taskMo == null)
+            return;
+        _log.info("任务信息: {}", taskMo);
+        if (SettleTaskExecuteStateDic.NONE.getCode() != taskMo.getExecuteState().intValue()) {
+            _log.error("任务不是未执行状态，不能执行: {}", taskMo);
+            return;
+        }
+
         // 计算当前时间
         Date now = new Date();
 
@@ -164,8 +175,8 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         // 将任务状态改为已经执行
         int rowCount = _mapper.done(now, taskMo.getId(), (byte) SettleTaskExecuteStateDic.DONE.getCode(), (byte) SettleTaskExecuteStateDic.NONE.getCode());
         if (rowCount != 1) {
-            String msg = "执行结算任务失败: 产生并发问题";
-            _log.error(msg);
+            String msg = "执行结算任务不成功: 出现并发问题";
+            _log.error("{}-{}", msg, taskMo);
             throw new RuntimeException(msg);
         }
     }

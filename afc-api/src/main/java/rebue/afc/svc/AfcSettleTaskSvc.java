@@ -9,20 +9,21 @@ import rebue.robotech.svc.MybatisBaseSvc;
 
 public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.lang.Long> {
     /**
-     * 添加交易任务
+     * 添加结算任务
+     * 任务调度器会定时检查当前要执行的任务
      */
     AddSettleTaskRo addSettleTask(AddSettleTaskTo to);
 
     /**
-     * 获取要执行的任务列表
+     * 获取要执行的任务ID列表
      */
-    List<AfcSettleTaskMo> getTasksThatShouldExecute();
+    List<Long> getTaskIdsThatShouldExecute();
 
     /**
      * 执行任务
      * 
-     * @param taskMo
-     *            要执行的任务
+     * @param id
+     *            要执行的任务ID
      */
-    void executeTask(AfcSettleTaskMo taskMo);
+    void executeTask(Long id);
 }
