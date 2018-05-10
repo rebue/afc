@@ -1,4 +1,4 @@
-package rebue.afc.vpay.svc.impl;
+package rebue.afc.svc.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -14,16 +14,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import rebue.afc.dic.AddSettleTaskResultDic;
+import rebue.afc.dic.SettleTaskExecuteStateDic;
 import rebue.afc.dic.TradeTypeDic;
-import rebue.afc.mapper.VpayTradeTaskMapper;
-import rebue.afc.mo.AfcTradeMo;
-import rebue.afc.mo.VpayTradeTaskMo;
+import rebue.afc.mapper.AfcSettleTaskMapper;
+import rebue.afc.mo.AfcSettleTaskMo;
+import rebue.afc.ro.AddSettleTaskRo;
+import rebue.afc.svc.AfcSettleSvc;
+import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.svc.AfcTradeSvc;
-import rebue.afc.svc.impl.AfcRebateSvcImpl;
-import rebue.afc.vpay.dic.AddRebateTaskResultDic;
-import rebue.afc.vpay.ro.AddRebateTaskRo;
-import rebue.afc.vpay.svc.VpayTradeTaskSvc;
-import rebue.afc.vpay.to.AddRebateTaskTo;
+import rebue.afc.to.AddSettleTaskTo;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.svr.feign.SucUserSvc;
 
@@ -40,13 +40,15 @@ import rebue.suc.svr.feign.SucUserSvc;
  * </pre>
  */
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-public class VpayTradeTaskSvcImpl extends MybatisBaseSvcImpl<VpayTradeTaskMo, java.lang.Long, VpayTradeTaskMapper> implements VpayTradeTaskSvc {
-    private final static Logger _log = LoggerFactory.getLogger(AfcRebateSvcImpl.class);
+public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, java.lang.Long, AfcSettleTaskMapper> implements AfcSettleTaskSvc {
+    private final static Logger _log = LoggerFactory.getLogger(AfcSettleTaskSvcImpl.class);
 
     @Resource
     private SucUserSvc          userSvc;
     @Resource
     private AfcTradeSvc         tradeSvc;
+    @Resource
+    private AfcSettleSvc        settleSvc;
 
     @Resource
     private Mapper              dozerMapper;
@@ -56,7 +58,7 @@ public class VpayTradeTaskSvcImpl extends MybatisBaseSvcImpl<VpayTradeTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public int add(VpayTradeTaskMo mo) {
+    public int add(AfcSettleTaskMo mo) {
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
             mo.setId(_idWorker.getId());
@@ -65,34 +67,35 @@ public class VpayTradeTaskSvcImpl extends MybatisBaseSvcImpl<VpayTradeTaskMo, ja
     }
 
     /**
-     * 添加返款任务
+     * 添加结算任务
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public AddRebateTaskRo addRebateTast(AddRebateTaskTo to) throws DuplicateKeyException {
-        _log.info("添加交易任务: {}", to);
-        if (to.getExecutePlanTime() == null || to.getAccountId() == null || to.getTradeType() == null || to.getTradeAmount() == null
+    public AddSettleTaskRo addSettleTask(AddSettleTaskTo to) throws DuplicateKeyException {
+        _log.info("添加结算任务: {}", to);
+        if (to.getExecutePlanTime() == null || to.getAccountId() == null || to.getTradeType() == null || to.getTradeAmount() == null || to.getTradeAmount() == 0L
                 || StringUtils.isAnyBlank(to.getOrderId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
             String msg = "参数有误";
             _log.error("{}: {}", msg, to);
-            AddRebateTaskRo ro = new AddRebateTaskRo();
-            ro.setResult(AddRebateTaskResultDic.PARAM_ERROR);
+            AddSettleTaskRo ro = new AddSettleTaskRo();
+            ro.setResult(AddSettleTaskResultDic.PARAM_ERROR);
             ro.setMsg(msg);
             return ro;
         }
 
         // 检查是否是本任务支持的交易类型
         switch (TradeTypeDic.getItem(to.getTradeType())) {
-        case REBATE_BUYER_CASHBACK:
-        case REBATE_PROVIDER_BALANCE:
-        case REBATE_SELLER_BALANCE:
-        case REBATE_SELLER_DEPOSIT_USED:
+        case SETTLE_BUYER_CASHBACK:
+        case SETTLE_PROVIDER_BALANCE:
+        case SETTLE_SELLER_BALANCE:
+        case SETTLE_SELLER_DEPOSIT_USED:
+        case SETTLE_PLATFORM_SERVICE_FEE:
             break;
         default:
-            String msg = "不支持的交易类型";
+            String msg = "不支持的结算类型";
             _log.error("{}: {}", msg, to);
-            AddRebateTaskRo ro = new AddRebateTaskRo();
-            ro.setResult(AddRebateTaskResultDic.NOT_SUPPORTED_TRADE_TYPE);
+            AddSettleTaskRo ro = new AddSettleTaskRo();
+            ro.setResult(AddSettleTaskResultDic.NOT_SUPPORTED_SETTLE_TYPE);
             ro.setMsg(msg);
             return ro;
         }
@@ -100,22 +103,22 @@ public class VpayTradeTaskSvcImpl extends MybatisBaseSvcImpl<VpayTradeTaskMo, ja
         if (!userSvc.exist(to.getAccountId())) {
             String msg = "没有此账户";
             _log.error("{}: {}", msg, to.getAccountId());
-            AddRebateTaskRo ro = new AddRebateTaskRo();
-            ro.setResult(AddRebateTaskResultDic.NOT_FOUND_ACCOUNT);
+            AddSettleTaskRo ro = new AddSettleTaskRo();
+            ro.setResult(AddSettleTaskResultDic.NOT_FOUND_ACCOUNT);
             ro.setMsg(msg);
             return ro;
         }
 
-        VpayTradeTaskMo mo = dozerMapper.map(to, VpayTradeTaskMo.class);
+        AfcSettleTaskMo mo = dozerMapper.map(to, AfcSettleTaskMo.class);
         mo.setExecuteState((byte) 0);
-        _log.info("添加交易任务记录");
+        _log.info("添加结算任务记录");
         add(mo);        // 如果交易类型+账户ID+销售订单详情ID如果重复，则抛出DuplicateKeyException异常
 
         // 返回成功
         String msg = "添加返款任务成功";
         _log.info("{}: {}", msg, to);
-        AddRebateTaskRo ro = new AddRebateTaskRo();
-        ro.setResult(AddRebateTaskResultDic.SUCCESS);
+        AddSettleTaskRo ro = new AddSettleTaskRo();
+        ro.setResult(AddSettleTaskResultDic.SUCCESS);
         ro.setMsg(msg);
         return ro;
     }
@@ -124,7 +127,7 @@ public class VpayTradeTaskSvcImpl extends MybatisBaseSvcImpl<VpayTradeTaskMo, ja
      * 获取将要执行的任务列表
      */
     @Override
-    public List<VpayTradeTaskMo> getTasksThatShouldExecute() {
+    public List<AfcSettleTaskMo> getTasksThatShouldExecute() {
         return _mapper.selectByExecutePlanTimeBeforeNow();
     }
 
@@ -136,31 +139,35 @@ public class VpayTradeTaskSvcImpl extends MybatisBaseSvcImpl<VpayTradeTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void executeTask(VpayTradeTaskMo taskMo) {
+    public void executeTask(AfcSettleTaskMo taskMo) {
         // 计算当前时间
         Date now = new Date();
 
         // 判断交易类型
         switch (TradeTypeDic.getItem(taskMo.getTradeType())) {
-        // 返款到平台服务费
-        case REBATE_PLATFORM_SERVICE_CHANGE:
-//            AfcPlatformFlowMo mo=
+        // 结算平台服务费
+        case SETTLE_PLATFORM_SERVICE_FEE:
+            settleSvc.settlePlatformServiceFee(taskMo.getOrderId(), taskMo.getTradeAmount(), now);
+            break;
+        case SETTLE_BUYER_CASHBACK:
+        case SETTLE_PROVIDER_BALANCE:
+        case SETTLE_SELLER_BALANCE:
+        case SETTLE_SELLER_DEPOSIT_USED:
+            settleSvc.settleAccountFee(taskMo, now);
             break;
         default:
+            String msg = "任务执行不支持此结算类型";
+            _log.error(msg + ": {}", taskMo.getTradeType());
+            throw new RuntimeException(msg);
         }
 
-        // 先添加账户交易，以更早终止并发产生的重复数据(同一交易类型的业务订单不允许重复)
-        AfcTradeMo tradeMo = dozerMapper.map(taskMo, AfcTradeMo.class);
-//        tradeMo.setId(taskMo.getId());       // 交易ID使用任务ID
-        tradeMo.setTradeTime(now);
-        tradeMo.setOpId(0L);         // 操作人设为0表示系统自动产生的交易
-        try {
-            tradeSvc.add(tradeMo);
-        } catch (DuplicateKeyException e) {
-            _log.error("返款到买家的返现金重复提交");
-            throw new RuntimeException("返款到买家的返现金重复提交", e);
+        // 将任务状态改为已经执行
+        int rowCount = _mapper.done(now, taskMo.getId(), (byte) SettleTaskExecuteStateDic.DONE.getCode(), (byte) SettleTaskExecuteStateDic.NONE.getCode());
+        if (rowCount != 1) {
+            String msg = "执行结算任务失败: 产生并发问题";
+            _log.error(msg);
+            throw new RuntimeException(msg);
         }
-
     }
 
 }

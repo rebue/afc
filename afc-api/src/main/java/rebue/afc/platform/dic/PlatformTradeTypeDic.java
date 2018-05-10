@@ -1,41 +1,27 @@
-package rebue.afc.dic;
+package rebue.afc.platform.dic;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import rebue.wheel.baseintf.EnumBase;
 
 /**
- * 1 返款成功
- * 0 参数不正确
- * -1 没有此用户
+ * 平台交易类型
+ * 
+ * 1：购买交易收取服务费
+ * 2：用户退款退回服务费
  */
-@ApiModel(value = "返款返回结果字典")
-public enum RebateResultDic implements EnumBase {
+public enum PlatformTradeTypeDic implements EnumBase {
     /**
-     * 1: 返款成功
+     * 1：收取服务费(购买交易成功)
      */
-    @ApiModelProperty(value = "返款成功")
-    SUCCESS(1),
+    CHARGE_SEVICE_FEE(1),
     /**
-     * 0: 参数不正确
+     * 2：退回服务费(用户退款)
      */
-    @ApiModelProperty(value = "参数不正确")
-    PARAM_ERROR(0),
-    /**
-     * -1: 没有此用户
-     */
-    @ApiModelProperty(value = "没有此用户")
-    NOT_FOUND_USER(-1),
-    /**
-     * -2: 账户没有支付过此销售单
-     */
-    @ApiModelProperty(value = "账户没有支付过此销售单")
-    NOT_FOUND_ORDERID(-2);
+    REFUND_SEVICE_FEE(2);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的
@@ -53,12 +39,12 @@ public enum RebateResultDic implements EnumBase {
      * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static RebateResultDic getItem(int code) {
+    public static PlatformTradeTypeDic getItem(int code) {
         EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
-        return (RebateResultDic) result;
+        return (PlatformTradeTypeDic) result;
     }
 
     private int code;
@@ -66,7 +52,7 @@ public enum RebateResultDic implements EnumBase {
     /**
      * 构造器，传入code
      */
-    RebateResultDic(int code) {
+    PlatformTradeTypeDic(int code) {
         this.code = code;
     }
 

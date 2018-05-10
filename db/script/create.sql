@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/10 11:30:07                           */
+/* Created on:     2018/5/10 15:22:21                           */
 /*==============================================================*/
 
 
@@ -14,13 +14,13 @@ drop table if exists AFC_PLATFORM;
 
 drop table if exists AFC_PLATFORM_TRADE;
 
+drop table if exists AFC_SETTLE_TASK;
+
 drop table if exists AFC_TRADE;
 
 drop table if exists AFC_WITHDRAW;
 
 drop table if exists AFC_WITHDRAW_ACCOUNT;
-
-drop table if exists VPAY_TRADE_TASK;
 
 /*==============================================================*/
 /* Table: AFC_ACCOUNT                                           */
@@ -107,7 +107,7 @@ alter table AFC_PLATFORM comment '平台信息';
 create table AFC_PLATFORM_TRADE
 (
    ID                   bigint not null comment '平台交易ID',
-   PLATFORM_TRADE_TYPE  tinyint not null comment '交易类型（1：购买交易收取服务费  2：用户退款退回服务费）',
+   PLATFORM_TRADE_TYPE  tinyint not null comment '交易类型（1：收取服务费(购买交易成功)  2：退回服务费(用户退款)）',
    ORDER_ID             bigint not null comment '销售/退货单ID
             流水类型是收取服务费，则填写销售订单ID
             如果是退回服务费，则填写退货订单ID',
@@ -120,6 +120,31 @@ create table AFC_PLATFORM_TRADE
 );
 
 alter table AFC_PLATFORM_TRADE comment '平台交易';
+
+/*==============================================================*/
+/* Table: AFC_SETTLE_TASK                                       */
+/*==============================================================*/
+create table AFC_SETTLE_TASK
+(
+   ID                   bigint not null comment '任务ID',
+   EXECUTE_STATE        tinyint not null comment '执行状态(-1:取消；0:未执行；1:已执行)',
+   EXECUTE_PLAN_TIME    datetime not null comment '计划执行时间',
+   EXECUTE_FACT_TIME    datetime comment '实际执行时间',
+   ACCOUNT_ID           bigint not null comment '账户ID(账户ID也就是用户ID)',
+   TRADE_TYPE           tinyint not null comment '结算类型(交易类型中的几种结算类型)',
+   TRADE_AMOUNT         decimal(18,4) not null comment '交易总额（收入为正数，支出为负数）',
+   CHANGE_AMOUNT1       decimal(18,4) comment '交易改变金额1，在交易类型是支付时代表返现金改变了多少',
+   CHANGE_AMOUNT2       decimal(18,4) comment '交易改变金额2，在交易类型是支付时代表余额改变了多少',
+   TRADE_TITLE          varchar(50) not null comment '交易标题',
+   TRADE_DETAIL         varchar(150) comment '交易详情',
+   ORDER_ID             varchar(150) comment '订单ID(返款其实是销售订单详情ID)',
+   MAC                  varchar(30) not null comment 'MAC地址',
+   IP                   varchar(150) not null comment 'IP地址',
+   primary key (ID),
+   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_ID (ACCOUNT_ID, TRADE_TYPE, ORDER_ID)
+);
+
+alter table AFC_SETTLE_TASK comment '结算任务';
 
 /*==============================================================*/
 /* Table: AFC_TRADE                                             */
@@ -206,29 +231,4 @@ create table AFC_WITHDRAW_ACCOUNT
 );
 
 alter table AFC_WITHDRAW_ACCOUNT comment '提现账户';
-
-/*==============================================================*/
-/* Table: VPAY_TRADE_TASK                                       */
-/*==============================================================*/
-create table VPAY_TRADE_TASK
-(
-   ID                   bigint not null comment '任务ID',
-   EXECUTE_STATE        tinyint not null comment '执行状态(-1:取消；0-未执行；1-执行中；2-已执行)',
-   EXECUTE_PLAN_TIME    datetime not null comment '计划执行时间',
-   EXECUTE_FACT_TIME    datetime comment '实际执行时间',
-   ACCOUNT_ID           bigint not null comment '账户ID(账户ID也就是用户ID)',
-   TRADE_TYPE           tinyint not null comment '交易类型',
-   TRADE_AMOUNT         decimal(18,4) not null comment '交易总额（收入为正数，支出为负数）',
-   CHANGE_AMOUNT1       decimal(18,4) comment '交易改变金额1，在交易类型是支付时代表返现金改变了多少',
-   CHANGE_AMOUNT2       decimal(18,4) comment '交易改变金额2，在交易类型是支付时代表余额改变了多少',
-   TRADE_TITLE          varchar(50) not null comment '交易标题',
-   TRADE_DETAIL         varchar(150) comment '交易详情',
-   ORDER_ID             varchar(150) comment '订单ID(返款其实是销售订单详情ID)',
-   MAC                  varchar(30) not null comment 'MAC地址',
-   IP                   varchar(150) not null comment 'IP地址',
-   primary key (ID),
-   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_ID (ACCOUNT_ID, TRADE_TYPE, ORDER_ID)
-);
-
-alter table VPAY_TRADE_TASK comment 'V支付交易任务';
 

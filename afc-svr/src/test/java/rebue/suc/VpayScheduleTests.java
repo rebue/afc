@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import rebue.afc.dic.AddSettleTaskResultDic;
 import rebue.afc.dic.TradeTypeDic;
-import rebue.afc.vpay.dic.AddRebateTaskResultDic;
-import rebue.afc.vpay.ro.AddRebateTaskRo;
+import rebue.afc.ro.AddSettleTaskRo;
 import rebue.wheel.OkhttpUtils;
 
 public class VpayScheduleTests {
@@ -34,7 +34,7 @@ public class VpayScheduleTests {
         String url = _hostUrl + "/task/rebate";
         // 返款到供应商的余额
         Map<String, Object> paramsMap = new LinkedHashMap<>();
-        paramsMap.put("tradeType", TradeTypeDic.REBATE_PROVIDER_BALANCE.getCode());
+        paramsMap.put("tradeType", TradeTypeDic.SETTLE_PROVIDER_BALANCE.getCode());
         paramsMap.put("executePlanTime", sdf.format(calendar.getTime()));
         paramsMap.put("accountId", accountId);
         paramsMap.put("orderId", orderId);
@@ -43,13 +43,13 @@ public class VpayScheduleTests {
         paramsMap.put("tradeAmount", 0.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        AddRebateTaskRo rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddRebateTaskRo.class);
+        AddSettleTaskRo rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTaskRo.class);
         Assert.assertNotNull(rebateRo);
-        Assert.assertEquals(AddRebateTaskResultDic.SUCCESS, rebateRo.getResult());
+        Assert.assertEquals(AddSettleTaskResultDic.SUCCESS, rebateRo.getResult());
 
         // 返款到买家的返现金
         paramsMap = new LinkedHashMap<>();
-        paramsMap.put("tradeType", TradeTypeDic.REBATE_BUYER_CASHBACK.getCode());
+        paramsMap.put("tradeType", TradeTypeDic.SETTLE_BUYER_CASHBACK.getCode());
         paramsMap.put("executePlanTime", sdf.format(calendar.getTime()));
         paramsMap.put("accountId", accountId);
         paramsMap.put("orderId", orderId);
@@ -58,13 +58,13 @@ public class VpayScheduleTests {
         paramsMap.put("tradeAmount", 0.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddRebateTaskRo.class);
+        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTaskRo.class);
         Assert.assertNotNull(rebateRo);
-        Assert.assertEquals(AddRebateTaskResultDic.SUCCESS, rebateRo.getResult());
+        Assert.assertEquals(AddSettleTaskResultDic.SUCCESS, rebateRo.getResult());
 
         // 返款到加盟商的已占用保证金
         paramsMap = new LinkedHashMap<>();
-        paramsMap.put("tradeType", TradeTypeDic.REBATE_SELLER_DEPOSIT_USED.getCode());
+        paramsMap.put("tradeType", TradeTypeDic.SETTLE_SELLER_DEPOSIT_USED.getCode());
         paramsMap.put("executePlanTime", sdf.format(calendar.getTime()));
         paramsMap.put("accountId", accountId);
         paramsMap.put("orderId", orderId);
@@ -73,13 +73,13 @@ public class VpayScheduleTests {
         paramsMap.put("tradeAmount", 0.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddRebateTaskRo.class);
+        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTaskRo.class);
         Assert.assertNotNull(rebateRo);
-        Assert.assertEquals(AddRebateTaskResultDic.SUCCESS, rebateRo.getResult());
+        Assert.assertEquals(AddSettleTaskResultDic.SUCCESS, rebateRo.getResult());
 
         // 返款到加盟商的余额
         paramsMap = new LinkedHashMap<>();
-        paramsMap.put("tradeType", TradeTypeDic.REBATE_SELLER_BALANCE.getCode());
+        paramsMap.put("tradeType", TradeTypeDic.SETTLE_SELLER_BALANCE.getCode());
         paramsMap.put("executePlanTime", sdf.format(calendar.getTime()));
         paramsMap.put("accountId", accountId);
         paramsMap.put("orderId", orderId);
@@ -88,9 +88,9 @@ public class VpayScheduleTests {
         paramsMap.put("tradeAmount", 0.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddRebateTaskRo.class);
+        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTaskRo.class);
         Assert.assertNotNull(rebateRo);
-        Assert.assertEquals(AddRebateTaskResultDic.SUCCESS, rebateRo.getResult());
+        Assert.assertEquals(AddSettleTaskResultDic.SUCCESS, rebateRo.getResult());
 
     }
 

@@ -9,31 +9,31 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import rebue.afc.mo.VpayTradeTaskMo;
-import rebue.afc.svr.feign.VpayTradeTaskSvc;
+import rebue.afc.mo.AfcSettleTaskMo;
+import rebue.afc.svc.AfcSettleTaskSvc;
 
 /**
- * 定时交易的任务
+ * 定时结算的任务
  */
 @Component
-public class TradeTask {
-    private final static Logger _log = LoggerFactory.getLogger(TradeTask.class);
+public class SettleTasks {
+    private final static Logger _log = LoggerFactory.getLogger(SettleTasks.class);
 
     @Resource
-    private VpayTradeTaskSvc    vpayTradeTaskSvc;
+    private AfcSettleTaskSvc    taskSvc;
 
     @Scheduled(fixedDelayString = "${afc.scheduler.tradeFixedDelay}")
-    public void executeTask() {
-        _log.info("定时执行需要交易的任务");
+    public void executeTasks() {
+        _log.info("定时执行需要结算的任务");
         try {
             _log.info("获取需要执行的任务列表");
-            List<VpayTradeTaskMo> tasks = vpayTradeTaskSvc.getTasksThatShouldExecute();
+            List<AfcSettleTaskMo> tasks = taskSvc.getTasksThatShouldExecute();
             _log.info("需要执行的任务数有{}条", tasks.size());
-            for (VpayTradeTaskMo taskMo : tasks) {
+            for (AfcSettleTaskMo taskMo : tasks) {
                 try {
-                    vpayTradeTaskSvc.executeTask(taskMo);
+                    taskSvc.executeTask(taskMo);
                 } catch (RuntimeException e) {
-                    _log.error("执行需要交易的任务出现异常: " + taskMo, e);
+                    _log.error("执行需要结算的任务出现异常: " + taskMo, e);
                 }
             }
         } catch (RuntimeException e) {

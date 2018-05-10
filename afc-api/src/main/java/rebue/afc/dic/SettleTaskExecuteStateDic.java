@@ -1,4 +1,4 @@
-package rebue.afc.vpay.dic;
+package rebue.afc.dic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,35 +8,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import rebue.wheel.baseintf.EnumBase;
 
 /**
- * 添加交易任务返回结果字典
+ * 结算任务执行状态的字典
  * 
- * 1: 添加任务成功
- * -1: 参数不正确
- * -2: 不支持的交易类型
- * -3: 没有此用户
- * -4: 重复添加任务(通过交易类型+账户ID+销售订单详情ID判断)
+ * -1: 取消
+ * 0: 未执行
+ * 1: 已执行
  */
-public enum AddRebateTaskResultDic implements EnumBase {
+public enum SettleTaskExecuteStateDic implements EnumBase {
     /**
-     * 1: 添加任务成功
+     * -1: 取消
      */
-    SUCCESS(1),
+    CANCEL(1),
     /**
-     * -1: 参数不正确
+     * 0: 未执行
      */
-    PARAM_ERROR(-1),
+    NONE(0),
     /**
-     * -2: 不支持的交易类型
+     * 1: 已执行
      */
-    NOT_SUPPORTED_TRADE_TYPE(-2),
-    /**
-     * -3: 没有此用户
-     */
-    NOT_FOUND_ACCOUNT(-3),
-    /**
-     * -4: 重复添加任务(通过交易类型+账户ID+销售订单详情ID判断)
-     */
-    ALREADY_ADD(-4);
+    DONE(1);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的
@@ -54,12 +44,12 @@ public enum AddRebateTaskResultDic implements EnumBase {
      * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static AddRebateTaskResultDic getItem(int code) {
+    public static SettleTaskExecuteStateDic getItem(int code) {
         EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
-        return (AddRebateTaskResultDic) result;
+        return (SettleTaskExecuteStateDic) result;
     }
 
     private int code;
@@ -67,7 +57,7 @@ public enum AddRebateTaskResultDic implements EnumBase {
     /**
      * 构造器，传入code
      */
-    AddRebateTaskResultDic(int code) {
+    SettleTaskExecuteStateDic(int code) {
         this.code = code;
     }
 

@@ -1,4 +1,4 @@
-package rebue.afc.vpay.to;
+package rebue.afc.to;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  * V支付-添加交易任务的传输对象
  *
  */
-public class AddRebateTaskTo {
+public class AddSettleTaskTo {
     /**
      * 计划执行时间
      */

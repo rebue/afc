@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import rebue.afc.mo.VpayTradeTaskMo;
+import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.sbs.feign.FeignConfig;
 
 @FeignClient(name = "afc-svr", configuration = FeignConfig.class)
-public interface VpayTradeTaskSvc {
+public interface AfcSettleTaskSvc {
     /**
      * 获取将要执行的任务列表
      */
     @GetMapping("/task/shouldexecute")
-    List<VpayTradeTaskMo> getTasksThatShouldExecute();
+    List<AfcSettleTaskMo> getTasksThatShouldExecute();
 
     /**
      * 执行任务
@@ -25,6 +25,6 @@ public interface VpayTradeTaskSvc {
      *            要执行的任务
      */
     @PostMapping("/task/execute")
-    void executeTask(@RequestBody VpayTradeTaskMo taskMo);
+    void executeTask(@RequestBody AfcSettleTaskMo taskMo);
 
 }

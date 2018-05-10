@@ -1,30 +1,30 @@
-package rebue.afc.vpay.ro;
+package rebue.afc.ro;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import rebue.afc.vpay.dic.AddRebateTaskResultDic;
+import rebue.afc.dic.AddSettleTaskResultDic;
 
 /**
  * 添加交易任务的返回结果
  */
 @JsonInclude(Include.NON_NULL)
-public class AddRebateTaskRo {
+public class AddSettleTaskRo {
     /**
      * 添加交易任务返回结果的代码
      */
-    private AddRebateTaskResultDic result;
+    private AddSettleTaskResultDic result;
 
     /**
      * 返回的提示信息
      */
     private String                 msg;
 
-    public AddRebateTaskResultDic getResult() {
+    public AddSettleTaskResultDic getResult() {
         return result;
     }
 
-    public void setResult(AddRebateTaskResultDic result) {
+    public void setResult(AddSettleTaskResultDic result) {
         this.result = result;
     }
 

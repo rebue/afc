@@ -5,11 +5,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import rebue.wheel.baseintf.EnumBase;
 
 /**
+ * 交易类型
  * 10: 充值-余额
  * 11: 充值-返现金
  * 20: 支付
@@ -19,95 +18,78 @@ import rebue.wheel.baseintf.EnumBase;
  * 40: 进货保证金-充值
  * 41: 进货保证金-进货
  * 42: 进货保证金-出货
- * 50: 返款-返款到供应商的余额
- * 51: 返款-返款到买家的返现金
- * 52: 返款-返款到加盟商的已占用保证金
- * 53: 返款-返款到加盟商的余额
- * 54: 返款-返款到平台的服务费
+ * 50: 结算-结算成本(将成本打到供应商的余额)
+ * 51: 结算-结算返现金(将返现金打到买家的返现金)
+ * 52: 结算-结算已占用保证金(释放卖家的已占用保证金相应金额)
+ * 53: 结算-结算卖家利润(将利润打到卖家的余额)
+ * 54: 结算-结算平台服务费
  * 60: 退货-买家退货（退到买家的余额和返现金）
  * 61: 退货-买家退货（扣减买家的返现金）
  */
-@ApiModel(value = "交易类型")
 public enum TradeTypeDic implements EnumBase {
     /**
      * 10: 充值-余额
      */
-    @ApiModelProperty(value = "充值-余额")
     CHARGE_BALANCE(10),
     /**
      * 11: 充值-返现金
      */
-    @ApiModelProperty(value = "充值-返现金")
     CHARGE_CASHBACK(11),
     /**
      * 20: 支付
      */
-    @ApiModelProperty(value = "支付")
     PAY(20),
     /**
      * 30: 申请提现
      */
-    @ApiModelProperty(value = "申请提现")
     WITHDRAW_APPLY(30),
     /**
      * 31: 提现
      */
-    @ApiModelProperty(value = "提现")
     WITHDRAW_OK(31),
     /**
      * 32: 作废提现
      */
-    @ApiModelProperty(value = "作废提现")
     WITHDRAW_CANCEL(32),
     /**
      * 40: 进货保证金-充值
      */
-    @ApiModelProperty(value = "进货保证金-充值")
     DEPOSIT_CHARGE(40),
     /**
      * 41: 进货保证金-进货
      */
-    @ApiModelProperty(value = "进货保证金-进货")
     DEPOSIT_GOODS_IN(41),
     /**
      * 42: 进货保证金-出货
      */
-    @ApiModelProperty(value = "进货保证金-出货")
     DEPOSIT_GOODS_RETURN(42),
     /**
-     * 50: 返款到供应商的余额
+     * 50: 结算-结算成本(将成本打到供应商的余额)
      */
-    @ApiModelProperty(value = "返款到供应商的余额")
-    REBATE_PROVIDER_BALANCE(50),
+    SETTLE_PROVIDER_BALANCE(50),
     /**
-     * 51: 返款到买家的返现金
+     * 51: 结算-结算返现金(将返现金打到买家的返现金)
      */
-    @ApiModelProperty(value = "返款到买家的返现金")
-    REBATE_BUYER_CASHBACK(51),
+    SETTLE_BUYER_CASHBACK(51),
     /**
-     * 52: 返款到加盟商的已占用保证金
+     * 52: 结算-结算已占用保证金(释放卖家的已占用保证金相应金额)
      */
-    @ApiModelProperty(value = "返款到加盟商的已占用保证金")
-    REBATE_SELLER_DEPOSIT_USED(52),
+    SETTLE_SELLER_DEPOSIT_USED(52),
     /**
-     * 53: 返款到加盟商的余额
+     * 53: 结算-结算卖家利润(将利润打到卖家的余额)
      */
-    @ApiModelProperty(value = "返款到加盟商的余额")
-    REBATE_SELLER_BALANCE(53),
+    SETTLE_SELLER_BALANCE(53),
     /**
-     * 54: 返款到平台的服务费
+     * 54: 结算-结算平台服务费
      */
-    @ApiModelProperty(value = "返款到平台的服务费")
-    REBATE_PLATFORM_SERVICE_CHANGE(54),
+    SETTLE_PLATFORM_SERVICE_FEE(54),
     /**
      * 60: 退货-买家退货（退到买家的余额和返现金）
      */
-    @ApiModelProperty(value = "退货-买家退货（退到买家的余额和返现金）")
     RETURN_GOODS_BY_BUYER(60),
     /**
      * 61: 退货-买家退货
      */
-    @ApiModelProperty(value = "退货-买家退货（扣减买家的返现金）")
     RETURN_GOODS_BY_BUYER_SUBTRACT_CASHBACK(61);
     /**
      * 枚举的所有项，注意这个变量是静态单例的

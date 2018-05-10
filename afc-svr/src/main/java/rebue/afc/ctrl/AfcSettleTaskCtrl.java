@@ -1,4 +1,4 @@
-package rebue.afc.vpay.ctrl;
+package rebue.afc.ctrl;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import rebue.afc.mo.VpayTradeTaskMo;
-import rebue.afc.vpay.dic.AddRebateTaskResultDic;
-import rebue.afc.vpay.ro.AddRebateTaskRo;
-import rebue.afc.vpay.svc.VpayTradeTaskSvc;
-import rebue.afc.vpay.to.AddRebateTaskTo;
+import rebue.afc.dic.AddSettleTaskResultDic;
+import rebue.afc.mo.AfcSettleTaskMo;
+import rebue.afc.ro.AddSettleTaskRo;
+import rebue.afc.svc.AfcSettleTaskSvc;
+import rebue.afc.to.AddSettleTaskTo;
 
 /**
  * 交易任务
@@ -25,26 +25,26 @@ import rebue.afc.vpay.to.AddRebateTaskTo;
  *
  */
 @RestController
-public class VpayTradeTaskCtrl {
-    private final static Logger _log = LoggerFactory.getLogger(VpayTradeTaskCtrl.class);
+public class AfcSettleTaskCtrl {
+    private final static Logger _log = LoggerFactory.getLogger(AfcSettleTaskCtrl.class);
 
     @Resource
-    private VpayTradeTaskSvc    svc;
+    private AfcSettleTaskSvc    svc;
 
     /**
      * 添加返款任务
      * 添加返款任务，任务调度器会定时检查当前要执行的任务
      */
-    @PostMapping("/task/rebate")
-    AddRebateTaskRo addRebateTast(@RequestBody AddRebateTaskTo to) {
+    @PostMapping("/task/settle")
+    AddSettleTaskRo addSettleTast(@RequestBody AddSettleTaskTo to) {
         _log.info("添加返款任务: {}", to);
         try {
-            return svc.addRebateTast(to);
+            return svc.addSettleTask(to);
         } catch (DuplicateKeyException e) {
             String msg = "重复添加任务";
             _log.error("{}: {}", msg, to);
-            AddRebateTaskRo ro = new AddRebateTaskRo();
-            ro.setResult(AddRebateTaskResultDic.ALREADY_ADD);
+            AddSettleTaskRo ro = new AddSettleTaskRo();
+            ro.setResult(AddSettleTaskResultDic.ALREADY_ADD);
             ro.setMsg(msg);
             return ro;
         }
@@ -54,7 +54,7 @@ public class VpayTradeTaskCtrl {
      * 获取将要执行的任务列表
      */
     @GetMapping("/task/shouldexecute")
-    List<VpayTradeTaskMo> getTasksThatShouldExecute() {
+    List<AfcSettleTaskMo> getTasksThatShouldExecute() {
         return svc.getTasksThatShouldExecute();
     }
 
@@ -65,7 +65,7 @@ public class VpayTradeTaskCtrl {
      *            要执行的任务
      */
     @PostMapping("/task/execute")
-    void executeTask(@RequestBody VpayTradeTaskMo taskMo) {
+    void executeTask(@RequestBody AfcSettleTaskMo taskMo) {
         svc.executeTask(taskMo);
     }
 

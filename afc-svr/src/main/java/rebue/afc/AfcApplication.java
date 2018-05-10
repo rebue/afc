@@ -25,12 +25,11 @@ public class AfcApplication {
 
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("rebue.suc")).paths(PathSelectors.any()).build();
+        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("rebue.suc")).paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("账户财务中心APIs").contact(new Contact("张柏子", "", "")).version("1.0.2").build();
+        return new ApiInfoBuilder().title("账户财务中心APIs").contact(new Contact("张柏子", "", "")).version("1.0.7").build();
     }
 
 }
