@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,14 +29,14 @@ public class AfcVpayCtrl {
 
     @ApiOperation("V支付-预支付")
     @PostMapping("/vpay/prepay")
-    PrepayRo prepay(AfcVpayPrepayTo to) {
+    PrepayRo prepay(@RequestBody AfcVpayPrepayTo to) {
         _log.info("V支付-预支付: {}", to);
         return svc.prepay(to);
     }
 
     @ApiOperation("V支付-支付")
     @PostMapping("/vpay/pay")
-    PayRo pay(AfcVpayPayTo to) {
+    PayRo pay(@RequestBody AfcVpayPayTo to) {
         _log.info("V支付-支付: {}", to);
         return svc.pay(to);
     }

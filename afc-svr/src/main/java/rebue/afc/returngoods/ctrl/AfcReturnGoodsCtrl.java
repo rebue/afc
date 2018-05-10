@@ -51,6 +51,7 @@ public class AfcReturnGoodsCtrl {
 				resultMap.put("result", -8);
 				resultMap.put("msg", msg);
 			} else {
+				e.printStackTrace();
 				resultMap.put("result", -9);
 				resultMap.put("msg", "买家退货退款失败");
 			}

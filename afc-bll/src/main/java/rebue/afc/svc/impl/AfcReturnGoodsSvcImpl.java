@@ -279,12 +279,26 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 
 		_log.info("用户退货退款并扣减返现金额根据操作人ID获取操作人信息的参数为：{}", opId);
 		// 根据用户ID获取操作人信息
-		SucUserMo opUserMo = userSvc.getById(opId);
-		_log.info("用户退货退款并扣减返现金额根据操作人ID获取操作人信息的返回值为：{}", opUserMo.toString());
-		if (opUserMo.getId() == null) {
+		SucUserMo opUserMo = new SucUserMo();
+		SucUserMo userMo = new SucUserMo();
+		try {
+			opUserMo = userSvc.getById(opId);
+			_log.info("用户退货退款并扣减返现金额根据操作人ID获取操作人信息的返回值为：{}", opUserMo.toString());
+			
+			_log.info("用户退货退款并扣减返现金额根据用户编号获取用户信息的参数为：{}", userId);
+			userMo = userSvc.getById(userId);
+			_log.info("用户退货退款并扣减返现金额根据用户编号获取用户信息的返回值为：{}", userMo.toString());
+			if (userMo.getId() == null) {
+				_log.error("用户退货退款并扣减返现金额时发现没有此用户: " + userId);
+				resultMap.put("result", -4);
+				resultMap.put("msg", "买家不存在");
+				return resultMap;
+			}
+		} catch (Exception e) {
 			_log.error("用户退货退款并扣减返现金额发现没有此操作人: " + opId);
 			resultMap.put("result", -2);
 			resultMap.put("msg", "没有此操作人");
+			e.printStackTrace();
 			return resultMap;
 		}
 
@@ -295,15 +309,6 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 			return resultMap;
 		}
 
-		_log.info("用户退货退款并扣减返现金额根据用户编号获取用户信息的参数为：{}", userId);
-		SucUserMo userMo = userSvc.getById(userId);
-		_log.info("用户退货退款并扣减返现金额根据用户编号获取用户信息的返回值为：{}", userMo.toString());
-		if (userMo.getId() == null) {
-			_log.error("用户退货退款并扣减返现金额时发现没有此用户: " + userId);
-			resultMap.put("result", -4);
-			resultMap.put("msg", "买家不存在");
-			return resultMap;
-		}
 		if (userMo.getIsLock()) {
 			_log.error("用户退货退款并扣减返现金额时发现用户被锁定: " + userMo);
 			resultMap.put("result", -5);
@@ -394,6 +399,8 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 		Date now = new Date();
 		// 生成本次交易的ID
 		Long tradeId = _idWorker.getId();
+		// 生成本次交易的ID
+		Long tradeId1 = _idWorker.getId();
 
 		// 查询旧账户信息
 		AfcAccountMo oldAccountMo = accountSvc.getById(userId);
@@ -422,10 +429,10 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 
 		// 先添加账户交易，以更早终止并发产生的重复数据(同一交易类型的业务订单不允许重复)（扣减返现金）
 		tradeMo = new AfcTradeMo();
-		tradeMo.setId(tradeId);
+		tradeMo.setId(tradeId1);
 		tradeMo.setAccountId(userId);
 		tradeMo.setTradeType((byte) TradeTypeDic.RETURN_GOODS_BY_BUYER_SUBTRACT_CASHBACK.getCode());
-		tradeMo.setTradeAmount(new BigDecimal(String.valueOf(subtractCashback)));
+		tradeMo.setTradeAmount(new BigDecimal(String.valueOf(subtractCashback)).setScale(4));
 		tradeMo.setTradeTitle("大卖网络-用户退货退款");
 		tradeMo.setTradeDetail("用户结算后退货退款扣减返现金");
 		tradeMo.setTradeTime(now);
@@ -438,22 +445,22 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 		try {
 			tradeSvc.add(tradeMo);
 		} catch (DuplicateKeyException e) {
-			_log.error("退货退款并扣减返现金额添加账户交易信息时出错，退货编号为：{}", returnGoodsOrderId);
-			throw new RuntimeException("买家退货重复提交", e);
+			_log.error("退货退款并扣减返现金额添加账户交易信息时出错，退货编号为："+returnGoodsOrderId, e);
+			throw new RuntimeException("添加账户交易信息失败", e);
 		}
 
 		AfcAccountMo newAccountMo = new AfcAccountMo();
 		// 修改账户余额和返现金（扣减返现金）
 		newAccountMo.setId(userId);
-		newAccountMo.setBalance(newBalance);
-		newAccountMo.setCashback(newCashback);
+		newAccountMo.setBalance(newBalance.setScale(4, BigDecimal.ROUND_HALF_UP));
+		newAccountMo.setCashback(newCashback.setScale(4, BigDecimal.ROUND_HALF_UP));
 		newAccountMo.setModifiedTimestamp(now.getTime());
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("id", to.getUserId());
-		map.put("balance", newAccountMo.getBalance());
-		map.put("oldBalance", oldAccountMo.getBalance());
-		map.put("cashback", newAccountMo.getCashback());
-		map.put("oldCashback", oldAccountMo.getCashback());
+		map.put("balance", newAccountMo.getBalance().setScale(4, BigDecimal.ROUND_HALF_UP));
+		map.put("oldBalance", oldAccountMo.getBalance().setScale(4, BigDecimal.ROUND_HALF_UP));
+		map.put("cashback", newAccountMo.getCashback().setScale(4, BigDecimal.ROUND_HALF_UP));
+		map.put("oldCashback", oldAccountMo.getCashback().setScale(4, BigDecimal.ROUND_HALF_UP));
 		map.put("modifiedTimestamp", newAccountMo.getModifiedTimestamp());
 		map.put("oldModifiedTimestamp", oldAccountMo.getModifiedTimestamp());
 		_log.info("退货退款并扣减返现金额修改账户余额和返现金额（扣减返现金额）的参数为：{}", String.valueOf(map));
@@ -471,19 +478,22 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 		_log.info("退货退款并扣减返现金额添加账户流水的参数为：{}", flowMo.toString());
 		try {
 			flowSvc.add(flowMo);
-
+			
+			oldAccountMo = accountSvc.getById(userId);
+			BigDecimal newbalance = new BigDecimal(oldAccountMo.getBalance().add(new BigDecimal(newBalanceAmount.toString())).toString()).setScale(4, BigDecimal.ROUND_HALF_UP);
+			BigDecimal newCashBack = new BigDecimal(oldAccountMo.getCashback().add(new BigDecimal(newCashbackAmount.toString())).toString()).setScale(4, BigDecimal.ROUND_HALF_UP);
 			// 修改账户余额和返现金额（余额+, 返现金+）
 			newAccountMo = new AfcAccountMo();
 			newAccountMo.setId(userId);
-			newAccountMo.setBalance(oldAccountMo.getBalance().add(new BigDecimal(newBalanceAmount.toString())));
-			newAccountMo.setCashback(oldAccountMo.getCashback().add(new BigDecimal(newCashbackAmount.toString())));
+			newAccountMo.setBalance(newbalance);
+			newAccountMo.setCashback(newCashBack);
 			newAccountMo.setModifiedTimestamp(now.getTime());
 			map = new HashMap<>();
 			map.put("id", to.getUserId());
 			map.put("balance", newAccountMo.getBalance());
-			map.put("oldBalance", oldAccountMo.getBalance());
+			map.put("oldBalance", oldAccountMo.getBalance().setScale(4, BigDecimal.ROUND_HALF_UP));
 			map.put("cashback", newAccountMo.getCashback());
-			map.put("oldCashback", oldAccountMo.getCashback());
+			map.put("oldCashback", oldAccountMo.getCashback().setScale(4, BigDecimal.ROUND_HALF_UP));
 			map.put("modifiedTimestamp", newAccountMo.getModifiedTimestamp());
 			map.put("oldModifiedTimestamp", oldAccountMo.getModifiedTimestamp());
 			_log.info("退货退款并扣减返现金额修改账户余额和返现金额（余额+，返现金额+）的参数为：{}", String.valueOf(map));
@@ -496,7 +506,7 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 			flowMo = dozerMapper.map(oldAccountMo, AfcFlowMo.class);
 			dozerMapper.map(newAccountMo, flowMo);
 			flowMo.setAccountId(userId);
-			flowMo.setId(tradeId);
+			flowMo.setId(tradeId1);
 			flowMo.setOldModifiedTimestamp(oldAccountMo.getModifiedTimestamp());
 			_log.info("退货退款并扣减返现金额添加账户流水的参数为：{}", flowMo.toString());
 			try {

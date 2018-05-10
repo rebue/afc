@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,6 +18,7 @@ import rebue.afc.ro.PayRo;
 import rebue.afc.ro.PrepayRo;
 import rebue.wheel.OkhttpUtils;
 import rebue.wheel.RandomEx;
+import rebue.wheel.idworker.IdWorker3;
 
 public class AfcVpayTests {
 
@@ -22,15 +26,19 @@ public class AfcVpayTests {
 
     private ObjectMapper _objectMapper = new ObjectMapper();
 
-    private Long         userId        = 466801648262578181L;
+    private Long         userId        = 469650705142120448L;
+
+    @Value("${appid:0}")
+	private int _appid;
 
     @Test
     public void test01() throws IOException {
+    	IdWorker3 _idWorker = new IdWorker3();
         // 预支付
         String url = _hostUrl + "/vpay/prepay";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
         paramsMap.put("userId", userId);
-        String orderId = RandomEx.randomUUID();
+        long orderId = _idWorker.getId();
         paramsMap.put("orderId", orderId);
         paramsMap.put("tradeTitle", "V支付交易的标题");
         paramsMap.put("tradeDetail", "V支付交易的详情");
