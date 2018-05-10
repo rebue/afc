@@ -290,13 +290,13 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 			_log.info("用户退货退款并扣减返现金额根据用户编号获取用户信息的返回值为：{}", userMo.toString());
 			if (userMo.getId() == null) {
 				_log.error("用户退货退款并扣减返现金额时发现没有此用户: " + userId);
-				resultMap.put("result", -4);
+				resultMap.put("result", -2);
 				resultMap.put("msg", "买家不存在");
 				return resultMap;
 			}
 		} catch (Exception e) {
 			_log.error("用户退货退款并扣减返现金额发现没有此操作人: " + opId);
-			resultMap.put("result", -2);
+			resultMap.put("result", -3);
 			resultMap.put("msg", "没有此操作人");
 			e.printStackTrace();
 			return resultMap;
@@ -304,7 +304,7 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 
 		if (opUserMo.getIsLock()) {
 			_log.error("用户退货退款并扣减返现金额发现操作人已被锁定，操作人编号为：{}", opId);
-			resultMap.put("result", -3);
+			resultMap.put("result", -4);
 			resultMap.put("msg", "操作人被锁定");
 			return resultMap;
 		}
@@ -323,7 +323,7 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 		List<AfcPayMo> pays = paySvc.list(condition);
 		if (pays.isEmpty()) {
 			_log.error("用户退货退款并扣减返现金额时发现账户没有支付过此销售单，订单编号为：{}", saleOrderId);
-			resultMap.put("result", -5);
+			resultMap.put("result", -6);
 			resultMap.put("msg", "账户没有支付过此销售单");
 			return resultMap;
 		}
@@ -345,7 +345,7 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 		// 比较大小
 		if (payTotal.compareTo(returnGoodsTotal.add(tradeAmount)) < 0) {
 			_log.error("退货金额不能超过销售金额: " + to);
-			resultMap.put("result", -5);
+			resultMap.put("result", -7);
 			resultMap.put("msg", "退货金额不能超过销售金额");
 			return resultMap;
 		}
@@ -356,7 +356,7 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 		_log.info("用户退货退款并扣减返现金额查询用户支付账号信息的返回值为：{}", afcAccountMo.toString());
 		if (afcAccountMo.getId() == null || afcAccountMo.getId() == 0) {
 			_log.error("用户退货退款并扣减返现金额查询用户支付账号信息时发现没有该用户支付账号信息，用户编号为：{}", userId);
-			resultMap.put("result", -6);
+			resultMap.put("result", -8);
 			resultMap.put("msg", "没有该用户支付账号");
 			return resultMap;
 		}
@@ -387,7 +387,7 @@ public class AfcReturnGoodsSvcImpl implements AfcReturnGoodsSvc {
 					_log.info("用户退货退款并扣减返现金额扣减之后退到余额的金额为：{}", newBalanceAmount);
 					if (newBalanceAmount.compareTo(bd) == -1) {
 						_log.error("用户退货退款并扣减返现金额扣减返现金额时出现扣减返现金额大于账号所有金额的总和，用户编号为：{}", userId);
-						resultMap.put("result", -7);
+						resultMap.put("result", -9);
 						resultMap.put("msg", "扣减返现金额失败");
 						return resultMap;
 					}
