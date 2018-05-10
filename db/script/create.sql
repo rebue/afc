@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/10 11:00:03                           */
+/* Created on:     2018/5/10 11:30:07                           */
 /*==============================================================*/
 
 
@@ -12,7 +12,7 @@ drop table if exists AFC_PAY;
 
 drop table if exists AFC_PLATFORM;
 
-drop table if exists AFC_PLATFORM_FLOW;
+drop table if exists AFC_PLATFORM_TRADE;
 
 drop table if exists AFC_TRADE;
 
@@ -102,12 +102,12 @@ create table AFC_PLATFORM
 alter table AFC_PLATFORM comment '平台信息';
 
 /*==============================================================*/
-/* Table: AFC_PLATFORM_FLOW                                     */
+/* Table: AFC_PLATFORM_TRADE                                    */
 /*==============================================================*/
-create table AFC_PLATFORM_FLOW
+create table AFC_PLATFORM_TRADE
 (
-   ID                   bigint not null comment '平台流水ID',
-   FLOW_TYPE            tinyint not null comment '流水类型（1：购买交易收取服务费  2：用户退款退回服务费）',
+   ID                   bigint not null comment '平台交易ID',
+   PLATFORM_TRADE_TYPE  tinyint not null comment '交易类型（1：购买交易收取服务费  2：用户退款退回服务费）',
    ORDER_ID             bigint not null comment '销售/退货单ID
             流水类型是收取服务费，则填写销售订单ID
             如果是退回服务费，则填写退货订单ID',
@@ -115,11 +115,11 @@ create table AFC_PLATFORM_FLOW
    BALANCE              decimal(18,4) not null default 0 comment '余额（修改后）',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
    primary key (ID),
-   unique key AK_ORDER_ID_AND_FLOW_TYPE (ORDER_ID, FLOW_TYPE),
+   unique key AK_ORDER_ID_AND_FLOW_TYPE (ORDER_ID, PLATFORM_TRADE_TYPE),
    unique key AK_MODIFIED_TIMESTAMP (MODIFIED_TIMESTAMP)
 );
 
-alter table AFC_PLATFORM_FLOW comment '平台流水';
+alter table AFC_PLATFORM_TRADE comment '平台交易';
 
 /*==============================================================*/
 /* Table: AFC_TRADE                                             */
