@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/10 15:22:21                           */
+/* Created on:     2018/5/11 14:21:56                           */
 /*==============================================================*/
 
 
@@ -75,7 +75,7 @@ create table AFC_PAY
 (
    ID                   bigint not null comment '支付ID',
    ACCOUNT_ID           bigint not null comment '账户ID(账户ID也就是用户ID)',
-   ORDER_ID             varchar(150) not null comment '订单ID(业务订单ID)',
+   ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
    PAY_TYPE_ID          tinyint not null comment '支付类型ID(1.V支付;2.微信支付;3.支付宝;4.银联)',
    PAY_ACCOUNT_ID       varchar(150) not null comment '支付账户ID(例如微信ID，支付宝ID，V支付的账户ID也就是本系统的用户ID)',
    PAY_ORDER_ID         varchar(150) not null comment '支付订单ID(V支付订单ID就是交易ID或流水ID)',
@@ -127,7 +127,7 @@ alter table AFC_PLATFORM_TRADE comment '平台交易';
 create table AFC_SETTLE_TASK
 (
    ID                   bigint not null comment '任务ID',
-   EXECUTE_STATE        tinyint not null comment '执行状态(-1:取消；0:未执行；1:已执行)',
+   EXECUTE_STATE        tinyint not null default 0 comment '执行状态(-1:取消；0:未执行；1:已执行)',
    EXECUTE_PLAN_TIME    datetime not null comment '计划执行时间',
    EXECUTE_FACT_TIME    datetime comment '实际执行时间',
    ACCOUNT_ID           bigint not null comment '账户ID(账户ID也就是用户ID)',
@@ -137,11 +137,12 @@ create table AFC_SETTLE_TASK
    CHANGE_AMOUNT2       decimal(18,4) comment '交易改变金额2，在交易类型是支付时代表余额改变了多少',
    TRADE_TITLE          varchar(50) not null comment '交易标题',
    TRADE_DETAIL         varchar(150) comment '交易详情',
-   ORDER_ID             varchar(150) comment '订单ID(返款其实是销售订单详情ID)',
+   ORDER_ID             varchar(150) comment '订单ID(销售订单ID)',
+   ORDER_DETAIL_ID      varchar(150) not null comment '订单详情ID(销售订单详情ID)',
    MAC                  varchar(30) not null comment 'MAC地址',
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID),
-   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_ID (ACCOUNT_ID, TRADE_TYPE, ORDER_ID)
+   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_ID_AND_ORDER_DETAIL_ID (ACCOUNT_ID, TRADE_TYPE, ORDER_ID, ORDER_DETAIL_ID)
 );
 
 alter table AFC_SETTLE_TASK comment '结算任务';
@@ -160,13 +161,14 @@ create table AFC_TRADE
    TRADE_TITLE          varchar(50) not null comment '交易标题',
    TRADE_DETAIL         varchar(150) comment '交易详情',
    TRADE_TIME           datetime not null comment '交易时间',
-   ORDER_ID             varchar(150) not null comment '订单ID(业务订单ID，返款其实是销售订单详情ID)',
+   ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
+   ORDER_DETAIL_ID      varchar(150) not null comment '订单详情ID(业务订单ID，结算是销售订单详情ID，退货是退货订单ID)',
    TRADE_VOUCHER_NO     varchar(150) comment '交易凭证号',
    OP_ID                bigint not null comment '操作人ID',
    MAC                  varchar(30) not null comment 'MAC地址',
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID),
-   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_ID (TRADE_TYPE, ACCOUNT_ID, ORDER_ID),
+   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_ID_AND_ORDER_DETAIL_ID (TRADE_TYPE, ACCOUNT_ID, ORDER_ID, ORDER_DETAIL_ID),
    unique key AK_TRADE_TYPE_AND_TRADE_VOUCHE_NO (TRADE_TYPE, TRADE_VOUCHER_NO)
 );
 

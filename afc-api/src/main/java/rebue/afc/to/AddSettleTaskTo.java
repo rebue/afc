@@ -43,9 +43,14 @@ public class AddSettleTaskTo {
 
     /**
      * 订单ID
-     * (销售订单详情ID)
+     * (销售订单ID)
      */
     private String orderId;
+    /**
+     * 订单详情ID
+     * (销售订单详情ID)
+     */
+    private String orderDetailId;
 
     /**
      * MAC地址
@@ -113,6 +118,14 @@ public class AddSettleTaskTo {
         this.orderId = orderId;
     }
 
+    public String getOrderDetailId() {
+        return orderDetailId;
+    }
+
+    public void setOrderDetailId(String orderDetailId) {
+        this.orderDetailId = orderDetailId;
+    }
+
     public String getMac() {
         return mac;
     }
@@ -131,8 +144,8 @@ public class AddSettleTaskTo {
 
     @Override
     public String toString() {
-        return "AddRebateTaskTo [executePlanTime=" + executePlanTime + ", accountId=" + accountId + ", tradeType=" + tradeType + ", tradeAmount=" + tradeAmount + ", tradeTitle="
-                + tradeTitle + ", tradeDetail=" + tradeDetail + ", orderId=" + orderId + ", mac=" + mac + ", ip=" + ip + "]";
+        return "AddSettleTaskTo [executePlanTime=" + executePlanTime + ", accountId=" + accountId + ", tradeType=" + tradeType + ", tradeAmount=" + tradeAmount + ", tradeTitle="
+                + tradeTitle + ", tradeDetail=" + tradeDetail + ", orderId=" + orderId + ", orderDetailId=" + orderDetailId + ", mac=" + mac + ", ip=" + ip + "]";
     }
 
 }

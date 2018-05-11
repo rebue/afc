@@ -75,7 +75,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     public AddSettleTaskRo addSettleTask(AddSettleTaskTo to) throws DuplicateKeyException {
         _log.info("添加结算任务: {}", to);
         if (to.getExecutePlanTime() == null || to.getAccountId() == null || to.getTradeType() == null || to.getTradeAmount() == null || to.getTradeAmount() == 0L
-                || StringUtils.isAnyBlank(to.getOrderId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
+                || StringUtils.isAnyBlank(to.getOrderId(), to.getOrderDetailId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
             String msg = "参数有误";
             _log.error("{}: {}", msg, to);
             AddSettleTaskRo ro = new AddSettleTaskRo();
@@ -111,7 +111,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         }
 
         AfcSettleTaskMo mo = dozerMapper.map(to, AfcSettleTaskMo.class);
-        mo.setExecuteState((byte) 0);
+        mo.setExecuteState((byte) SettleTaskExecuteStateDic.NONE.getCode());
         _log.info("添加结算任务记录");
         add(mo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
 

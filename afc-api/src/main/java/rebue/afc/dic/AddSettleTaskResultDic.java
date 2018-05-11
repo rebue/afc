@@ -30,7 +30,7 @@ public enum AddSettleTaskResultDic implements EnumBase {
      */
     NOT_SUPPORTED_SETTLE_TYPE(-2),
     /**
-     * -3: 没有此用户
+     * -3: 没有此账户
      */
     NOT_FOUND_ACCOUNT(-3),
     /**
