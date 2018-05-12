@@ -6,8 +6,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import rebue.afc.returngoods.ro.ReturnGoodsByBuyerRo;
-import rebue.afc.returngoods.to.ReturnGoodsByBuyerTo;
+import rebue.afc.returngoods.ro.RefundToBuyerRo;
+import rebue.afc.returngoods.to.RefundToBuyerTo;
 import rebue.sbs.feign.FeignConfig;
 
 /**  
@@ -31,7 +31,7 @@ public interface AfcReturnGoodsSvc {
 	 * @date 2018年5月7日 下午4:26:28
 	 */
 	@PostMapping("/returngoods/bybuyer")
-    ReturnGoodsByBuyerRo returnGoodsByBuyer(@RequestBody ReturnGoodsByBuyerTo to);
+    RefundToBuyerRo returnGoodsByBuyer(@RequestBody RefundToBuyerTo to);
 	
 	/**
      * 用户退货退款并扣减返现金额
@@ -42,7 +42,7 @@ public interface AfcReturnGoodsSvc {
      * @date 2018年5月9日 上午9:32:48
      */
     @PostMapping("/returngoods/refund/bybuyer")
-    Map<String, Object> returnRefundAndSubtractCashback(@RequestBody ReturnGoodsByBuyerTo to);
+    Map<String, Object> returnRefundAndSubtractCashback(@RequestBody RefundToBuyerTo to);
 }
   
 

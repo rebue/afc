@@ -60,7 +60,7 @@ public enum TradeTypeDic implements EnumBase {
      */
     DEPOSIT_GOODS_IN(41),
     /**
-     * 42: 进货保证金-出货
+     * 42: 进货保证金-退货
      */
     DEPOSIT_GOODS_RETURN(42),
     /**
@@ -68,7 +68,7 @@ public enum TradeTypeDic implements EnumBase {
      */
     SETTLE_PROVIDER_BALANCE(50),
     /**
-     * 51: 结算-结算返现金(将返现金打到买家的返现金)
+     * 51: 结算-结算返现金(将返现中的金额移到返现金，注意是买家在本次交易中应获得的返现金金额，而不是买家的全部返现中的返现金)
      */
     SETTLE_BUYER_CASHBACK(51),
     /**
@@ -80,13 +80,17 @@ public enum TradeTypeDic implements EnumBase {
      */
     SETTLE_SELLER_BALANCE(53),
     /**
-     * 54: 结算-结算平台服务费
+     * 54: 结算-结算返现中金额(打到买家的返现中金额)
      */
-    SETTLE_PLATFORM_SERVICE_FEE(54),
+    SETTLE_BUYER_CASHBACKING(54),
     /**
-     * 60: 退货-买家退货（退到买家的余额和返现金）
+     * 55: 结算-结算平台服务费
      */
-    RETURN_GOODS_BY_BUYER(60),
+    SETTLE_PLATFORM_SERVICE_FEE(55),
+    /**
+     * 60: 退款-退款给买家（退到买家的余额和返现金）
+     */
+    REFUND_TO_BUYER(60),
     /**
      * 61: 退货-买家退货
      */

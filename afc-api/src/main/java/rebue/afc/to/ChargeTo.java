@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "账户-充值的传输对象（参数）")
 public class ChargeTo {
     /**
-     * 用户ID
+     * 账户ID
      */
     private Long   userId;
     /**

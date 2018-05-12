@@ -2,17 +2,13 @@ package rebue.afc.vpay.svc.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +17,12 @@ import rebue.afc.dic.PayResultDic;
 import rebue.afc.dic.PayTypeDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mo.AfcAccountMo;
-import rebue.afc.mo.AfcFlowMo;
 import rebue.afc.mo.AfcPayMo;
 import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.PayOrderQueryRo;
 import rebue.afc.ro.PayRo;
 import rebue.afc.ro.PrepayRo;
 import rebue.afc.svc.AfcAccountSvc;
-import rebue.afc.svc.AfcFlowSvc;
 import rebue.afc.svc.AfcPaySvc;
 import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.vpay.pub.VpayNotifyPub;
@@ -41,7 +35,6 @@ import rebue.sbs.redis.RedisSetException;
 import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.svr.feign.SucUserSvc;
 import rebue.wheel.RandomEx;
-import rebue.wheel.idworker.IdWorker3;
 import rebue.wheel.turing.DigestUtils;
 
 @Service
@@ -67,19 +60,12 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
      */
     private static final String REDIS_KEY_PREPAY_ORDER_PREFIX = "rebue.afc.vpay.svc.prepay.order.";
 
-    @Value("${appid:0}")
-    private int                 _appid;
-
-    protected IdWorker3         _idWorker;
-
     @Resource
     private SucUserSvc          userSvc;
     @Resource
     private AfcAccountSvc       accountSvc;
     @Resource
     private AfcTradeSvc         tradeSvc;
-    @Resource
-    private AfcFlowSvc          flowSvc;
     @Resource
     private AfcPaySvc           paySvc;
 
@@ -90,11 +76,6 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
     private RedisClient         redisClient;
     @Resource
     private Mapper              dozerMapper;
-
-    @PostConstruct
-    public void init() {
-        _idWorker = new IdWorker3(_appid);
-    }
 
     /**
      * V支付-预支付
@@ -117,7 +98,7 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
     }
 
     /**
-     * XXX AFC : 交易 : V支付-支付( -返现金-余额 )
+     * V支付-支付（ -返现金-余额 ）
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -192,38 +173,14 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
             return ro;
         }
 
-        // 生成本次交易的ID
-        Long tradeId = _idWorker.getId();
         // 计算当前时间
         Date now = new Date();
-        // 计算返现金和余额各扣除多少，先扣返现金，再扣余额
-        BigDecimal oldCashback = oldAccountMo.getCashback();                // 扣除前的返现金
-        BigDecimal newCashback = null;                                      // 扣除后的返现金
-        BigDecimal subtractCashback = null;                                 // 返现金将扣除多少
-        BigDecimal oldBalance = oldAccountMo.getBalance();                  // 扣除前的余额
-        BigDecimal newBalance = null;                                       // 扣除后的余额
-        BigDecimal subtractBalance = null;                                  // 余额将扣除多少
-        // 如果返现金余额>=交易金额，说明返现金够减，直接从返现金中扣除交易金额
-        if (oldCashback.compareTo(tradeAmount) >= 0) {
-            subtractCashback = tradeAmount;                                 // 扣除的返现金=交易金额
-            newCashback = oldCashback.subtract(tradeAmount);                // 扣除后的返现金=扣除前返现金-交易金额
-        }
-        // 否则就是剩余金额<0，说明返现金不够减，那就先减完返现金，再减余额
-        else {
-            subtractCashback = oldCashback;                                 // 扣除的返现金=扣除前的返现金
-            newCashback = new BigDecimal(0);                                // 扣除后的返现金=0
-            subtractBalance = tradeAmount.subtract(oldCashback);            // 扣除的余额=交易金额-扣除前返现金
-            newBalance = oldBalance.subtract(subtractBalance);              // 扣除后的余额=扣除前的余额-扣除的余额
-        }
 
-        // 先添加账户交易，以更早终止并发产生的重复数据(同一交易类型的业务订单不允许重复)
+        // 添加一笔交易
         AfcTradeMo tradeMo = new AfcTradeMo();
-        tradeMo.setId(tradeId);
         tradeMo.setAccountId(prepay.getUserId());
         tradeMo.setTradeType((byte) TradeTypeDic.PAY.getCode());
         tradeMo.setTradeAmount(tradeAmount);
-        tradeMo.setChangeAmount1(subtractCashback);         // 扣除的返现金
-        tradeMo.setChangeAmount2(subtractBalance);          // 扣除的余额
         tradeMo.setTradeTitle(prepay.getTradeTitle());
         tradeMo.setTradeDetail(prepay.getTradeDetail());
         tradeMo.setTradeTime(now);
@@ -231,52 +188,14 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
         tradeMo.setOpId(prepay.getUserId());
         tradeMo.setMac(to.getMac());
         tradeMo.setIp(to.getIp());
-        try {
-            tradeSvc.add(tradeMo);
-        } catch (DuplicateKeyException e) {
-            _log.error("订单已经支付: " + prepay);
-            ro = new PayRo();
-            ro.setResult(PayResultDic.ALREADY_PAID);
-            return ro;
-        }
-
-        // 账户扣款
-        AfcAccountMo newAccountMo = new AfcAccountMo();
-        newAccountMo.setId(prepay.getUserId());
-        newAccountMo.setCashback(newCashback);
-        if (newBalance != null)
-            newAccountMo.setBalance(newBalance);
-        newAccountMo.setModifiedTimestamp(now.getTime());
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("id", prepay.getUserId());
-        map.put("cashback", newCashback);
-        map.put("oldCashback", oldCashback);
-        if (newBalance != null) {
-            map.put("balance", newBalance);
-            map.put("oldBalance", oldBalance);
-        }
-        map.put("modifiedTimestamp", now.getTime());
-        map.put("oldModifiedTimestamp", oldAccountMo.getModifiedTimestamp());
-        if (accountSvc.trade(map) != 1) {
-            _log.error("账户更新余额和返现金出现并发错误");
-            throw new RuntimeException("账户更新余额和返现金出现并发错误");
-        }
-
-        // 添加账户流水
-        AfcFlowMo flowMo = dozerMapper.map(oldAccountMo, AfcFlowMo.class);
-        dozerMapper.map(newAccountMo, flowMo);
-        flowMo.setAccountId(prepay.getUserId());
-        flowMo.setId(tradeId);
-        flowMo.setOldModifiedTimestamp(oldAccountMo.getModifiedTimestamp());
-        flowSvc.add(flowMo);
+        tradeSvc.addTrade(tradeMo);
 
         // 加入支付完成通知的消息队列
         VpayNotifyRo payNotifyRo = new VpayNotifyRo();
         payNotifyRo.setUserId(prepay.getUserId());
         payNotifyRo.setOrderId(prepay.getOrderId());
         payNotifyRo.setPayAccountId(prepay.getUserId().toString());
-        payNotifyRo.setPayOrderId(tradeId.toString());
+        payNotifyRo.setPayOrderId(tradeMo.getId().toString());
         payNotifyRo.setPayAmount(tradeAmount.doubleValue());
         payNotifyRo.setPayTime(now);
         vpayNotifyPub.send(payNotifyRo);

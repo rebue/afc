@@ -11,8 +11,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import rebue.afc.returngoods.dic.ReturnGoodsByBuyerResultDic;
-import rebue.afc.returngoods.ro.ReturnGoodsByBuyerRo;
+import rebue.afc.returngoods.dic.RefundToBuyerResultDic;
+import rebue.afc.returngoods.ro.RefundToBuyerRo;
 import rebue.wheel.OkhttpUtils;
 import rebue.wheel.RandomEx;
 import rebue.wheel.idworker.IdWorker3;

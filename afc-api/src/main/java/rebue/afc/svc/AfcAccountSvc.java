@@ -9,7 +9,7 @@ public interface AfcAccountSvc
 			MybatisBaseSvc<AfcAccountMo, java.lang.Long> {
 
 	/**
-	 * 产生了一笔交易(影响余额/返现金/货款)，修改相应的字段及记录时间戳
+	 * 产生了一笔交易(影响余额/返现金/返现中金额/货款)，修改相应的字段及记录时间戳
 	 * 
 	 * @param map
 	 * @return

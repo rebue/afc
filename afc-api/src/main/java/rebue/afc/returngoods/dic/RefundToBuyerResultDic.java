@@ -5,22 +5,22 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import rebue.wheel.baseintf.EnumBase;
 
 /**
- * 1: 退货成功
+ * 退款给买家返回结果的字典
+ * 
+ * 1: 退款成功
  * 0: 参数不正确
  * -1: 没有此操作人
  * -2: 操作人被锁定
  * -3: 没有此买家
  * -4: 买家被锁定
  * -5: 账户没有支付过此销售单
- * -6: 退货金额不能超过销售金额
+ * -6: 退款金额不能超过支付金额
  */
-@ApiModel(value = "买家退货返回结果字典")
-public enum ReturnGoodsByBuyerResultDic implements EnumBase {
+public enum RefundToBuyerResultDic implements EnumBase {
     /**
      * 1: 退货成功
      */
@@ -78,12 +78,12 @@ public enum ReturnGoodsByBuyerResultDic implements EnumBase {
      * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static ReturnGoodsByBuyerResultDic getItem(int code) {
+    public static RefundToBuyerResultDic getItem(int code) {
         EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
-        return (ReturnGoodsByBuyerResultDic) result;
+        return (RefundToBuyerResultDic) result;
     }
 
     private int code;
@@ -91,7 +91,7 @@ public enum ReturnGoodsByBuyerResultDic implements EnumBase {
     /**
      * 构造器，传入code
      */
-    ReturnGoodsByBuyerResultDic(int code) {
+    RefundToBuyerResultDic(int code) {
         this.code = code;
     }
 

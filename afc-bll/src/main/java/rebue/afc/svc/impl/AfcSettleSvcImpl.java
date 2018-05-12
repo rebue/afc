@@ -2,7 +2,6 @@ package rebue.afc.svc.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 
 import javax.annotation.Resource;
 
@@ -14,9 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import rebue.afc.dic.TradeTypeDic;
-import rebue.afc.mo.AfcAccountMo;
-import rebue.afc.mo.AfcFlowMo;
 import rebue.afc.mo.AfcPlatformMo;
 import rebue.afc.mo.AfcPlatformTradeMo;
 import rebue.afc.mo.AfcSettleTaskMo;
@@ -75,87 +71,12 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
     public void settleAccountFee(AfcSettleTaskMo taskMo, Date now) {
         _log.info("结算此账户的费用: {}", taskMo);
 
-        Long accountId = taskMo.getAccountId();
-        BigDecimal tradeAmount = taskMo.getTradeAmount();
-        // 查询旧账户信息
-        AfcAccountMo oldAccountMo = accountSvc.getById(accountId);
-
-        // 先添加账户交易，以更早终止并发产生的重复数据(同一交易类型的业务订单不允许重复)
+        // 添加一笔交易
         AfcTradeMo tradeMo = dozerMapper.map(taskMo, AfcTradeMo.class);
         // tradeMo.setId(taskMo.getId());已克隆过来，交易ID=任务ID，防止一个任务多次结算
         tradeMo.setTradeTime(now);
         tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
-        tradeSvc.add(tradeMo);                  // 如果重复提交，会抛出DuplicateKeyException运行时异常
-
-        // 修改账户相应的金额字段
-        HashMap<String, Object> map = new HashMap<>();
-        AfcAccountMo newAccountMo = new AfcAccountMo();
-        newAccountMo.setId(accountId);
-        // 判断交易类型
-        switch (TradeTypeDic.getItem(taskMo.getTradeType())) {
-        // XXX AFC : 交易 : （ 余额+ ）结算-结算成本(将成本打到供应商的余额)
-        case SETTLE_PROVIDER_BALANCE:
-            BigDecimal newBalance = oldAccountMo.getBalance().add(tradeAmount);
-            newAccountMo.setBalance(newBalance);
-            newAccountMo.setModifiedTimestamp(now.getTime());
-            map.put("id", accountId);
-            map.put("balance", newBalance);
-            map.put("oldBalance", oldAccountMo.getBalance());
-            map.put("modifiedTimestamp", newAccountMo.getModifiedTimestamp());
-            map.put("oldModifiedTimestamp", oldAccountMo.getModifiedTimestamp());
-            break;
-        // XXX AFC : 交易 : （ 返现金+ ）结算-结算返现金(将返现金打到买家的返现金)
-        case SETTLE_BUYER_CASHBACK:
-            BigDecimal newCashback = oldAccountMo.getCashback().add(tradeAmount);
-            newAccountMo.setCashback(newCashback);
-            newAccountMo.setModifiedTimestamp(now.getTime());
-            map.put("id", accountId);
-            map.put("cashback", newCashback);
-            map.put("oldCashback", oldAccountMo.getCashback());
-            map.put("modifiedTimestamp", newAccountMo.getModifiedTimestamp());
-            map.put("oldModifiedTimestamp", oldAccountMo.getModifiedTimestamp());
-            break;
-        // XXX AFC : 交易 : （ 已占用返现金+ ）结算-结算已占用保证金(释放卖家的已占用保证金相应金额)
-        case SETTLE_SELLER_DEPOSIT_USED:
-            BigDecimal newDepositUsed = oldAccountMo.getDepositUsed().subtract(tradeAmount);
-            newAccountMo.setDepositUsed(newDepositUsed);
-            newAccountMo.setModifiedTimestamp(now.getTime());
-            map.put("id", accountId);
-            map.put("depositUsed", newAccountMo.getDepositUsed());
-            map.put("oldDepositUsed", oldAccountMo.getDepositUsed());
-            map.put("modifiedTimestamp", newAccountMo.getModifiedTimestamp());
-            map.put("oldModifiedTimestamp", oldAccountMo.getModifiedTimestamp());
-            break;
-        // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额)
-        case SETTLE_SELLER_BALANCE:
-            newBalance = oldAccountMo.getBalance().add(tradeAmount);
-            newAccountMo.setBalance(newBalance);
-            newAccountMo.setModifiedTimestamp(now.getTime());
-            map.put("id", accountId);
-            map.put("balance", newAccountMo.getBalance());
-            map.put("oldBalance", oldAccountMo.getBalance());
-            map.put("modifiedTimestamp", newAccountMo.getModifiedTimestamp());
-            map.put("oldModifiedTimestamp", oldAccountMo.getModifiedTimestamp());
-            break;
-        default:
-            String msg = "不支持此结算类型";
-            _log.error("{}: {}", msg, taskMo.getTradeType());
-            throw new RuntimeException(msg);
-        }
-        // 执行sql
-        if (accountSvc.trade(map) != 1) {
-            String msg = "结算此账户的费用不成功: 出现并发问题";
-            _log.error("{}-{}", msg, taskMo);
-            throw new RuntimeException(msg);
-        }
-
-        // 添加账户流水
-        AfcFlowMo flowMo = dozerMapper.map(oldAccountMo, AfcFlowMo.class);
-        dozerMapper.map(newAccountMo, flowMo);
-        flowMo.setId(tradeMo.getId());      // 流水ID=交易ID
-        flowMo.setAccountId(accountId);
-        flowMo.setOldModifiedTimestamp(oldAccountMo.getModifiedTimestamp());
-        flowSvc.add(flowMo);                // 如果重复提交，会抛出DuplicateKeyException运行时异常
+        tradeSvc.addTrade(tradeMo);
     }
 
     /**

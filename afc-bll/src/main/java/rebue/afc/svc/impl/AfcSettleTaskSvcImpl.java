@@ -19,7 +19,9 @@ import rebue.afc.dic.SettleTaskExecuteStateDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcSettleTaskMapper;
 import rebue.afc.mo.AfcSettleTaskMo;
+import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.AddSettleTaskRo;
+import rebue.afc.svc.AfcAccountSvc;
 import rebue.afc.svc.AfcSettleSvc;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.svc.AfcTradeSvc;
@@ -43,6 +45,10 @@ import rebue.suc.svr.feign.SucUserSvc;
 public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, java.lang.Long, AfcSettleTaskMapper> implements AfcSettleTaskSvc {
     private final static Logger _log = LoggerFactory.getLogger(AfcSettleTaskSvcImpl.class);
 
+    @Resource
+    private AfcSettleTaskSvc    thisSvc;
+    @Resource
+    private AfcAccountSvc       accountSvc;
     @Resource
     private SucUserSvc          userSvc;
     @Resource
@@ -86,7 +92,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
 
         // 检查是否是本任务支持的交易类型
         switch (TradeTypeDic.getItem(to.getTradeType())) {
-        case SETTLE_BUYER_CASHBACK:
+        case SETTLE_BUYER_CASHBACKING:
         case SETTLE_PROVIDER_BALANCE:
         case SETTLE_SELLER_BALANCE:
         case SETTLE_SELLER_DEPOSIT_USED:
@@ -110,10 +116,20 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             return ro;
         }
 
+        // 如果是结算返现金，先添加返现中金额
+        if (TradeTypeDic.SETTLE_BUYER_CASHBACK.getCode() == to.getTradeType().intValue()) {
+            // 添加一笔交易
+            AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
+            tradeMo.setTradeType((byte) TradeTypeDic.SETTLE_BUYER_CASHBACKING.getCode());
+            tradeMo.setTradeTime(new Date());
+            tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
+            tradeSvc.addTrade(tradeMo);
+        }
+
         AfcSettleTaskMo mo = dozerMapper.map(to, AfcSettleTaskMo.class);
         mo.setExecuteState((byte) SettleTaskExecuteStateDic.NONE.getCode());
-        _log.info("添加结算任务记录");
-        add(mo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+        _log.info("添加结算任务");
+        thisSvc.add(mo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
 
         // 返回成功
         String msg = "添加结算任务成功";
@@ -142,13 +158,16 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public void executeTask(Long id) {
         _log.info("执行任务: {}", id);
+
+        // 获取任务信息
         AfcSettleTaskMo taskMo = getById(id);
         if (taskMo == null)
             return;
         _log.info("任务信息: {}", taskMo);
         if (SettleTaskExecuteStateDic.NONE.getCode() != taskMo.getExecuteState().intValue()) {
-            _log.error("任务不是未执行状态，不能执行: {}", taskMo);
-            return;
+            String msg = "任务不是未执行状态，不能执行";
+            _log.error("{}: {}", msg, taskMo);
+            throw new RuntimeException(msg);
         }
 
         // 计算当前时间

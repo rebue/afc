@@ -8,8 +8,16 @@ import rebue.robotech.svc.MybatisBaseSvc;
 public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> {
 
     /**
-     * 计算销售单的用户退货总额
+     * 添加一笔交易记录
+     * 1. 添加交易记录
+     * 2. 修改账户相应的金额字段
+     * 3. 添加账户流水
      */
-    BigDecimal getReturnGoodsTotalAmountByOrder(String saleOrderId);
+    void addTrade(AfcTradeMo tradeMo);
+
+    /**
+     * 计算此订单的退款总额(通过销售订单ID)
+     */
+    BigDecimal getRefundTotalAmountByOrderId(String saleOrderId);
 
 }
