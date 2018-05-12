@@ -1,7 +1,7 @@
 package rebue.afc.svc;
 
-import rebue.afc.returngoods.ro.RefundToBuyerRo;
-import rebue.afc.returngoods.to.RefundToBuyerTo;
+import rebue.afc.ro.RefundToBuyerRo;
+import rebue.afc.to.RefundToBuyerTo;
 
 public interface AfcRefundSvc {
 

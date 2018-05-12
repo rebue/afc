@@ -1,4 +1,4 @@
-package rebue.afc.returngoods.dic;
+package rebue.afc.dic;
 
 import java.util.HashMap;
 import java.util.Map;

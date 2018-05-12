@@ -4,33 +4,27 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import rebue.afc.dic.RefundToBuyerResultDic;
 import rebue.afc.dic.TradeTypeDic;
-import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcPayMo;
 import rebue.afc.mo.AfcTradeMo;
-import rebue.afc.returngoods.dic.RefundToBuyerResultDic;
-import rebue.afc.returngoods.ro.RefundToBuyerRo;
-import rebue.afc.returngoods.to.RefundToBuyerTo;
-import rebue.afc.svc.AfcAccountSvc;
-import rebue.afc.svc.AfcFlowSvc;
+import rebue.afc.ro.RefundToBuyerRo;
 import rebue.afc.svc.AfcPaySvc;
 import rebue.afc.svc.AfcRefundSvc;
 import rebue.afc.svc.AfcTradeSvc;
+import rebue.afc.to.RefundToBuyerTo;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.svr.feign.SucUserSvc;
-import rebue.wheel.idworker.IdWorker3;
 
 @Service
 /**
@@ -51,26 +45,12 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
     @Resource
     private SucUserSvc          userSvc;
     @Resource
-    private AfcAccountSvc       accountSvc;
-    @Resource
     private AfcTradeSvc         tradeSvc;
-    @Resource
-    private AfcFlowSvc          flowSvc;
     @Resource
     private AfcPaySvc           paySvc;
 
     @Resource
     private Mapper              dozerMapper;
-
-    @Value("${appid:0}")
-    private int                 _appid;
-
-    protected IdWorker3         _idWorker;
-
-    @PostConstruct
-    public void init() {
-        _idWorker = new IdWorker3(_appid);
-    }
 
     /**
      * 退款-退款到买家账户（ 余额+，返现金+ ）
@@ -78,18 +58,7 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public RefundToBuyerRo refundToBuyer(RefundToBuyerTo to) {
-//        // 账户ID
-//        Long accountId = to.getUserId();
-//        // 操作人编号
-//        Long opId = to.getOpId();
-//        // 退到余额金额
-//        Double balanceAmount = to.getBalanceAmount();
-//        // 退到返现金金额
-//        Double cashbackAmount = to.getCashbackAmount();
-//        // 退款订单ID
-//        String refundOrderId = to.getReturnGoodsOrderId();
-//        // 销售订单ID
-//        String saleOrderId = to.getSaleOrderId();
+        _log.info("退款-退款到买家账户: {}", to);
 
         if (to.getAccountId() == null || to.getChangeAmount1() == null || to.getChangeAmount2() == null || to.getOpId() == null
                 || StringUtils.isAnyBlank(to.getOrderId(), to.getOrderDetailId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
@@ -183,19 +152,11 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
             return ro;
         }
 
-        // 计算当前时间
-        Date now = new Date();
-
-        _log.info("用户退货退款查询用户账号信息的参数为：{}", to.getAccountId());
-        // 查询旧账户信息
-        AfcAccountMo oldAccountMo = accountSvc.getById(to.getAccountId());
-        _log.info("用户退货退款查询用户账号信息的返回值为：{}", oldAccountMo.toString());
-
         // 添加一笔交易
         AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
         tradeMo.setTradeType((byte) TradeTypeDic.REFUND_TO_BUYER.getCode());
         tradeMo.setTradeAmount(tradeAmount);
-        tradeMo.setTradeTime(now);
+        tradeMo.setTradeTime(new Date());
         tradeSvc.addTrade(tradeMo);
 
         // 返回成功

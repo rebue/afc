@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import rebue.afc.returngoods.ro.RefundToBuyerRo;
-import rebue.afc.returngoods.to.RefundToBuyerTo;
+import rebue.afc.ro.RefundToBuyerRo;
 import rebue.afc.svc.AfcRefundSvc;
+import rebue.afc.to.RefundToBuyerTo;
 
 @Api(tags = "退款")
 @RestController

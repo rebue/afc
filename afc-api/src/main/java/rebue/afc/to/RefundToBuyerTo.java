@@ -1,4 +1,4 @@
-package rebue.afc.returngoods.to;
+package rebue.afc.to;
 
 /**
  * 退款到买家的传输对象（参数）

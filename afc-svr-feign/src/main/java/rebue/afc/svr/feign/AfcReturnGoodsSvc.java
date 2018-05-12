@@ -6,8 +6,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import rebue.afc.returngoods.ro.RefundToBuyerRo;
-import rebue.afc.returngoods.to.RefundToBuyerTo;
+import rebue.afc.ro.RefundToBuyerRo;
+import rebue.afc.to.RefundToBuyerTo;
 import rebue.sbs.feign.FeignConfig;
 
 /**  

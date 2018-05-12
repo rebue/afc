@@ -1,9 +1,9 @@
-package rebue.afc.returngoods.ro;
+package rebue.afc.ro;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import rebue.afc.returngoods.dic.RefundToBuyerResultDic;
+import rebue.afc.dic.RefundToBuyerResultDic;
 
 /**
  * 退款给买家的返回结果

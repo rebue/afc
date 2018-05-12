@@ -8,3 +8,4 @@ app.properties
 *.pdb
 *.ldb
 .DS_Store
+~$*.docx
