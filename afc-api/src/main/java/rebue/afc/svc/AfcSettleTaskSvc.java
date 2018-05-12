@@ -26,4 +26,12 @@ public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.l
      *            要执行的任务ID
      */
     void executeTask(Long id);
+
+    /**
+     * 订单是否已经结算完成
+     * 
+     * @param orderId
+     *            销售订单ID
+     */
+    Boolean isSettleCompleted(String orderId);
 }

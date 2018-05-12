@@ -20,8 +20,9 @@ import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcSettleTaskMapper;
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.mo.AfcTradeMo;
+import rebue.afc.pub.SettleNotifyPub;
 import rebue.afc.ro.AddSettleTaskRo;
-import rebue.afc.svc.AfcAccountSvc;
+import rebue.afc.ro.SettleNotifyRo;
 import rebue.afc.svc.AfcSettleSvc;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.svc.AfcTradeSvc;
@@ -48,13 +49,14 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     @Resource
     private AfcSettleTaskSvc    thisSvc;
     @Resource
-    private AfcAccountSvc       accountSvc;
-    @Resource
     private SucUserSvc          userSvc;
     @Resource
     private AfcTradeSvc         tradeSvc;
     @Resource
     private AfcSettleSvc        settleSvc;
+
+    @Resource
+    private SettleNotifyPub     settleNotifyPub;
 
     @Resource
     private Mapper              dozerMapper;
@@ -149,6 +151,17 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     }
 
     /**
+     * 订单是否已经结算完成
+     * 
+     * @param orderId
+     *            销售订单ID
+     */
+    @Override
+    public Boolean isSettleCompleted(String orderId) {
+        return _mapper.isSettleCompleted(orderId, (byte) SettleTaskExecuteStateDic.DONE.getCode());
+    }
+
+    /**
      * 执行任务
      * 
      * @param taskMo
@@ -191,13 +204,22 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             throw new RuntimeException(msg);
         }
 
-        // 将任务状态改为已经执行
+        _log.info("将任务状态改为已经执行");
         int rowCount = _mapper.done(now, taskMo.getId(), (byte) SettleTaskExecuteStateDic.DONE.getCode(), (byte) SettleTaskExecuteStateDic.NONE.getCode());
         if (rowCount != 1) {
             String msg = "执行结算任务不成功: 出现并发问题";
             _log.error("{}-{}", msg, taskMo);
             throw new RuntimeException(msg);
         }
+
+        if (!thisSvc.isSettleCompleted(taskMo.getOrderId())) {
+            _log.info("发送结算完成的通知");
+            SettleNotifyRo msg = new SettleNotifyRo();
+            msg.setOrderId(taskMo.getOrderId());
+            msg.setSettleTime(now);
+            settleNotifyPub.send(msg);
+        }
+
     }
 
 }

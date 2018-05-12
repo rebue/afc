@@ -383,7 +383,7 @@
   </select>
 	<select id="selectByExecutePlanTimeBeforeNow" resultType="java.lang.Long">
 		<!-- 获取计划执行时间在当前时间之前的任务列表 -->
-		select ID from VPAY_TRADE_TASK
+		select ID from AFC_SETTLE_TASK
 		<where>
 			EXECUTE_PLAN_TIME &lt;= SYSDATE()
 		</where>
