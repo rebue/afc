@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/11 14:21:56                           */
+/* Created on:     2018/5/14 15:07:29                           */
 /*==============================================================*/
 
 
@@ -156,13 +156,13 @@ create table AFC_TRADE
    ACCOUNT_ID           bigint not null comment '账户ID(账户ID也就是用户ID)',
    TRADE_TYPE           tinyint not null comment '交易类型',
    TRADE_AMOUNT         decimal(18,4) not null comment '交易总额（收入为正数，支出为负数）',
-   CHANGE_AMOUNT1       decimal(18,4) comment '交易改变金额1，在交易类型是支付时代表返现金改变了多少',
-   CHANGE_AMOUNT2       decimal(18,4) comment '交易改变金额2，在交易类型是支付时代表余额改变了多少',
+   CHANGE_AMOUNT1       decimal(18,4) comment '交易改变金额1，在交易类型是支付和退款时代表返现金改变了多少',
+   CHANGE_AMOUNT2       decimal(18,4) comment '交易改变金额2，在交易类型是支付和退款时代表余额改变了多少',
    TRADE_TITLE          varchar(50) not null comment '交易标题',
    TRADE_DETAIL         varchar(150) comment '交易详情',
    TRADE_TIME           datetime not null comment '交易时间',
    ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
-   ORDER_DETAIL_ID      varchar(150) not null comment '订单详情ID(业务订单ID，结算是销售订单详情ID，退货是退货订单ID)',
+   ORDER_DETAIL_ID      varchar(150) comment '订单详情ID(业务订单ID，结算是销售订单详情ID，退货是退货订单ID)',
    TRADE_VOUCHER_NO     varchar(150) comment '交易凭证号',
    OP_ID                bigint not null comment '操作人ID',
    MAC                  varchar(30) not null comment 'MAC地址',

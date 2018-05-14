@@ -66,23 +66,23 @@ public enum TradeTypeDic implements EnumBase {
     /**
      * 50: 结算-结算成本(将成本打到供应商的余额)
      */
-    SETTLE_PROVIDER_BALANCE(50),
+    SETTLE_COST(50),
     /**
      * 51: 结算-结算返现金(将返现中的金额移到返现金，注意是买家在本次交易中应获得的返现金金额，而不是买家的全部返现中的返现金)
      */
-    SETTLE_BUYER_CASHBACK(51),
+    SETTLE_CASHBACK(51),
     /**
      * 52: 结算-结算已占用保证金(释放卖家的已占用保证金相应金额)
      */
-    SETTLE_SELLER_DEPOSIT_USED(52),
+    SETTLE_DEPOSIT_USED(52),
     /**
      * 53: 结算-结算卖家利润(将利润打到卖家的余额)
      */
-    SETTLE_SELLER_BALANCE(53),
+    SETTLE_SELLER_PROFIT(53),
     /**
      * 54: 结算-结算返现中金额(打到买家的返现中金额)
      */
-    SETTLE_BUYER_CASHBACKING(54),
+    SETTLE_CASHBACKING(54),
     /**
      * 55: 结算-结算平台服务费
      */
@@ -90,11 +90,7 @@ public enum TradeTypeDic implements EnumBase {
     /**
      * 60: 退款-退款给买家（退到买家的余额和返现金）
      */
-    REFUND_TO_BUYER(60),
-    /**
-     * 61: 退货-买家退货
-     */
-    RETURN_GOODS_BY_BUYER_SUBTRACT_CASHBACK(61);
+    REFUND_TO_BUYER(60);
     /**
      * 枚举的所有项，注意这个变量是静态单例的
      */

@@ -94,10 +94,10 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
 
         // 检查是否是本任务支持的交易类型
         switch (TradeTypeDic.getItem(to.getTradeType())) {
-        case SETTLE_BUYER_CASHBACKING:
-        case SETTLE_PROVIDER_BALANCE:
-        case SETTLE_SELLER_BALANCE:
-        case SETTLE_SELLER_DEPOSIT_USED:
+        case SETTLE_CASHBACKING:
+        case SETTLE_COST:
+        case SETTLE_SELLER_PROFIT:
+        case SETTLE_DEPOSIT_USED:
         case SETTLE_PLATFORM_SERVICE_FEE:
             break;
         default:
@@ -119,10 +119,10 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         }
 
         // 如果是结算返现金，先添加返现中金额
-        if (TradeTypeDic.SETTLE_BUYER_CASHBACK.getCode() == to.getTradeType().intValue()) {
+        if (TradeTypeDic.SETTLE_CASHBACK.getCode() == to.getTradeType().intValue()) {
             // 添加一笔交易
             AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
-            tradeMo.setTradeType((byte) TradeTypeDic.SETTLE_BUYER_CASHBACKING.getCode());
+            tradeMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACKING.getCode());
             tradeMo.setTradeTime(new Date());
             tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
             tradeSvc.addTrade(tradeMo);
@@ -192,10 +192,10 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         case SETTLE_PLATFORM_SERVICE_FEE:
             settleSvc.settlePlatformServiceFee(taskMo.getOrderId(), taskMo.getTradeAmount(), now);
             break;
-        case SETTLE_BUYER_CASHBACK:
-        case SETTLE_PROVIDER_BALANCE:
-        case SETTLE_SELLER_BALANCE:
-        case SETTLE_SELLER_DEPOSIT_USED:
+        case SETTLE_CASHBACK:
+        case SETTLE_COST:
+        case SETTLE_SELLER_PROFIT:
+        case SETTLE_DEPOSIT_USED:
             settleSvc.settleAccountFee(taskMo, now);
             break;
         default:

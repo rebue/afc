@@ -133,24 +133,24 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             break;
         // XXX AFC : 交易 : （ 余额+ ）结算-结算成本(将成本打到供应商的余额)
         // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额)
-        case SETTLE_PROVIDER_BALANCE:
-        case SETTLE_SELLER_BALANCE:
+        case SETTLE_COST:
+        case SETTLE_SELLER_PROFIT:
             // 余额+
             newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
         // XXX AFC : 交易 : （ 返现中金额+ ）结算-结算返现中金额(打到买家的返现中金额)
-        case SETTLE_BUYER_CASHBACKING:
+        case SETTLE_CASHBACKING:
             // 返现中金额+
             newAccountMo.setCashbacking(oldAccountMo.getCashbacking().add(tradeAmount));
             break;
         // XXX AFC : 交易 : （ 返现中金额-，返现金+ ）结算-结算返现金(将返现中的金额移到返现金，注意是买家在本次交易中应获得的返现金金额，而不是买家的全部返现中的返现金)
-        case SETTLE_BUYER_CASHBACK:
+        case SETTLE_CASHBACK:
             // 返现中金额-，返现金+
             newAccountMo.setCashbacking(oldAccountMo.getCashbacking().subtract(tradeAmount));
             newAccountMo.setCashback(oldAccountMo.getCashback().add(tradeAmount));
             break;
         // XXX AFC : 交易 : （ 已占用保证金+ ）结算-结算已占用保证金(释放卖家的已占用保证金相应金额)
-        case SETTLE_SELLER_DEPOSIT_USED:
+        case SETTLE_DEPOSIT_USED:
             // 已占用保证金+
             newAccountMo.setDepositUsed(oldAccountMo.getDepositUsed().subtract(tradeAmount));
             break;
@@ -216,27 +216,27 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
 
         // 2. 修改账户相应的金额字段
         HashMap<String, Object> map = new HashMap<>();
-        if (!newAccountMo.getBalance().equals(oldAccountMo.getBalance())) {
+        if (newAccountMo.getBalance() != null && !newAccountMo.getBalance().equals(oldAccountMo.getBalance())) {
             map.put("balance", newAccountMo.getBalance());
             map.put("oldBalance", oldAccountMo.getBalance());
         }
-        if (!newAccountMo.getCashbacking().equals(oldAccountMo.getCashbacking())) {
+        if (newAccountMo.getCashbacking() != null && !newAccountMo.getCashbacking().equals(oldAccountMo.getCashbacking())) {
             map.put("cashbacking", newAccountMo.getCashbacking());
             map.put("oldCashbacking", oldAccountMo.getCashbacking());
         }
-        if (!newAccountMo.getCashback().equals(oldAccountMo.getCashback())) {
+        if (newAccountMo.getCashback() != null && !newAccountMo.getCashback().equals(oldAccountMo.getCashback())) {
             map.put("cashback", newAccountMo.getCashback());
             map.put("oldCashback", oldAccountMo.getCashback());
         }
-        if (!newAccountMo.getDeposit().equals(oldAccountMo.getDeposit())) {
+        if (newAccountMo.getDeposit() != null && !newAccountMo.getDeposit().equals(oldAccountMo.getDeposit())) {
             map.put("deposit", newAccountMo.getDeposit());
             map.put("oldDeposit", oldAccountMo.getDeposit());
         }
-        if (!newAccountMo.getDepositUsed().equals(oldAccountMo.getDepositUsed())) {
+        if (newAccountMo.getDepositUsed() != null && !newAccountMo.getDepositUsed().equals(oldAccountMo.getDepositUsed())) {
             map.put("depositUsed", newAccountMo.getDepositUsed());
             map.put("oldDepositUsed", oldAccountMo.getDepositUsed());
         }
-        if (!newAccountMo.getWithdrawing().equals(oldAccountMo.getWithdrawing())) {
+        if (newAccountMo.getWithdrawing() != null && !newAccountMo.getWithdrawing().equals(oldAccountMo.getWithdrawing())) {
             map.put("withdrawing", newAccountMo.getWithdrawing());
             map.put("oldWithdrawing", oldAccountMo.getWithdrawing());
         }

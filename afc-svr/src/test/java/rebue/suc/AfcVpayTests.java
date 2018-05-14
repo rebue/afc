@@ -23,14 +23,14 @@ public class AfcVpayTests {
 
     private ObjectMapper _objectMapper = new ObjectMapper();
 
-    private Long         userId        = 469650705142120448L;
+    private Long         userId        = 471188184353603590L;
 
     @Value("${appid:0}")
-	private int _appid;
+    private int          _appid;
 
     @Test
     public void test01() throws IOException {
-    	IdWorker3 _idWorker = new IdWorker3();
+        IdWorker3 _idWorker = new IdWorker3();
         // 预支付
         String url = _hostUrl + "/vpay/prepay";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
@@ -42,7 +42,7 @@ public class AfcVpayTests {
         paramsMap.put("tradeAmount", 1.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        PrepayRo prepayRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), PrepayRo.class);
+        PrepayRo prepayRo = _objectMapper.readValue(OkhttpUtils.postByJsonParams(url, paramsMap), PrepayRo.class);
         String prepayId = prepayRo.getPrepayId();
         Assert.assertNotNull(prepayId);
 
@@ -53,7 +53,7 @@ public class AfcVpayTests {
         paramsMap.put("payPswd", "");
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        PayRo payRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), PayRo.class);
+        PayRo payRo = _objectMapper.readValue(OkhttpUtils.postByJsonParams(url, paramsMap), PayRo.class);
         Assert.assertNotNull(payRo);
         Assert.assertEquals(PayResultDic.SUCCESS, payRo.getResult());
 
