@@ -133,8 +133,8 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             break;
         // XXX AFC : 交易 : （ 余额+ ）结算-结算成本(将成本打到供应商的余额)
         // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额)
-        case SETTLE_COST:
-        case SETTLE_SELLER_PROFIT:
+        case SETTLE_SUPPLIER:
+        case SETTLE_SELLER:
             // 余额+
             newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;

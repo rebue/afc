@@ -18,22 +18,22 @@ public interface AfcSettleTaskSvc {
      * 添加结算任务
      * 任务调度器会定时检查当前要执行的任务
      */
-    @PostMapping("/task/settle")
+    @PostMapping("/settle/tasks")
     AddSettleTaskRo addSettleTask(@RequestBody AddSettleTaskTo to);
 
     /**
-     * 获取将要执行的任务列表
+     * 获取将要执行的结算任务列表
      */
-    @GetMapping("/task/shouldexecute")
+    @GetMapping("/settle/task/shouldexecute")
     List<Long> getTaskIdsThatShouldExecute();
 
     /**
-     * 执行任务
+     * 执行结算任务
      * 
      * @param taskMo
      *            要执行的任务
      */
-    @PostMapping("/task/execute")
+    @PostMapping("/settle/task/execute")
     void executeTask(@RequestParam("id") Long id);
 
 }

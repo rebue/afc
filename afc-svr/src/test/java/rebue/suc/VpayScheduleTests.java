@@ -34,7 +34,7 @@ public class VpayScheduleTests {
         String url = _hostUrl + "/task/rebate";
         // 返款到供应商的余额
         Map<String, Object> paramsMap = new LinkedHashMap<>();
-        paramsMap.put("tradeType", TradeTypeDic.SETTLE_COST.getCode());
+        paramsMap.put("tradeType", TradeTypeDic.SETTLE_SUPPLIER.getCode());
         paramsMap.put("executePlanTime", sdf.format(calendar.getTime()));
         paramsMap.put("accountId", accountId);
         paramsMap.put("orderId", orderId);
@@ -79,7 +79,7 @@ public class VpayScheduleTests {
 
         // 返款到加盟商的余额
         paramsMap = new LinkedHashMap<>();
-        paramsMap.put("tradeType", TradeTypeDic.SETTLE_SELLER_PROFIT.getCode());
+        paramsMap.put("tradeType", TradeTypeDic.SETTLE_SELLER.getCode());
         paramsMap.put("executePlanTime", sdf.format(calendar.getTime()));
         paramsMap.put("accountId", accountId);
         paramsMap.put("orderId", orderId);

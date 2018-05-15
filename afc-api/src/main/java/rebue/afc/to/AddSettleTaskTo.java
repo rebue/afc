@@ -1,5 +1,6 @@
 package rebue.afc.to;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,125 +13,117 @@ public class AddSettleTaskTo {
     /**
      * 买家的账户ID
      */
-    private Long   buyerAccountId;
+    private Long       buyerAccountId;
     /**
      * 卖家的账户ID
      */
-    private Long   sellerAccountId;
+    private Long       sellerAccountId;
     /**
      * 供应商的账户ID
      */
-    private Long   supplierAccountId;
+    private Long       supplierAccountId;
 
     /**
      * 结算给买家返现金的金额
      */
-    private Double settleBuyerCashbackAmount;
+    private BigDecimal settleBuyerCashbackAmount;
     /**
      * 结算给买家返现金的标题
      */
-    private String settleBuyerCashbackTitle;
+    private String     settleBuyerCashbackTitle;
     /**
      * 结算给买家返现金的详情
      */
-    private String settleBuyerCashbackDetail;
+    private String     settleBuyerCashbackDetail;
     /**
      * 结算给买家返现金的计划执行时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date   settleBuyerCashbackTime;
+    private Date       settleBuyerCashbackTime;
 
     /**
      * 结算给平台服务费的金额
      */
-    private Double settlePlatformServiceFeeAmount;
-    /**
-     * 结算给平台服务费的标题
-     */
-    private String settlePlatformServiceFeeTitle;
-    /**
-     * 结算给平台服务费的详情
-     */
-    private String settlePlatformServiceFeeDetail;
+    private BigDecimal settlePlatformServiceFeeAmount;
     /**
      * 结算给平台服务费的计划执行时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date   settlePlatformServiceFeeTime;
+    private Date       settlePlatformServiceFeeTime;
 
     /**
      * 结算给供应商的金额（成本，打到余额）
      */
-    private Double settleSupplierAmount;
+    private BigDecimal settleSupplierAmount;
     /**
      * 结算给供应商的标题
      */
-    private String settleSupplierTitle;
+    private String     settleSupplierTitle;
     /**
      * 结算给供应商的详情
      */
-    private String settleSupplierDetail;
+    private String     settleSupplierDetail;
     /**
      * 结算给供应商的计划执行时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date   settleSupplierTime;
+    private Date       settleSupplierTime;
 
     /**
      * 结算给卖家的金额（利润，打到余额）
      */
-    private Double settleSellerAmount;
+    private BigDecimal settleSellerAmount;
     /**
      * 结算给卖家的标题
      */
-    private String settleSellerTitle;
+    private String     settleSellerTitle;
     /**
      * 结算给卖家的详情
      */
-    private String settleSellerDetail;
+    private String     settleSellerDetail;
     /**
      * 结算给卖家的计划执行时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date   settleSellerTime;
+    private Date       settleSellerTime;
 
     /**
      * 结算卖家已占用保证金的金额
      */
-    private Double settleDepositUsedAmount;
+    private BigDecimal settleDepositUsedAmount;
     /**
      * 结算卖家已占用保证金的标题
      */
-    private String settleDepositUsedTitle;
+    private String     settleDepositUsedTitle;
     /**
      * 结算卖家已占用保证金的详情
      */
-    private String settleDepositUsedDetail;
+    private String     settleDepositUsedDetail;
     /**
      * 结算卖家已占用保证金的计划执行时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date   settleDepositUsedTime;
+    private Date       settleDepositUsedTime;
 
     /**
      * 订单ID
      * (销售订单ID)
      */
-    private String orderId;
+    private String     orderId;
     /**
      * 订单详情ID
      * (销售订单详情ID)
      */
-    private String orderDetailId;
+    private String     orderDetailId;
 
     /**
      * MAC地址
      */
-    private String mac;
+    private String     mac;
     /**
      * IP地址
      */
-    private String ip;
+    private String     ip;
 
     public Long getBuyerAccountId() {
         return buyerAccountId;
@@ -138,14 +131,6 @@ public class AddSettleTaskTo {
 
     public void setBuyerAccountId(Long buyerAccountId) {
         this.buyerAccountId = buyerAccountId;
-    }
-
-    public Long getSupplierAccountId() {
-        return supplierAccountId;
-    }
-
-    public void setSupplierAccountId(Long supplierAccountId) {
-        this.supplierAccountId = supplierAccountId;
     }
 
     public Long getSellerAccountId() {
@@ -156,11 +141,19 @@ public class AddSettleTaskTo {
         this.sellerAccountId = sellerAccountId;
     }
 
-    public Double getSettleBuyerCashbackAmount() {
+    public Long getSupplierAccountId() {
+        return supplierAccountId;
+    }
+
+    public void setSupplierAccountId(Long supplierAccountId) {
+        this.supplierAccountId = supplierAccountId;
+    }
+
+    public BigDecimal getSettleBuyerCashbackAmount() {
         return settleBuyerCashbackAmount;
     }
 
-    public void setSettleBuyerCashbackAmount(Double settleBuyerCashbackAmount) {
+    public void setSettleBuyerCashbackAmount(BigDecimal settleBuyerCashbackAmount) {
         this.settleBuyerCashbackAmount = settleBuyerCashbackAmount;
     }
 
@@ -188,28 +181,12 @@ public class AddSettleTaskTo {
         this.settleBuyerCashbackTime = settleBuyerCashbackTime;
     }
 
-    public Double getSettlePlatformServiceFeeAmount() {
+    public BigDecimal getSettlePlatformServiceFeeAmount() {
         return settlePlatformServiceFeeAmount;
     }
 
-    public void setSettlePlatformServiceFeeAmount(Double settlePlatformServiceFeeAmount) {
+    public void setSettlePlatformServiceFeeAmount(BigDecimal settlePlatformServiceFeeAmount) {
         this.settlePlatformServiceFeeAmount = settlePlatformServiceFeeAmount;
-    }
-
-    public String getSettlePlatformServiceFeeTitle() {
-        return settlePlatformServiceFeeTitle;
-    }
-
-    public void setSettlePlatformServiceFeeTitle(String settlePlatformServiceFeeTitle) {
-        this.settlePlatformServiceFeeTitle = settlePlatformServiceFeeTitle;
-    }
-
-    public String getSettlePlatformServiceFeeDetail() {
-        return settlePlatformServiceFeeDetail;
-    }
-
-    public void setSettlePlatformServiceFeeDetail(String settlePlatformServiceFeeDetail) {
-        this.settlePlatformServiceFeeDetail = settlePlatformServiceFeeDetail;
     }
 
     public Date getSettlePlatformServiceFeeTime() {
@@ -220,11 +197,11 @@ public class AddSettleTaskTo {
         this.settlePlatformServiceFeeTime = settlePlatformServiceFeeTime;
     }
 
-    public Double getSettleSupplierAmount() {
+    public BigDecimal getSettleSupplierAmount() {
         return settleSupplierAmount;
     }
 
-    public void setSettleSupplierAmount(Double settleSupplierAmount) {
+    public void setSettleSupplierAmount(BigDecimal settleSupplierAmount) {
         this.settleSupplierAmount = settleSupplierAmount;
     }
 
@@ -252,11 +229,11 @@ public class AddSettleTaskTo {
         this.settleSupplierTime = settleSupplierTime;
     }
 
-    public Double getSettleSellerAmount() {
+    public BigDecimal getSettleSellerAmount() {
         return settleSellerAmount;
     }
 
-    public void setSettleSellerAmount(Double settleSellerAmount) {
+    public void setSettleSellerAmount(BigDecimal settleSellerAmount) {
         this.settleSellerAmount = settleSellerAmount;
     }
 
@@ -284,11 +261,11 @@ public class AddSettleTaskTo {
         this.settleSellerTime = settleSellerTime;
     }
 
-    public Double getSettleDepositUsedAmount() {
+    public BigDecimal getSettleDepositUsedAmount() {
         return settleDepositUsedAmount;
     }
 
-    public void setSettleDepositUsedAmount(Double settleDepositUsedAmount) {
+    public void setSettleDepositUsedAmount(BigDecimal settleDepositUsedAmount) {
         this.settleDepositUsedAmount = settleDepositUsedAmount;
     }
 
@@ -350,10 +327,9 @@ public class AddSettleTaskTo {
 
     @Override
     public String toString() {
-        return "AddSettleTaskTo [buyerAccountId=" + buyerAccountId + ", supplierAccountId=" + supplierAccountId + ", sellerAccountId=" + sellerAccountId
+        return "AddSettleTaskTo [buyerAccountId=" + buyerAccountId + ", sellerAccountId=" + sellerAccountId + ", supplierAccountId=" + supplierAccountId
                 + ", settleBuyerCashbackAmount=" + settleBuyerCashbackAmount + ", settleBuyerCashbackTitle=" + settleBuyerCashbackTitle + ", settleBuyerCashbackDetail="
                 + settleBuyerCashbackDetail + ", settleBuyerCashbackTime=" + settleBuyerCashbackTime + ", settlePlatformServiceFeeAmount=" + settlePlatformServiceFeeAmount
-                + ", settlePlatformServiceFeeTitle=" + settlePlatformServiceFeeTitle + ", settlePlatformServiceFeeDetail=" + settlePlatformServiceFeeDetail
                 + ", settlePlatformServiceFeeTime=" + settlePlatformServiceFeeTime + ", settleSupplierAmount=" + settleSupplierAmount + ", settleSupplierTitle="
                 + settleSupplierTitle + ", settleSupplierDetail=" + settleSupplierDetail + ", settleSupplierTime=" + settleSupplierTime + ", settleSellerAmount="
                 + settleSellerAmount + ", settleSellerTitle=" + settleSellerTitle + ", settleSellerDetail=" + settleSellerDetail + ", settleSellerTime=" + settleSellerTime
