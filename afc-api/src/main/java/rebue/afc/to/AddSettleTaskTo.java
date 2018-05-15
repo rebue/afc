@@ -21,25 +21,79 @@ public class AddSettleTaskTo {
     private Long   accountId;
 
     /**
-     * 交易类型
-     * (只支持返款到供应商的余额、返款到买家的返现金、返款到加盟商的已占用保证金、返款到加盟商的余额、返款到平台的服务费5种类型)
+     * 结算给买家返现金的金额
      */
-    private Byte   tradeType;
+    private Double settleBuyerCashbackAmount;
 
     /**
-     * 交易总额
+     * 结算给买家返现金的标题
      */
-    private Double tradeAmount;
+    private String settleBuyerCashbackTitle;
 
     /**
-     * 交易标题
+     * 结算给买家返现金的详情
      */
-    private String tradeTitle;
+    private String settleBuyerCashbackDetail;
 
     /**
-     * 交易详情
+     * 结算给平台服务费的金额
      */
-    private String tradeDetail;
+    private Double settlePlatformServiceFeeAmount;
+
+    /**
+     * 结算给平台服务费的标题
+     */
+    private String settlePlatformServiceFeeTitle;
+
+    /**
+     * 结算给平台服务费的详情
+     */
+    private String settlePlatformServiceFeeDetail;
+
+    /**
+     * 结算给供应商的金额（成本）
+     */
+    private Double settleSupplierAmount;
+
+    /**
+     * 结算给供应商的标题
+     */
+    private String settleSupplierTitle;
+
+    /**
+     * 结算给供应商的详情
+     */
+    private String settleSupplierDetail;
+
+    /**
+     * 结算给卖家的金额（利润）
+     */
+    private Double settleSellerAmount;
+
+    /**
+     * 结算给卖家的标题
+     */
+    private String settleSellerTitle;
+
+    /**
+     * 结算给卖家的详情
+     */
+    private String settleSellerDetail;
+
+    /**
+     * 结算卖家已占用保证金的金额
+     */
+    private Double settleDepositUsedAmount;
+
+    /**
+     * 结算卖家已占用保证金的标题
+     */
+    private String settleDepositUsedTitle;
+
+    /**
+     * 结算卖家已占用保证金的详情
+     */
+    private String settleDepositUsedDetail;
 
     /**
      * 订单ID
@@ -78,36 +132,124 @@ public class AddSettleTaskTo {
         this.accountId = accountId;
     }
 
-    public Byte getTradeType() {
-        return tradeType;
+    public Double getSettleBuyerCashbackAmount() {
+        return settleBuyerCashbackAmount;
     }
 
-    public void setTradeType(Byte tradeType) {
-        this.tradeType = tradeType;
+    public void setSettleBuyerCashbackAmount(Double settleBuyerCashbackAmount) {
+        this.settleBuyerCashbackAmount = settleBuyerCashbackAmount;
     }
 
-    public Double getTradeAmount() {
-        return tradeAmount;
+    public String getSettleBuyerCashbackTitle() {
+        return settleBuyerCashbackTitle;
     }
 
-    public void setTradeAmount(Double tradeAmount) {
-        this.tradeAmount = tradeAmount;
+    public void setSettleBuyerCashbackTitle(String settleBuyerCashbackTitle) {
+        this.settleBuyerCashbackTitle = settleBuyerCashbackTitle;
     }
 
-    public String getTradeTitle() {
-        return tradeTitle;
+    public String getSettleBuyerCashbackDetail() {
+        return settleBuyerCashbackDetail;
     }
 
-    public void setTradeTitle(String tradeTitle) {
-        this.tradeTitle = tradeTitle;
+    public void setSettleBuyerCashbackDetail(String settleBuyerCashbackDetail) {
+        this.settleBuyerCashbackDetail = settleBuyerCashbackDetail;
     }
 
-    public String getTradeDetail() {
-        return tradeDetail;
+    public Double getSettlePlatformServiceFeeAmount() {
+        return settlePlatformServiceFeeAmount;
     }
 
-    public void setTradeDetail(String tradeDetail) {
-        this.tradeDetail = tradeDetail;
+    public void setSettlePlatformServiceFeeAmount(Double settlePlatformServiceFeeAmount) {
+        this.settlePlatformServiceFeeAmount = settlePlatformServiceFeeAmount;
+    }
+
+    public String getSettlePlatformServiceFeeTitle() {
+        return settlePlatformServiceFeeTitle;
+    }
+
+    public void setSettlePlatformServiceFeeTitle(String settlePlatformServiceFeeTitle) {
+        this.settlePlatformServiceFeeTitle = settlePlatformServiceFeeTitle;
+    }
+
+    public String getSettlePlatformServiceFeeDetail() {
+        return settlePlatformServiceFeeDetail;
+    }
+
+    public void setSettlePlatformServiceFeeDetail(String settlePlatformServiceFeeDetail) {
+        this.settlePlatformServiceFeeDetail = settlePlatformServiceFeeDetail;
+    }
+
+    public Double getSettleSupplierAmount() {
+        return settleSupplierAmount;
+    }
+
+    public void setSettleSupplierAmount(Double settleSupplierAmount) {
+        this.settleSupplierAmount = settleSupplierAmount;
+    }
+
+    public String getSettleSupplierTitle() {
+        return settleSupplierTitle;
+    }
+
+    public void setSettleSupplierTitle(String settleSupplierTitle) {
+        this.settleSupplierTitle = settleSupplierTitle;
+    }
+
+    public String getSettleSupplierDetail() {
+        return settleSupplierDetail;
+    }
+
+    public void setSettleSupplierDetail(String settleSupplierDetail) {
+        this.settleSupplierDetail = settleSupplierDetail;
+    }
+
+    public Double getSettleSellerAmount() {
+        return settleSellerAmount;
+    }
+
+    public void setSettleSellerAmount(Double settleSellerAmount) {
+        this.settleSellerAmount = settleSellerAmount;
+    }
+
+    public String getSettleSellerTitle() {
+        return settleSellerTitle;
+    }
+
+    public void setSettleSellerTitle(String settleSellerTitle) {
+        this.settleSellerTitle = settleSellerTitle;
+    }
+
+    public String getSettleSellerDetail() {
+        return settleSellerDetail;
+    }
+
+    public void setSettleSellerDetail(String settleSellerDetail) {
+        this.settleSellerDetail = settleSellerDetail;
+    }
+
+    public Double getSettleDepositUsedAmount() {
+        return settleDepositUsedAmount;
+    }
+
+    public void setSettleDepositUsedAmount(Double settleDepositUsedAmount) {
+        this.settleDepositUsedAmount = settleDepositUsedAmount;
+    }
+
+    public String getSettleDepositUsedTitle() {
+        return settleDepositUsedTitle;
+    }
+
+    public void setSettleDepositUsedTitle(String settleDepositUsedTitle) {
+        this.settleDepositUsedTitle = settleDepositUsedTitle;
+    }
+
+    public String getSettleDepositUsedDetail() {
+        return settleDepositUsedDetail;
+    }
+
+    public void setSettleDepositUsedDetail(String settleDepositUsedDetail) {
+        this.settleDepositUsedDetail = settleDepositUsedDetail;
     }
 
     public String getOrderId() {
@@ -144,8 +286,13 @@ public class AddSettleTaskTo {
 
     @Override
     public String toString() {
-        return "AddSettleTaskTo [executePlanTime=" + executePlanTime + ", accountId=" + accountId + ", tradeType=" + tradeType + ", tradeAmount=" + tradeAmount + ", tradeTitle="
-                + tradeTitle + ", tradeDetail=" + tradeDetail + ", orderId=" + orderId + ", orderDetailId=" + orderDetailId + ", mac=" + mac + ", ip=" + ip + "]";
+        return "AddSettleTaskTo [executePlanTime=" + executePlanTime + ", accountId=" + accountId + ", settleBuyerCashbackAmount=" + settleBuyerCashbackAmount
+                + ", settleBuyerCashbackTitle=" + settleBuyerCashbackTitle + ", settleBuyerCashbackDetail=" + settleBuyerCashbackDetail + ", settlePlatformServiceFeeAmount="
+                + settlePlatformServiceFeeAmount + ", settlePlatformServiceFeeTitle=" + settlePlatformServiceFeeTitle + ", settlePlatformServiceFeeDetail="
+                + settlePlatformServiceFeeDetail + ", settleSupplierAmount=" + settleSupplierAmount + ", settleSupplierTitle=" + settleSupplierTitle + ", settleSupplierDetail="
+                + settleSupplierDetail + ", settleSellerAmount=" + settleSellerAmount + ", settleSellerTitle=" + settleSellerTitle + ", settleSellerDetail=" + settleSellerDetail
+                + ", settleDepositUsedAmount=" + settleDepositUsedAmount + ", settleDepositUsedTitle=" + settleDepositUsedTitle + ", settleDepositUsedDetail="
+                + settleDepositUsedDetail + ", orderId=" + orderId + ", orderDetailId=" + orderDetailId + ", mac=" + mac + ", ip=" + ip + "]";
     }
 
 }
