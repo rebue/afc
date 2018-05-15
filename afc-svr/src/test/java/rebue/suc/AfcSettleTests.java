@@ -21,9 +21,9 @@ public class AfcSettleTests {
 
     private String       _hostUrl          = "http://localhost:9300";
 
-    private Long         buyerAccountId    = 471579798452436998L;                                                                                                                                                                                                                                                                                                                     // 买家账户ID
-    private Long         sellerAccountId   = 471579798246916101L;                                                                                                                                                                                                                                                                                                                     // 卖家账户ID
-    private Long         supplierAccountId = 471579797462581252L;                                                                                                                                                                                                                                                                                                                     // 供应商账户ID
+    private Long         buyerAccountId    = 471579798452436998L;                                                                                                                                                                                                                                                                                                                             // 买家账户ID
+    private Long         sellerAccountId   = 471579798246916101L;                                                                                                                                                                                                                                                                                                                             // 卖家账户ID
+    private Long         supplierAccountId = 471579797462581252L;                                                                                                                                                                                                                                                                                                                             // 供应商账户ID
     private String       orderId           = "471581601956888576";
 
     @Value("${appid:0}")
@@ -37,10 +37,10 @@ public class AfcSettleTests {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
         // 返现时间
-        calendar.add(Calendar.SECOND, 13);
+        calendar.add(Calendar.SECOND, 10);
         String cashbackTime = sdf.format(calendar.getTime());
         // 结算供应商的时间
-        calendar.add(Calendar.SECOND, 4);
+        calendar.add(Calendar.SECOND, 10);
         String supplierTime = sdf.format(calendar.getTime());
         // 结算卖家的时间
         String sellerTime = sdf.format(calendar.getTime());

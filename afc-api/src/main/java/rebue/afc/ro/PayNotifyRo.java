@@ -1,5 +1,6 @@
 package rebue.afc.ro;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -34,7 +35,7 @@ public class PayNotifyRo {
      * 支付交易的金额(单位为元)
      */
     @ApiModelProperty(value = "支付交易的金额(单位为元)", required = true)
-    private Double     payAmount;
+    private BigDecimal payAmount;
     /**
      * 支付订单号
      */
@@ -75,11 +76,11 @@ public class PayNotifyRo {
         this.payAccountId = payAccountId;
     }
 
-    public Double getPayAmount() {
+    public BigDecimal getPayAmount() {
         return payAmount;
     }
 
-    public void setPayAmount(Double payAmount) {
+    public void setPayAmount(BigDecimal payAmount) {
         this.payAmount = payAmount;
     }
 
@@ -109,9 +110,8 @@ public class PayNotifyRo {
 
     @Override
     public String toString() {
-        return "PayNotifyRo [payType=" + payType + ", userId=" + userId + ", payAccountId=" + payAccountId
-                + ", payAmount=" + payAmount + ", payOrderId=" + payOrderId + ", orderId=" + orderId + ", payTime="
-                + payTime + "]";
+        return "PayNotifyRo [payType=" + payType + ", userId=" + userId + ", payAccountId=" + payAccountId + ", payAmount=" + payAmount + ", payOrderId=" + payOrderId
+                + ", orderId=" + orderId + ", payTime=" + payTime + "]";
     }
 
 }
