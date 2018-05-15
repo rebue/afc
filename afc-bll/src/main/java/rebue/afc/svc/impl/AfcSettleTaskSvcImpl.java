@@ -82,8 +82,10 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public AddSettleTaskRo addSettleTask(AddSettleTaskTo to) throws DuplicateKeyException {
         _log.info("添加结算任务: {}", to);
-        if (to.getExecutePlanTime() == null || to.getAccountId() == null || to.getTradeType() == null || to.getTradeAmount() == null || to.getTradeAmount() == 0L
-                || StringUtils.isAnyBlank(to.getOrderId(), to.getOrderDetailId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
+        if (to.getBuyerAccountId() == null || to.getSellerAccountId() == null || to.getSettleBuyerCashbackAmount() == null || to.getSettleBuyerCashbackTime() == null
+                || to.getSettlePlatformServiceFeeAmount() == null || to.getSettlePlatformServiceFeeTime() == null//
+                || StringUtils.isAnyBlank(to.getSettleBuyerCashbackTitle(), to.getSettlePlatformServiceFeeTitle(), //
+                        to.getOrderId(), to.getOrderDetailId(), to.getMac(), to.getIp())) {
             String msg = "参数有误";
             _log.error("{}: {}", msg, to);
             AddSettleTaskRo ro = new AddSettleTaskRo();
@@ -92,41 +94,25 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             return ro;
         }
 
-        // 检查是否是本任务支持的交易类型
-        switch (TradeTypeDic.getItem(to.getTradeType())) {
-        case SETTLE_CASHBACKING:
-        case SETTLE_COST:
-        case SETTLE_SELLER_PROFIT:
-        case SETTLE_DEPOSIT_USED:
-        case SETTLE_PLATFORM_SERVICE_FEE:
-            break;
-        default:
-            String msg = "不支持的结算类型";
-            _log.error("{}: {}", msg, to);
-            AddSettleTaskRo ro = new AddSettleTaskRo();
-            ro.setResult(AddSettleTaskResultDic.NOT_SUPPORTED_SETTLE_TYPE);
-            ro.setMsg(msg);
-            return ro;
-        }
 
-        if (!userSvc.exist(to.getAccountId())) {
-            String msg = "没有此账户";
-            _log.error("{}: {}", msg, to.getAccountId());
-            AddSettleTaskRo ro = new AddSettleTaskRo();
-            ro.setResult(AddSettleTaskResultDic.NOT_FOUND_ACCOUNT);
-            ro.setMsg(msg);
-            return ro;
-        }
-
-        // 如果是结算返现金，先添加返现中金额
-        if (TradeTypeDic.SETTLE_CASHBACK.getCode() == to.getTradeType().intValue()) {
-            // 添加一笔交易
-            AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
-            tradeMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACKING.getCode());
-            tradeMo.setTradeTime(new Date());
-            tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
-            tradeSvc.addTrade(tradeMo);
-        }
+//        if (!userSvc.exist(to.getAccountId())) {
+//            String msg = "没有此账户";
+//            _log.error("{}: {}", msg, to.getAccountId());
+//            AddSettleTaskRo ro = new AddSettleTaskRo();
+//            ro.setResult(AddSettleTaskResultDic.NOT_FOUND_ACCOUNT);
+//            ro.setMsg(msg);
+//            return ro;
+//        }
+//
+//        // 如果是结算返现金，先添加返现中金额
+//        if (TradeTypeDic.SETTLE_CASHBACK.getCode() == to.getTradeType().intValue()) {
+//            // 添加一笔交易
+//            AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
+//            tradeMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACKING.getCode());
+//            tradeMo.setTradeTime(new Date());
+//            tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
+//            tradeSvc.addTrade(tradeMo);
+//        }
 
         AfcSettleTaskMo mo = dozerMapper.map(to, AfcSettleTaskMo.class);
         mo.setExecuteState((byte) SettleTaskExecuteStateDic.NONE.getCode());

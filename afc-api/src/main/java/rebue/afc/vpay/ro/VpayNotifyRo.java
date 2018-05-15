@@ -23,6 +23,14 @@ public class VpayNotifyRo {
      */
     private Double payAmount;
     /**
+     * 支付返现金的金额(单位为元)
+     */
+    private Double payChangeAmount1;
+    /**
+     * 支付余额的金额(单位为元)
+     */
+    private Double payChangeAmount2;
+    /**
      * 支付订单号
      */
     private String payOrderId;
@@ -59,6 +67,22 @@ public class VpayNotifyRo {
         this.payAmount = payAmount;
     }
 
+    public Double getPayChangeAmount1() {
+        return payChangeAmount1;
+    }
+
+    public void setPayChangeAmount1(Double payChangeAmount1) {
+        this.payChangeAmount1 = payChangeAmount1;
+    }
+
+    public Double getPayChangeAmount2() {
+        return payChangeAmount2;
+    }
+
+    public void setPayChangeAmount2(Double payChangeAmount2) {
+        this.payChangeAmount2 = payChangeAmount2;
+    }
+
     public String getPayOrderId() {
         return payOrderId;
     }
@@ -85,8 +109,8 @@ public class VpayNotifyRo {
 
     @Override
     public String toString() {
-        return "VpayNotifyRo [userId=" + userId + ", payAccountId=" + payAccountId + ", payAmount=" + payAmount + ", payOrderId=" + payOrderId + ", orderId=" + orderId
-                + ", payTime=" + payTime + "]";
+        return "VpayNotifyRo [userId=" + userId + ", payAccountId=" + payAccountId + ", payAmount=" + payAmount + ", payChangeAmount1=" + payChangeAmount1 + ", payChangeAmount2="
+                + payChangeAmount2 + ", payOrderId=" + payOrderId + ", orderId=" + orderId + ", payTime=" + payTime + "]";
     }
 
 }

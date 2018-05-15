@@ -26,10 +26,6 @@ public enum AddSettleTaskResultDic implements EnumBase {
      */
     PARAM_ERROR(-1),
     /**
-     * -2: 不支持的结算类型
-     */
-    NOT_SUPPORTED_SETTLE_TYPE(-2),
-    /**
      * -3: 没有此账户
      */
     NOT_FOUND_ACCOUNT(-3),
