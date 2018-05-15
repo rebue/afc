@@ -47,6 +47,13 @@ public class AfcSettleTaskCtrl {
             ro.setResult(AddSettleTaskResultDic.ALREADY_ADD);
             ro.setMsg(msg);
             return ro;
+        } catch (Exception e) {
+            String msg = "添加任务失败-" + e.getMessage();
+            _log.error(msg + ":" + to, e);
+            AddSettleTasksRo ro = new AddSettleTasksRo();
+            ro.setResult(AddSettleTaskResultDic.FAIL);
+            ro.setMsg(msg);
+            return ro;
         }
     }
 

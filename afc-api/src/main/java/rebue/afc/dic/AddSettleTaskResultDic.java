@@ -26,13 +26,13 @@ public enum AddSettleTaskResultDic implements EnumBase {
      */
     PARAM_ERROR(-1),
     /**
-     * -3: 没有此账户
+     * -2: 添加任务失败
      */
-    NOT_FOUND_ACCOUNT(-3),
+    FAIL(-2),
     /**
-     * -4: 重复添加任务(通过交易类型+账户ID+销售订单详情ID判断)
+     * -3: 重复添加任务(通过交易类型+账户ID+销售订单详情ID判断)
      */
-    ALREADY_ADD(-4);
+    ALREADY_ADD(-3);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的
