@@ -21,12 +21,12 @@ import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcSettleTaskMapper;
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.pub.SettleNotifyPub;
-import rebue.afc.ro.AddSettleTaskRo;
+import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.ro.SettleNotifyRo;
 import rebue.afc.svc.AfcSettleSvc;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.svc.AfcTradeSvc;
-import rebue.afc.to.AddSettleTaskTo;
+import rebue.afc.to.AddSettleTasksTo;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.svr.feign.SucUserSvc;
 
@@ -80,13 +80,13 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public AddSettleTaskRo addSettleTask(AddSettleTaskTo to) throws DuplicateKeyException {
+    public AddSettleTasksRo addSettleTasks(AddSettleTasksTo to) throws DuplicateKeyException {
         _log.info("添加结算任务: {}", to);
         if (to.getBuyerAccountId() == null || to.getSellerAccountId() == null || to.getSettleBuyerCashbackAmount() == null || to.getSettleBuyerCashbackTime() == null
                 || StringUtils.isAnyBlank(to.getSettleBuyerCashbackTitle(), to.getOrderId(), to.getOrderDetailId(), to.getMac(), to.getIp())) {
             String msg = "参数有误";
             _log.error("{}: {}", msg, to);
-            AddSettleTaskRo ro = new AddSettleTaskRo();
+            AddSettleTasksRo ro = new AddSettleTasksRo();
             ro.setResult(AddSettleTaskResultDic.PARAM_ERROR);
             ro.setMsg(msg);
             return ro;
@@ -163,7 +163,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         // 返回成功
         String msg = "添加结算任务成功";
         _log.info("{}: {}", msg, to);
-        AddSettleTaskRo ro = new AddSettleTaskRo();
+        AddSettleTasksRo ro = new AddSettleTasksRo();
         ro.setResult(AddSettleTaskResultDic.SUCCESS);
         ro.setMsg(msg);
         return ro;

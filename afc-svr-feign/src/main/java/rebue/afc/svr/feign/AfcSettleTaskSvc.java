@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import rebue.afc.ro.AddSettleTaskRo;
-import rebue.afc.to.AddSettleTaskTo;
+import rebue.afc.ro.AddSettleTasksRo;
+import rebue.afc.to.AddSettleTasksTo;
 import rebue.sbs.feign.FeignConfig;
 
 @FeignClient(name = "afc-svr", configuration = FeignConfig.class)
@@ -19,7 +19,7 @@ public interface AfcSettleTaskSvc {
      * 任务调度器会定时检查当前要执行的任务
      */
     @PostMapping("/settle/tasks")
-    AddSettleTaskRo addSettleTask(@RequestBody AddSettleTaskTo to);
+    AddSettleTasksRo addSettleTasks(@RequestBody AddSettleTasksTo to);
 
     /**
      * 获取将要执行的结算任务列表

@@ -3,8 +3,8 @@ package rebue.afc.svc;
 import java.util.List;
 
 import rebue.afc.mo.AfcSettleTaskMo;
-import rebue.afc.ro.AddSettleTaskRo;
-import rebue.afc.to.AddSettleTaskTo;
+import rebue.afc.ro.AddSettleTasksRo;
+import rebue.afc.to.AddSettleTasksTo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.lang.Long> {
@@ -12,7 +12,7 @@ public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.l
      * 添加结算任务
      * 任务调度器会定时检查当前要执行的任务
      */
-    AddSettleTaskRo addSettleTask(AddSettleTaskTo to);
+    AddSettleTasksRo addSettleTasks(AddSettleTasksTo to);
 
     /**
      * 获取要执行的任务ID列表

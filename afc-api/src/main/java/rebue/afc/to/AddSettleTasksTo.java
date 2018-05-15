@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  * V支付-添加交易任务的传输对象
  *
  */
-public class AddSettleTaskTo {
+public class AddSettleTasksTo {
     /**
      * 买家的账户ID
      */

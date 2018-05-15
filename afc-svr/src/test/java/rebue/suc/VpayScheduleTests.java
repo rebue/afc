@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import rebue.afc.dic.AddSettleTaskResultDic;
 import rebue.afc.dic.TradeTypeDic;
-import rebue.afc.ro.AddSettleTaskRo;
+import rebue.afc.ro.AddSettleTasksRo;
 import rebue.wheel.OkhttpUtils;
 
 public class VpayScheduleTests {
@@ -43,7 +43,7 @@ public class VpayScheduleTests {
         paramsMap.put("tradeAmount", 0.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        AddSettleTaskRo rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTaskRo.class);
+        AddSettleTasksRo rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTasksRo.class);
         Assert.assertNotNull(rebateRo);
         Assert.assertEquals(AddSettleTaskResultDic.SUCCESS, rebateRo.getResult());
 
@@ -58,7 +58,7 @@ public class VpayScheduleTests {
         paramsMap.put("tradeAmount", 0.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTaskRo.class);
+        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTasksRo.class);
         Assert.assertNotNull(rebateRo);
         Assert.assertEquals(AddSettleTaskResultDic.SUCCESS, rebateRo.getResult());
 
@@ -73,7 +73,7 @@ public class VpayScheduleTests {
         paramsMap.put("tradeAmount", 0.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTaskRo.class);
+        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTasksRo.class);
         Assert.assertNotNull(rebateRo);
         Assert.assertEquals(AddSettleTaskResultDic.SUCCESS, rebateRo.getResult());
 
@@ -88,7 +88,7 @@ public class VpayScheduleTests {
         paramsMap.put("tradeAmount", 0.01);
         paramsMap.put("mac", "MAC地址1");
         paramsMap.put("ip", "192.168.1.1");
-        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTaskRo.class);
+        rebateRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), AddSettleTasksRo.class);
         Assert.assertNotNull(rebateRo);
         Assert.assertEquals(AddSettleTaskResultDic.SUCCESS, rebateRo.getResult());
 

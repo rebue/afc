@@ -9,7 +9,7 @@ import rebue.afc.dic.AddSettleTaskResultDic;
  * 添加交易任务的返回结果
  */
 @JsonInclude(Include.NON_NULL)
-public class AddSettleTaskRo {
+public class AddSettleTasksRo {
     /**
      * 添加交易任务返回结果的代码
      */

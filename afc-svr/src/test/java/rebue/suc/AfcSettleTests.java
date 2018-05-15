@@ -4,16 +4,23 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class AfcSettleTests {
 
-//    private String       _hostUrl      = "http://localhost:9300";
-//
-//    private Long         userId        = 466801648262578181L;
-//
-//    private ObjectMapper _objectMapper = new ObjectMapper();
+    private String       _hostUrl      = "http://localhost:9300";
+
+    private Long         userId        = 466801648262578181L;
+    private String       orderId       = "9D19A1299B844FEFA529F726278B2A06";
+    private String       orderDetailId = "9D19A1299B844FEFA529F726278B2A06";
+
+    private ObjectMapper _objectMapper = new ObjectMapper();
 
     @Test
     public void test01() throws IOException {
+      String url = _hostUrl + "/settle/tasks";
+      String orderDetailId = "9D19A1299B844FEFA529F726278B2A06";
+
 //        // 返款到供应商的余额
 //        String url = _hostUrl + "/rebate/provider/balance";
 //        String orderId = "9D19A1299B844FEFA529F726278B2A06";

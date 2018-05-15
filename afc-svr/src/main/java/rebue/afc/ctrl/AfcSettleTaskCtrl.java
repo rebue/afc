@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rebue.afc.dic.AddSettleTaskResultDic;
-import rebue.afc.ro.AddSettleTaskRo;
+import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.svc.AfcSettleTaskSvc;
-import rebue.afc.to.AddSettleTaskTo;
+import rebue.afc.to.AddSettleTasksTo;
 
 /**
  * 交易任务
@@ -36,14 +36,14 @@ public class AfcSettleTaskCtrl {
      * 任务调度器会定时检查当前要执行的任务
      */
     @PostMapping("/settle/tasks")
-    AddSettleTaskRo addSettleTask(@RequestBody AddSettleTaskTo to) {
+    AddSettleTasksRo addSettleTasks(@RequestBody AddSettleTasksTo to) {
         _log.info("添加结算任务: {}", to);
         try {
-            return svc.addSettleTask(to);
+            return svc.addSettleTasks(to);
         } catch (DuplicateKeyException e) {
             String msg = "重复添加任务";
             _log.error("{}: {}", msg, to);
-            AddSettleTaskRo ro = new AddSettleTaskRo();
+            AddSettleTasksRo ro = new AddSettleTasksRo();
             ro.setResult(AddSettleTaskResultDic.ALREADY_ADD);
             ro.setMsg(msg);
             return ro;
