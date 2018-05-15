@@ -196,9 +196,9 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
         payNotifyRo.setOrderId(prepay.getOrderId());
         payNotifyRo.setPayAccountId(prepay.getUserId().toString());
         payNotifyRo.setPayOrderId(tradeMo.getId().toString());
-        payNotifyRo.setPayAmount(tradeAmount.doubleValue());
-        payNotifyRo.setPayChangeAmount1(tradeMo.getChangeAmount1().doubleValue());
-        payNotifyRo.setPayChangeAmount2(tradeMo.getChangeAmount2().doubleValue());
+        payNotifyRo.setPayAmount(tradeAmount);
+        payNotifyRo.setPayChangeAmount1(tradeMo.getChangeAmount1());
+        payNotifyRo.setPayChangeAmount2(tradeMo.getChangeAmount2());
         payNotifyRo.setPayTime(now);
         vpayNotifyPub.send(payNotifyRo);
 

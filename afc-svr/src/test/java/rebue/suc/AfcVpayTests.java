@@ -23,7 +23,7 @@ public class AfcVpayTests {
 
     private ObjectMapper _objectMapper = new ObjectMapper();
 
-    private Long         userId        = 471188184353603590L;
+    private Long         userId        = 471579798452436998L;
 
     @Value("${appid:0}")
     private int          _appid;

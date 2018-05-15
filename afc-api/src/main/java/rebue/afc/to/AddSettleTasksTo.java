@@ -3,7 +3,7 @@ package rebue.afc.to;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * V支付-添加交易任务的传输对象
@@ -38,7 +38,7 @@ public class AddSettleTasksTo {
     /**
      * 结算给买家返现金的计划执行时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date       settleBuyerCashbackTime;
 
     /**
@@ -48,7 +48,7 @@ public class AddSettleTasksTo {
     /**
      * 结算给平台服务费的计划执行时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date       settlePlatformServiceFeeTime;
 
     /**
@@ -66,7 +66,7 @@ public class AddSettleTasksTo {
     /**
      * 结算给供应商的计划执行时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date       settleSupplierTime;
 
     /**
@@ -84,7 +84,7 @@ public class AddSettleTasksTo {
     /**
      * 结算给卖家的计划执行时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date       settleSellerTime;
 
     /**
@@ -102,7 +102,7 @@ public class AddSettleTasksTo {
     /**
      * 结算卖家已占用保证金的计划执行时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date       settleDepositUsedTime;
 
     /**

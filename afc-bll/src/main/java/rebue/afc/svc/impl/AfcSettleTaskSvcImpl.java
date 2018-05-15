@@ -116,6 +116,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             _log.info("添加结算平台服务费的任务");
             AfcSettleTaskMo taskMo = dozerMapper.map(to, AfcSettleTaskMo.class);
             taskMo.setTradeType((byte) TradeTypeDic.SETTLE_PLATFORM_SERVICE_FEE.getCode());
+            taskMo.setTradeTitle("结算平台服务费");                                        // 结算平台服务费的标题
             taskMo.setExecutePlanTime(to.getSettlePlatformServiceFeeTime());            // 计划执行时间
             taskMo.setTradeAmount(to.getSettlePlatformServiceFeeAmount());              // 平台服务费
             thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
