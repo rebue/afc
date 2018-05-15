@@ -24,7 +24,7 @@ public class AfcSettleTests {
     private Long         buyerAccountId    = 471579798452436998L;                                                                                                                                                                                                                                                                                                                             // 买家账户ID
     private Long         sellerAccountId   = 471579798246916101L;                                                                                                                                                                                                                                                                                                                             // 卖家账户ID
     private Long         supplierAccountId = 471579797462581252L;                                                                                                                                                                                                                                                                                                                             // 供应商账户ID
-    private String       orderId           = "471581601956888576";
+    private String       orderId           = "471581551608463360";
 
     @Value("${appid:0}")
     private int          _appid;
