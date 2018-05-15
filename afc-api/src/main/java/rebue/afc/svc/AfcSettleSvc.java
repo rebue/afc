@@ -1,6 +1,5 @@
 package rebue.afc.svc;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import rebue.afc.mo.AfcSettleTaskMo;
@@ -31,6 +30,6 @@ public interface AfcSettleSvc {
      * @param now
      *            当前时间
      */
-    void settlePlatformServiceFee(String orderId, BigDecimal serviceFee, Date now);
+    void settlePlatformServiceFee(AfcSettleTaskMo taskMo, Date now);
 
 }

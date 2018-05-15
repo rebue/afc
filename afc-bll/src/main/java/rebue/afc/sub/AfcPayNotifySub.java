@@ -57,7 +57,6 @@ public class AfcPayNotifySub implements ApplicationListener<ContextRefreshedEven
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // 防止里面的代码被运行两次
-        System.out.println(event.getApplicationContext());
         if (!(event.getApplicationContext() instanceof AnnotationConfigServletWebServerApplicationContext))
             return;
 

@@ -25,22 +25,17 @@ import rebue.suc.msg.SucUserAddMsg;
 public class AfcSucUserAddSub implements ApplicationListener<ContextRefreshedEvent> {
     private final static Logger _log = LoggerFactory.getLogger(AfcSucUserAddSub.class);
 
-//    private static AtomicInteger count      = new AtomicInteger();
+    @Resource
+    private AfcAccountSvc       accountSvc;
 
     @Resource
-    private AfcAccountSvc  accountSvc;
-
-    @Resource
-    private RabbitConsumer consumer;
+    private RabbitConsumer      consumer;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // 防止里面的代码被运行两次
-        System.out.println(event.getApplicationContext());
         if (!(event.getApplicationContext() instanceof AnnotationConfigServletWebServerApplicationContext))
             return;
-//        if (count.incrementAndGet() > 1)
-//            return;
 
         _log.info("绑定添加用户消息的队列: {}", SucExchangeCo.SUC_USER_ADD_QUEUE_NAME);
 

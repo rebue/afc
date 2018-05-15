@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/14 15:07:29                           */
+/* Created on:     2018/5/15 15:30:18                           */
 /*==============================================================*/
 
 
@@ -108,15 +108,16 @@ create table AFC_PLATFORM_TRADE
 (
    ID                   bigint not null comment '平台交易ID',
    PLATFORM_TRADE_TYPE  tinyint not null comment '交易类型（1：收取服务费(购买交易成功)  2：退回服务费(用户退款)）',
-   ORDER_ID             bigint not null comment '销售/退货单ID
-            流水类型是收取服务费，则填写销售订单ID
-            如果是退回服务费，则填写退货订单ID',
+   ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
+   ORDER_DETAIL_ID      varchar(150) comment '订单详情ID
+            (如果平台交易类型是收取服务费，则填销售订单详情ID；如果是退款，则填写退款单ID)',
    CHANGE_AMOUNT        decimal(18,4) not null comment '变化的金额',
    BALANCE              decimal(18,4) not null default 0 comment '余额（修改后）',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
    primary key (ID),
-   unique key AK_ORDER_ID_AND_FLOW_TYPE (ORDER_ID, PLATFORM_TRADE_TYPE),
-   unique key AK_MODIFIED_TIMESTAMP (MODIFIED_TIMESTAMP)
+   unique key AK_PLATFORM_TRADE_TYPE_AND_ORDER (PLATFORM_TRADE_TYPE, ORDER_ID),
+   unique key AK_MODIFIED_TIMESTAMP (MODIFIED_TIMESTAMP),
+   unique key AK_PLATFORM_TRADE_TYPE_AND_ORDER_DETAIL (PLATFORM_TRADE_TYPE, ORDER_DETAIL_ID)
 );
 
 alter table AFC_PLATFORM_TRADE comment '平台交易';
@@ -142,7 +143,8 @@ create table AFC_SETTLE_TASK
    MAC                  varchar(30) not null comment 'MAC地址',
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID),
-   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_ID_AND_ORDER_DETAIL_ID (ACCOUNT_ID, TRADE_TYPE, ORDER_ID, ORDER_DETAIL_ID)
+   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER (ACCOUNT_ID, TRADE_TYPE, ORDER_ID),
+   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_DETAIL (ACCOUNT_ID, TRADE_TYPE, ORDER_DETAIL_ID)
 );
 
 alter table AFC_SETTLE_TASK comment '结算任务';
