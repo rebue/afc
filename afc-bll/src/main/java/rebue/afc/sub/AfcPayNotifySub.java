@@ -39,7 +39,7 @@ public class AfcPayNotifySub implements ApplicationListener<ContextRefreshedEven
     /**
      * 支付完成通知的URL @FIXME 当不用再支持微薄利商超老版本时删除
      */
-    @Value("${afc.pay.pay-notify-url}")
+    @Value("${afc.pay.pay-notify-url:null}")
     private String              payNotifyUrl;
 
     @Resource
