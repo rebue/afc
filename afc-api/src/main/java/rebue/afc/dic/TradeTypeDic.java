@@ -90,7 +90,23 @@ public enum TradeTypeDic implements EnumBase {
     /**
      * 60: 退款-退款给买家（退到买家的余额和返现金）
      */
-    REFUND_TO_BUYER(60);
+    REFUND_TO_BUYER(60),
+    /**
+     * 61: 退款-收回平台服务费(结算给平台的服务费的金额)
+     */
+    GETBACK_PLATFORM_SERVICE_FEE(61),
+    /**
+     * 62: 退款-收回供应商款项(结算给供应商的金额)
+     */
+    GETBACK_SUPPLIER(62),
+    /**
+     * 63: 退款-收回卖家款项(结算给卖家利润的金额)
+     */
+    GETBACK_SELLER(63),
+    /**
+     * 64: 收回已占用保证金(结算给卖家释放已占用保证金的金额)
+     */
+    GETBACK_DEPOSIT_USED(64);
     /**
      * 枚举的所有项，注意这个变量是静态单例的
      */
