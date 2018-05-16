@@ -19,11 +19,12 @@ import rebue.wheel.idworker.IdWorker3;
 
 public class AfcVpayTests {
 
-    private String       _hostUrl      = "http://localhost:9300";
+//    private String       _hostUrl      = "http://localhost:9300";
+    private String       _hostUrl      = "http://192.168.1.201/afc-svr";
 
     private ObjectMapper _objectMapper = new ObjectMapper();
 
-    private Long         userId        = 471579798452436998L;
+    private Long         userId        = 471853827675389958L;
 
     @Value("${appid:0}")
     private int          _appid;

@@ -26,6 +26,7 @@ import rebue.afc.ro.SettleNotifyRo;
 import rebue.afc.svc.AfcSettleSvc;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.svc.AfcTradeSvc;
+import rebue.afc.to.AddSettleTasksDetailTo;
 import rebue.afc.to.AddSettleTasksTo;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.svr.feign.SucUserSvc;
@@ -82,8 +83,8 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public AddSettleTasksRo addSettleTasks(AddSettleTasksTo to) throws DuplicateKeyException {
         _log.info("添加结算任务: {}", to);
-        if (to.getBuyerAccountId() == null || to.getSellerAccountId() == null || to.getSettleBuyerCashbackAmount() == null || to.getSettleBuyerCashbackTime() == null
-                || StringUtils.isAnyBlank(to.getSettleBuyerCashbackTitle(), to.getOrderId(), to.getOrderDetailId(), to.getMac(), to.getIp())) {
+
+        if (StringUtils.isAnyBlank(to.getOrderId(), to.getMac(), to.getIp())) {
             String msg = "参数有误";
             _log.error("{}: {}", msg, to);
             AddSettleTasksRo ro = new AddSettleTasksRo();
@@ -92,73 +93,101 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             return ro;
         }
 
-        // 如果要结算返现
-        if (to.getSettleBuyerCashbackAmount().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("添加结算返现中金额的任务");
-            AfcSettleTaskMo taskMo = dozerMapper.map(to, AfcSettleTaskMo.class);
-            taskMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACKING.getCode());
-            taskMo.setExecutePlanTime(new Date());                                      // 计划执行时间（立即执行）
-            taskMo.setAccountId(to.getBuyerAccountId());                                // 买家的账户ID
-            taskMo.setTradeAmount(to.getSettleBuyerCashbackAmount());                   // 返现金
-            taskMo.setTradeTitle(to.getSettleBuyerCashbackTitle());                     // 结算给买家返现金的标题
-            taskMo.setTradeDetail(to.getSettleBuyerCashbackDetail());                   // 结算给买家返现金的详情
-            thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+        // 立即执行的时间
+        Date now = new Date();
 
-            _log.info("添加结算返现金的任务");
-            taskMo.setId(null);
-            taskMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACK.getCode());
-            taskMo.setExecutePlanTime(to.getSettleBuyerCashbackTime());                 // 计划执行时间
-            thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
-        }
+        // 遍历详情来添加任务
+        for (AddSettleTasksDetailTo detail : to.getDetails()) {
+            if (detail.getBuyerAccountId() == null || detail.getSellerAccountId() == null || detail.getSettleBuyerCashbackAmount() == null
+                    || StringUtils.isAnyBlank(detail.getSettleBuyerCashbackTitle(), detail.getOrderDetailId())) {
+                String msg = "参数有误";
+                _log.error("{}: {}", msg, detail);
+                throw new RuntimeException(msg);
+            }
 
-        // 如果要结算平台服务费
-        if (to.getSettlePlatformServiceFeeAmount() != null && to.getSettlePlatformServiceFeeAmount().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("添加结算平台服务费的任务");
-            AfcSettleTaskMo taskMo = dozerMapper.map(to, AfcSettleTaskMo.class);
-            taskMo.setTradeType((byte) TradeTypeDic.SETTLE_PLATFORM_SERVICE_FEE.getCode());
-            taskMo.setTradeTitle("结算平台服务费");                                        // 结算平台服务费的标题
-            taskMo.setExecutePlanTime(to.getSettlePlatformServiceFeeTime());            // 计划执行时间
-            taskMo.setTradeAmount(to.getSettlePlatformServiceFeeAmount());              // 平台服务费
-            thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
-        }
+            // 如果要结算返现
+            if (detail.getSettleBuyerCashbackAmount() != null && detail.getSettleBuyerCashbackAmount().compareTo(BigDecimal.ZERO) > 0) {
+                _log.info("添加结算返现中金额的任务");
+                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                taskMo.setOrderId(to.getOrderId());
+                taskMo.setMac(to.getMac());
+                taskMo.setIp(to.getIp());
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACKING.getCode());
+                taskMo.setExecutePlanTime(now);                                                 // 计划执行时间（立即执行）
+                taskMo.setAccountId(detail.getBuyerAccountId());                                // 买家的账户ID
+                taskMo.setTradeAmount(detail.getSettleBuyerCashbackAmount());                   // 返现金
+                taskMo.setTradeTitle(detail.getSettleBuyerCashbackTitle());                     // 结算给买家返现金的标题
+                taskMo.setTradeDetail(detail.getSettleBuyerCashbackDetail());                   // 结算给买家返现金的详情
+                thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
 
-        // 如果要结算供应商
-        if (to.getSettleSupplierAmount() != null && to.getSettleSupplierAmount().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("添加结算供应商的任务");
-            AfcSettleTaskMo taskMo = dozerMapper.map(to, AfcSettleTaskMo.class);
-            taskMo.setTradeType((byte) TradeTypeDic.SETTLE_SUPPLIER.getCode());
-            taskMo.setExecutePlanTime(to.getSettleSupplierTime());                      // 计划执行时间
-            taskMo.setAccountId(to.getSupplierAccountId());                             // 供应商的账户ID
-            taskMo.setTradeAmount(to.getSettleSupplierAmount());                        // 结算供应商的金额(成本，打到余额)
-            taskMo.setTradeTitle(to.getSettleSupplierTitle());                          // 结算供应商的标题
-            taskMo.setTradeDetail(to.getSettleSupplierDetail());                        // 结算供应商的详情
-            thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
-        }
+                _log.info("添加结算返现金的任务");
+                taskMo.setId(null);
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACK.getCode());
+                taskMo.setExecutePlanTime(to.getSettleBuyerCashbackTime());                 // 计划执行时间
+                thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+            }
 
-        // 如果要结算卖家
-        if (to.getSettleSellerAmount() != null && to.getSettleSellerAmount().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("添加结算卖家的任务");
-            AfcSettleTaskMo taskMo = dozerMapper.map(to, AfcSettleTaskMo.class);
-            taskMo.setTradeType((byte) TradeTypeDic.SETTLE_SELLER.getCode());
-            taskMo.setExecutePlanTime(to.getSettleSellerTime());                        // 计划执行时间
-            taskMo.setAccountId(to.getSellerAccountId());                               // 卖家的账户ID
-            taskMo.setTradeAmount(to.getSettleSellerAmount());                          // 结算卖家的金额(利润，打到余额)
-            taskMo.setTradeTitle(to.getSettleSellerTitle());                            // 结算卖家的标题
-            taskMo.setTradeDetail(to.getSettleSellerDetail());                          // 结算卖家的详情
-            thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
-        }
+            // 如果要结算平台服务费
+            if (detail.getSettlePlatformServiceFeeAmount() != null && detail.getSettlePlatformServiceFeeAmount().compareTo(BigDecimal.ZERO) > 0) {
+                _log.info("添加结算平台服务费的任务");
+                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                taskMo.setOrderId(to.getOrderId());
+                taskMo.setMac(to.getMac());
+                taskMo.setIp(to.getIp());
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_PLATFORM_SERVICE_FEE.getCode());
+                taskMo.setTradeTitle("结算平台服务费");                                        // 结算平台服务费的标题
+                taskMo.setExecutePlanTime(to.getSettlePlatformServiceFeeTime());            // 计划执行时间
+                taskMo.setTradeAmount(detail.getSettlePlatformServiceFeeAmount());              // 平台服务费
+                thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+            }
 
-        // 如果要结算已占用保证金
-        if (to.getSettleDepositUsedAmount() != null && to.getSettleDepositUsedAmount().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("添加结算供应商的任务");
-            AfcSettleTaskMo taskMo = dozerMapper.map(to, AfcSettleTaskMo.class);
-            taskMo.setTradeType((byte) TradeTypeDic.SETTLE_DEPOSIT_USED.getCode());
-            taskMo.setExecutePlanTime(to.getSettleDepositUsedTime());                   // 计划执行时间
-            taskMo.setAccountId(to.getSellerAccountId());                               // 卖家的账户ID
-            taskMo.setTradeAmount(to.getSettleDepositUsedAmount());                     // 结算已占用保证金的金额(成本，打到余额)
-            taskMo.setTradeTitle(to.getSettleDepositUsedTitle());                       // 结算已占用保证金的标题
-            taskMo.setTradeDetail(to.getSettleDepositUsedDetail());                     // 结算已占用保证金的详情
-            thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+            // 如果要结算供应商
+            if (detail.getSettleSupplierAmount() != null && detail.getSettleSupplierAmount().compareTo(BigDecimal.ZERO) > 0) {
+                _log.info("添加结算供应商的任务");
+                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                taskMo.setOrderId(to.getOrderId());
+                taskMo.setMac(to.getMac());
+                taskMo.setIp(to.getIp());
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_SUPPLIER.getCode());
+                taskMo.setExecutePlanTime(to.getSettleSupplierTime());                      // 计划执行时间
+                taskMo.setAccountId(detail.getSupplierAccountId());                             // 供应商的账户ID
+                taskMo.setTradeAmount(detail.getSettleSupplierAmount());                        // 结算供应商的金额(成本，打到余额)
+                taskMo.setTradeTitle(detail.getSettleSupplierTitle());                          // 结算供应商的标题
+                taskMo.setTradeDetail(detail.getSettleSupplierDetail());                        // 结算供应商的详情
+                thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+            }
+
+            // 如果要结算卖家
+            if (detail.getSettleSellerAmount() != null && detail.getSettleSellerAmount().compareTo(BigDecimal.ZERO) > 0) {
+                _log.info("添加结算卖家的任务");
+                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                taskMo.setOrderId(to.getOrderId());
+                taskMo.setMac(to.getMac());
+                taskMo.setIp(to.getIp());
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_SELLER.getCode());
+                taskMo.setExecutePlanTime(to.getSettleSellerTime());                        // 计划执行时间
+                taskMo.setAccountId(detail.getSellerAccountId());                               // 卖家的账户ID
+                taskMo.setTradeAmount(detail.getSettleSellerAmount());                          // 结算卖家的金额(利润，打到余额)
+                taskMo.setTradeTitle(detail.getSettleSellerTitle());                            // 结算卖家的标题
+                taskMo.setTradeDetail(detail.getSettleSellerDetail());                          // 结算卖家的详情
+                thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+            }
+
+            // 如果要结算已占用保证金
+            if (detail.getSettleDepositUsedAmount() != null && detail.getSettleDepositUsedAmount().compareTo(BigDecimal.ZERO) > 0) {
+                _log.info("添加结算供应商的任务");
+                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                taskMo.setOrderId(to.getOrderId());
+                taskMo.setMac(to.getMac());
+                taskMo.setIp(to.getIp());
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_DEPOSIT_USED.getCode());
+                taskMo.setExecutePlanTime(to.getSettleDepositUsedTime());                   // 计划执行时间
+                taskMo.setAccountId(detail.getSellerAccountId());                               // 卖家的账户ID
+                taskMo.setTradeAmount(detail.getSettleDepositUsedAmount());                     // 结算已占用保证金的金额(成本，打到余额)
+                taskMo.setTradeTitle(detail.getSettleDepositUsedTitle());                       // 结算已占用保证金的标题
+                taskMo.setTradeDetail(detail.getSettleDepositUsedDetail());                     // 结算已占用保证金的详情
+                thisSvc.add(taskMo);        // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+            }
         }
 
         // 返回成功
