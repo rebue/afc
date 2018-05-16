@@ -1,13 +1,13 @@
 package rebue.afc.svc;
 
-import rebue.afc.ro.RefundToBuyerRo;
-import rebue.afc.to.RefundToBuyerTo;
+import rebue.afc.ro.RefundRo;
+import rebue.afc.to.RefundTo;
 
 public interface AfcRefundSvc {
 
     /**
-     * 退款-退款到买家账户
+     * 退款
      */
-    RefundToBuyerRo refundToBuyer(RefundToBuyerTo to);
+    RefundRo refund(RefundTo to);
 
 }

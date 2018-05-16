@@ -84,7 +84,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     public AddSettleTasksRo addSettleTasks(AddSettleTasksTo to) throws DuplicateKeyException {
         _log.info("添加结算任务: {}", to);
 
-        if (StringUtils.isAnyBlank(to.getOrderId(), to.getMac(), to.getIp())) {
+        if (to.getBuyerAccountId() == null || StringUtils.isAnyBlank(to.getOrderId(), to.getMac(), to.getIp())) {
             String msg = "参数有误";
             _log.error("{}: {}", msg, to);
             AddSettleTasksRo ro = new AddSettleTasksRo();
@@ -98,8 +98,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
 
         // 遍历详情来添加任务
         for (AddSettleTasksDetailTo detail : to.getDetails()) {
-            if (detail.getBuyerAccountId() == null || detail.getSellerAccountId() == null || detail.getSettleBuyerCashbackAmount() == null
-                    || StringUtils.isAnyBlank(detail.getSettleBuyerCashbackTitle(), detail.getOrderDetailId())) {
+            if (detail.getSettleBuyerCashbackAmount() == null || StringUtils.isAnyBlank(detail.getSettleBuyerCashbackTitle(), detail.getOrderDetailId())) {
                 String msg = "参数有误";
                 _log.error("{}: {}", msg, detail);
                 throw new RuntimeException(msg);
@@ -114,7 +113,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
                 taskMo.setIp(to.getIp());
                 taskMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACKING.getCode());
                 taskMo.setExecutePlanTime(now);                                                 // 计划执行时间（立即执行）
-                taskMo.setAccountId(detail.getBuyerAccountId());                                // 买家的账户ID
+                taskMo.setAccountId(to.getBuyerAccountId());                                // 买家的账户ID
                 taskMo.setTradeAmount(detail.getSettleBuyerCashbackAmount());                   // 返现金
                 taskMo.setTradeTitle(detail.getSettleBuyerCashbackTitle());                     // 结算给买家返现金的标题
                 taskMo.setTradeDetail(detail.getSettleBuyerCashbackDetail());                   // 结算给买家返现金的详情
@@ -166,7 +165,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
                 taskMo.setIp(to.getIp());
                 taskMo.setTradeType((byte) TradeTypeDic.SETTLE_SELLER.getCode());
                 taskMo.setExecutePlanTime(to.getSettleSellerTime());                        // 计划执行时间
-                taskMo.setAccountId(detail.getSellerAccountId());                               // 卖家的账户ID
+                taskMo.setAccountId(to.getSellerAccountId());                               // 卖家的账户ID
                 taskMo.setTradeAmount(detail.getSettleSellerAmount());                          // 结算卖家的金额(利润，打到余额)
                 taskMo.setTradeTitle(detail.getSettleSellerTitle());                            // 结算卖家的标题
                 taskMo.setTradeDetail(detail.getSettleSellerDetail());                          // 结算卖家的详情
@@ -182,7 +181,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
                 taskMo.setIp(to.getIp());
                 taskMo.setTradeType((byte) TradeTypeDic.SETTLE_DEPOSIT_USED.getCode());
                 taskMo.setExecutePlanTime(to.getSettleDepositUsedTime());                   // 计划执行时间
-                taskMo.setAccountId(detail.getSellerAccountId());                               // 卖家的账户ID
+                taskMo.setAccountId(to.getSellerAccountId());                               // 卖家的账户ID
                 taskMo.setTradeAmount(detail.getSettleDepositUsedAmount());                     // 结算已占用保证金的金额(成本，打到余额)
                 taskMo.setTradeTitle(detail.getSettleDepositUsedTitle());                       // 结算已占用保证金的标题
                 taskMo.setTradeDetail(detail.getSettleDepositUsedDetail());                     // 结算已占用保证金的详情

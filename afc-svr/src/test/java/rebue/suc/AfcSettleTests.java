@@ -50,6 +50,8 @@ public class AfcSettleTests {
         String url = _hostUrl + "/settle/tasks";
         AddSettleTasksTo to = new AddSettleTasksTo();
         to.setOrderId(orderId);
+        to.setBuyerAccountId(buyerAccountId);
+        to.setSellerAccountId(sellerAccountId);
         to.setSettleBuyerCashbackTime(cashbackTime);
         to.setSettlePlatformServiceFeeTime(cashbackTime);
         to.setSettleSupplierTime(supplierTime);
@@ -61,8 +63,6 @@ public class AfcSettleTests {
         List<AddSettleTasksDetailTo> details = new LinkedList<>();
         AddSettleTasksDetailTo detail = new AddSettleTasksDetailTo();
         detail.setOrderDetailId(_idWorker.getIdStr());
-        detail.setBuyerAccountId(buyerAccountId);
-        detail.setSellerAccountId(sellerAccountId);
         detail.setSupplierAccountId(supplierAccountId);
         detail.setSettleBuyerCashbackAmount(BigDecimal.valueOf(1.01));
         detail.setSettleBuyerCashbackTitle("结算给买家返现金的标题");

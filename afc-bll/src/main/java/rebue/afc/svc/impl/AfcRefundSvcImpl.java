@@ -14,15 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import rebue.afc.dic.RefundToBuyerResultDic;
+import rebue.afc.dic.RefundResultDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mo.AfcPayMo;
 import rebue.afc.mo.AfcTradeMo;
-import rebue.afc.ro.RefundToBuyerRo;
+import rebue.afc.ro.RefundRo;
 import rebue.afc.svc.AfcPaySvc;
 import rebue.afc.svc.AfcRefundSvc;
 import rebue.afc.svc.AfcTradeSvc;
-import rebue.afc.to.RefundToBuyerTo;
+import rebue.afc.to.RefundTo;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.svr.feign.SucUserSvc;
 
@@ -53,82 +53,64 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
     private Mapper              dozerMapper;
 
     /**
-     * 退款-退款到买家账户（ 余额+，返现金+ ）
+     * 退款
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public RefundToBuyerRo refundToBuyer(RefundToBuyerTo to) {
-        _log.info("退款-退款到买家账户: {}", to);
+    public RefundRo refund(RefundTo to) {
+        _log.info("退款: {}", to);
 
-        if (to.getAccountId() == null || to.getChangeAmount1() == null || to.getChangeAmount2() == null || to.getOpId() == null
+        if (to.getBuyerAccountId() == null || (to.getReturnBalanceToBuyer() == null && to.getReturnCashbackToBuyer() == null) || to.getOpId() == null
                 || StringUtils.isAnyBlank(to.getOrderId(), to.getOrderDetailId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
-            String msg = "参数不对";
+            String msg = "参数不正确";
             _log.error("{}: {}", msg, to);
-            RefundToBuyerRo ro = new RefundToBuyerRo();
-            ro.setResult(RefundToBuyerResultDic.PARAM_ERROR);
-            ro.setMsg(msg);
-            return ro;
+            throw new RuntimeException(msg);
         }
 
-        _log.info("用户退款查询操作人信息的参数为：{}", to.getOpId());
+        _log.info("退款查询操作人信息的参数为：{}", to.getOpId());
         SucUserMo opUserMo = userSvc.getById(to.getOpId());
-        _log.info("用户退货退款查询操作人信息的返回值为：{}", opUserMo.toString());
+        _log.info("退款查询操作人信息的返回值为：{}", opUserMo.toString());
         if (opUserMo.getId() == null) {
-            String msg = "用户退货退款查询用户信息时发现没有此操作人";
+            String msg = "退款时发现没有此操作人";
             _log.error("{}，操作人编号为：{}", msg, to.getOpId());
-            RefundToBuyerRo ro = new RefundToBuyerRo();
-            ro.setResult(RefundToBuyerResultDic.NOT_FOUND_OP);
-            ro.setMsg(msg);
-            return ro;
+            throw new RuntimeException(msg);
         }
 
         if (opUserMo.getIsLock()) {
-            String msg = "用户退款时发现操作人已被锁定";
+            String msg = "退款时发现操作人已被锁定";
             _log.error("{}，操作人编号为：{}", msg, opUserMo);
-            RefundToBuyerRo ro = new RefundToBuyerRo();
-            ro.setResult(RefundToBuyerResultDic.OP_LOCKED);
-            ro.setMsg(msg);
-            return ro;
+            throw new RuntimeException(msg);
         }
 
-        _log.info("用户退款查询用户信息的参数为：{}", to.getAccountId());
-        SucUserMo userMo = userSvc.getById(to.getAccountId());
-        _log.info("用户退款查询用户信息的返回值为：{}", userMo.toString());
-        if (userMo.getId() == null) {
-            String msg = "用户退货退款时发现没有此用户";
-            _log.error("{}，账户ID为：{}", msg, to.getAccountId());
-            RefundToBuyerRo ro = new RefundToBuyerRo();
-            ro.setResult(RefundToBuyerResultDic.NOT_FOUND_USER);
-            ro.setMsg(msg);
-            return ro;
+        _log.info("退款查询买家信息的参数为：{}", to.getBuyerAccountId());
+        SucUserMo buyerMo = userSvc.getById(to.getBuyerAccountId());
+        _log.info("退款查询买家信息的返回值为：{}", buyerMo.toString());
+        if (buyerMo.getId() == null) {
+            String msg = "退款时发现没有此买家";
+            _log.error("{}，账户ID为：{}", msg, to.getBuyerAccountId());
+            throw new RuntimeException(msg);
         }
-        if (userMo.getIsLock()) {
-            String msg = "用户退款时发现用户已被锁定";
-            _log.error("{}，账户ID为：{}", msg, userMo);
-            RefundToBuyerRo ro = new RefundToBuyerRo();
-            ro.setResult(RefundToBuyerResultDic.USER_LOCKED);
-            ro.setMsg(msg);
-            return ro;
+        if (buyerMo.getIsLock()) {
+            String msg = "退款时发现买家已被锁定";
+            _log.error("{}，账户ID为：{}", msg, buyerMo);
+            throw new RuntimeException(msg);
         }
 
         // 检查账户有没有支付过此销售单
         AfcPayMo condition = new AfcPayMo();
-        condition.setAccountId(to.getAccountId());
+        condition.setAccountId(to.getBuyerAccountId());
         condition.setOrderId(to.getOrderId());
-        _log.info("用户退款查询支付订单信息的参数为：{}", condition.toString());
+        _log.info("退款查询支付订单信息的参数为：{}", condition.toString());
         List<AfcPayMo> pays = paySvc.list(condition);
-        _log.info("用户退款查询支付订单信息的返回值为：{}", String.valueOf(pays));
+        _log.info("退款查询支付订单信息的返回值为：{}", String.valueOf(pays));
         if (pays.isEmpty()) {
-            String msg = "用户退货退款时发现用户未支付此销售单";
+            String msg = "退款时发现买家未支付此销售单";
             _log.error("{}，销售单号为：{}", msg, to.getOrderId());
-            RefundToBuyerRo ro = new RefundToBuyerRo();
-            ro.setResult(RefundToBuyerResultDic.NOT_FOUND_ORDERID);
-            ro.setMsg(msg);
-            return ro;
+            throw new RuntimeException(msg);
         }
 
-        // 得到交易金额
-        BigDecimal tradeAmount = new BigDecimal(to.getChangeAmount2()).add(new BigDecimal(to.getChangeAmount1().toString()));
+        // 得到退款总额
+        BigDecimal tradeAmount = to.getReturnBalanceToBuyer().add(to.getReturnCashbackToBuyer());
 
         // 检查退款金额不能超过支付金额
         // 计算支付总额 TODO SQL直查
@@ -136,33 +118,34 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
         for (AfcPayMo afcPayMo : pays) {
             payTotal = payTotal.add(afcPayMo.getPayAmount());
         }
-        _log.info("用户退货退款查询退货总额的参数为：{}", to.getOrderId());
+        _log.info("退款查询退货总额的参数为：{}", to.getOrderId());
         // 计算已退款总额
         BigDecimal refundTotal = tradeSvc.getRefundTotalAmountByOrderId(to.getOrderId());
-        _log.info("用户退款查询退款总额的返回值为：{}", refundTotal);
+        _log.info("退款查询退款总额的返回值为：{}", refundTotal);
         if (refundTotal == null)
             refundTotal = BigDecimal.ZERO;
         // 比较大小
         if (payTotal.compareTo(refundTotal.add(tradeAmount)) < 0) {
             String msg = "退款总额不能超过支付总额";
             _log.error("{}: {}", to);
-            RefundToBuyerRo ro = new RefundToBuyerRo();
-            ro.setResult(RefundToBuyerResultDic.NOT_ENOUGH_MONEY);
-            ro.setMsg(msg);
-            return ro;
+            throw new RuntimeException(msg);
         }
 
+        // 退款到买家账户（ 余额+，返现金+ ）
         // 添加一笔交易
         AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
         tradeMo.setTradeType((byte) TradeTypeDic.REFUND_TO_BUYER.getCode());
+        tradeMo.setAccountId(to.getBuyerAccountId());
         tradeMo.setTradeAmount(tradeAmount);
         tradeMo.setTradeTime(new Date());
         tradeSvc.addTrade(tradeMo);
+        
+        
 
         // 返回成功
         _log.info("退货-买家退货成功: {}", to);
-        RefundToBuyerRo ro = new RefundToBuyerRo();
-        ro.setResult(RefundToBuyerResultDic.SUCCESS);
+        RefundRo ro = new RefundRo();
+        ro.setResult(RefundResultDic.SUCCESS);
         return ro;
     }
 

@@ -4,14 +4,6 @@ import java.math.BigDecimal;
 
 public class AddSettleTasksDetailTo {
     /**
-     * 买家的账户ID
-     */
-    private Long       buyerAccountId;
-    /**
-     * 卖家的账户ID
-     */
-    private Long       sellerAccountId;
-    /**
      * 供应商的账户ID
      */
     private Long       supplierAccountId;
@@ -78,22 +70,6 @@ public class AddSettleTasksDetailTo {
      * (销售订单详情ID)
      */
     private String     orderDetailId;
-
-    public Long getBuyerAccountId() {
-        return buyerAccountId;
-    }
-
-    public void setBuyerAccountId(Long buyerAccountId) {
-        this.buyerAccountId = buyerAccountId;
-    }
-
-    public Long getSellerAccountId() {
-        return sellerAccountId;
-    }
-
-    public void setSellerAccountId(Long sellerAccountId) {
-        this.sellerAccountId = sellerAccountId;
-    }
 
     public Long getSupplierAccountId() {
         return supplierAccountId;
@@ -217,12 +193,12 @@ public class AddSettleTasksDetailTo {
 
     @Override
     public String toString() {
-        return "AddSettleTasksDetailTo [buyerAccountId=" + buyerAccountId + ", sellerAccountId=" + sellerAccountId + ", supplierAccountId=" + supplierAccountId
-                + ", settleBuyerCashbackAmount=" + settleBuyerCashbackAmount + ", settleBuyerCashbackTitle=" + settleBuyerCashbackTitle + ", settleBuyerCashbackDetail="
-                + settleBuyerCashbackDetail + ", settlePlatformServiceFeeAmount=" + settlePlatformServiceFeeAmount + ", settleSupplierAmount=" + settleSupplierAmount
-                + ", settleSupplierTitle=" + settleSupplierTitle + ", settleSupplierDetail=" + settleSupplierDetail + ", settleSellerAmount=" + settleSellerAmount
-                + ", settleSellerTitle=" + settleSellerTitle + ", settleSellerDetail=" + settleSellerDetail + ", settleDepositUsedAmount=" + settleDepositUsedAmount
-                + ", settleDepositUsedTitle=" + settleDepositUsedTitle + ", settleDepositUsedDetail=" + settleDepositUsedDetail + ", orderDetailId=" + orderDetailId + "]";
+        return "AddSettleTasksDetailTo [supplierAccountId=" + supplierAccountId + ", settleBuyerCashbackAmount=" + settleBuyerCashbackAmount + ", settleBuyerCashbackTitle="
+                + settleBuyerCashbackTitle + ", settleBuyerCashbackDetail=" + settleBuyerCashbackDetail + ", settlePlatformServiceFeeAmount=" + settlePlatformServiceFeeAmount
+                + ", settleSupplierAmount=" + settleSupplierAmount + ", settleSupplierTitle=" + settleSupplierTitle + ", settleSupplierDetail=" + settleSupplierDetail
+                + ", settleSellerAmount=" + settleSellerAmount + ", settleSellerTitle=" + settleSellerTitle + ", settleSellerDetail=" + settleSellerDetail
+                + ", settleDepositUsedAmount=" + settleDepositUsedAmount + ", settleDepositUsedTitle=" + settleDepositUsedTitle + ", settleDepositUsedDetail="
+                + settleDepositUsedDetail + ", orderDetailId=" + orderDetailId + "]";
     }
 
 }

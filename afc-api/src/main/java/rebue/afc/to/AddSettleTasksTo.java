@@ -17,6 +17,14 @@ public class AddSettleTasksTo {
      * (销售订单ID)
      */
     private String                       orderId;
+    /**
+     * 买家的账户ID
+     */
+    private Long                         buyerAccountId;
+    /**
+     * 卖家的账户ID
+     */
+    private Long                         sellerAccountId;
 
     /**
      * 结算给买家返现金的计划执行时间
@@ -66,6 +74,22 @@ public class AddSettleTasksTo {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public Long getBuyerAccountId() {
+        return buyerAccountId;
+    }
+
+    public void setBuyerAccountId(Long buyerAccountId) {
+        this.buyerAccountId = buyerAccountId;
+    }
+
+    public Long getSellerAccountId() {
+        return sellerAccountId;
+    }
+
+    public void setSellerAccountId(Long sellerAccountId) {
+        this.sellerAccountId = sellerAccountId;
     }
 
     public Date getSettleBuyerCashbackTime() {
@@ -134,9 +158,9 @@ public class AddSettleTasksTo {
 
     @Override
     public String toString() {
-        return "AddSettleTasksTo [orderId=" + orderId + ", settleBuyerCashbackTime=" + settleBuyerCashbackTime + ", settlePlatformServiceFeeTime=" + settlePlatformServiceFeeTime
-                + ", settleSupplierTime=" + settleSupplierTime + ", settleSellerTime=" + settleSellerTime + ", settleDepositUsedTime=" + settleDepositUsedTime + ", mac=" + mac
-                + ", ip=" + ip + ", details=" + details + "]";
+        return "AddSettleTasksTo [orderId=" + orderId + ", buyerAccountId=" + buyerAccountId + ", sellerAccountId=" + sellerAccountId + ", settleBuyerCashbackTime="
+                + settleBuyerCashbackTime + ", settlePlatformServiceFeeTime=" + settlePlatformServiceFeeTime + ", settleSupplierTime=" + settleSupplierTime + ", settleSellerTime="
+                + settleSellerTime + ", settleDepositUsedTime=" + settleDepositUsedTime + ", mac=" + mac + ", ip=" + ip + ", details=" + details + "]";
     }
 
 }
