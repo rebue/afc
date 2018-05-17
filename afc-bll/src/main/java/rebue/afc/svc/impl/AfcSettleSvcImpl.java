@@ -1,6 +1,5 @@
 package rebue.afc.svc.impl;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import rebue.afc.mo.AfcPlatformMo;
 import rebue.afc.mo.AfcPlatformTradeMo;
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.mo.AfcTradeMo;
@@ -94,25 +92,11 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
     public void settlePlatformServiceFee(AfcSettleTaskMo taskMo, Date now) {
         _log.info("结算平台服务费: ", taskMo);
 
-        BigDecimal serviceFee = taskMo.getTradeAmount();
-
-        _log.info("查询平台信息");
-        AfcPlatformMo oldPlatfromMo = platformSvc.getById(0L);
-        _log.info("当前平台信息: {}", oldPlatfromMo);
-        _log.info("改变前的余额: {}", oldPlatfromMo.getBalance());
-        BigDecimal newBalance = oldPlatfromMo.getBalance().add(serviceFee);
-        _log.info("改变后的余额: {}", newBalance);
-
         // 添加一笔平台交易
         AfcPlatformTradeMo tradeMo = dozerMapper.map(taskMo, AfcPlatformTradeMo.class);
         tradeMo.setPlatformTradeType((byte) PlatformTradeTypeDic.CHARGE_SEVICE_FEE.getCode());  // 交易类型（1：收取服务费(购买交易成功) 2：退回服务费(用户退款)）
-        tradeMo.setChangeAmount(serviceFee);                                                    // 收取的服务费
-        tradeMo.setBalance(newBalance);                                                         // 余额（修改后）
         tradeMo.setModifiedTimestamp(now.getTime());                                            // 修改时间戳
         platformTradeSvc.add(tradeMo);      // 如果重复提交，会抛出DuplicateKeyException运行时异常
-
-        // 修改平台余额
-        platformSvc.modifyBalance(newBalance, now.getTime(), oldPlatfromMo.getBalance(), oldPlatfromMo.getModifiedTimestamp(), oldPlatfromMo.getId());
     }
 
 }

@@ -26,8 +26,7 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
  * </pre>
  */
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-public class AfcAccountSvcImpl extends MybatisBaseSvcImpl<AfcAccountMo, java.lang.Long, AfcAccountMapper>
-        implements AfcAccountSvc {
+public class AfcAccountSvcImpl extends MybatisBaseSvcImpl<AfcAccountMo, java.lang.Long, AfcAccountMapper> implements AfcAccountSvc {
 
     /**
      */
@@ -47,13 +46,17 @@ public class AfcAccountSvcImpl extends MybatisBaseSvcImpl<AfcAccountMo, java.lan
     }
 
     /**
-     * 产生了一笔交易(影响余额/返现金/返现中金额/货款)，修改相应的字段及记录时间戳
+     * 修改金额-产生了一笔交易(影响余额/返现金/返现中金额/货款)，修改相应的字段及记录时间戳
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public int trade(HashMap<String, ?> map) {
-        _log.info("产生了一笔交易(影响余额/返现金/货款)，修改相应的字段及记录时间戳: {}", map);
-        return _mapper.trade(map);
+    public void modifyAmount(HashMap<String, ?> map) {
+        _log.info("修改金额-产生了一笔交易(影响余额/返现金/货款)，修改相应的字段及记录时间戳: {}", map);
+        if (_mapper.modifyAmount(map) != 1) {
+            String msg = "修改账户的金额不成功: 出现并发问题";
+            _log.error("{}-{}", msg, map);
+            throw new RuntimeException(msg);
+        }
     }
 
 }

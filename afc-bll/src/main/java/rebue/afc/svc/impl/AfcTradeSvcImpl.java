@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +77,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      * 3. 添加账户流水
      */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public void addTrade(AfcTradeMo tradeMo) {
         _log.info("添加一笔交易记录");
         // 账户ID
@@ -173,6 +173,15 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             newAccountMo.setBalance(newBalanceAmount);
             newAccountMo.setCashback(newCashbackAmount);
             break;
+        // XXX AFC : 交易 : （ 返现金- ）退款-收回买家返现金
+        case GETBACK_SELLER:
+            break;
+        // XXX AFC : 交易 : （ 返现金- ）退款-收回卖家款项
+        case GETBACK_SUPPLIER:
+            break;
+        // XXX AFC : 交易 : （ 返现金- ）退款-收回释放的卖家已占用保证金
+        case GETBACK_DEPOSIT_USED:
+            break;
         // XXX AFC : 交易 : （ 进货保证金+ ）进货保证金-充值
         case DEPOSIT_CHARGE:
             // 进货保证金+
@@ -243,12 +252,8 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         map.put("id", accountId);
         map.put("modifiedTimestamp", newAccountMo.getModifiedTimestamp());
         map.put("oldModifiedTimestamp", oldAccountMo.getModifiedTimestamp());
-        // 执行sql
-        if (accountSvc.trade(map) != 1) {
-            String msg = "修改账户的金额不成功: 出现并发问题";
-            _log.error("{}-{}", msg, tradeMo);
-            throw new DuplicateKeyException(msg);
-        }
+        // 修改账户的金额
+        accountSvc.modifyAmount(map);
 
         // 3. 添加账户流水
         AfcFlowMo flowMo = dozerMapper.map(oldAccountMo, AfcFlowMo.class);

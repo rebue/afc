@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/15 17:52:26                           */
+/* Created on:     2018/5/17 10:08:33                           */
 /*==============================================================*/
 
 
@@ -111,8 +111,9 @@ create table AFC_PLATFORM_TRADE
    ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
    ORDER_DETAIL_ID      varchar(150) comment '订单详情ID
             (如果平台交易类型是收取服务费，则填销售订单详情ID；如果是退款，则填写退款单ID)',
-   CHANGE_AMOUNT        decimal(18,4) not null comment '变化的金额',
-   BALANCE              decimal(18,4) not null default 0 comment '余额（修改后）',
+   OLD_BALANCE          decimal(18,4) not null default 0 comment '交易前的余额',
+   TRADE_AMOUNT         decimal(18,4) not null comment '交易金额',
+   NEW_BALANCE          decimal(18,4) not null default 0 comment '交易后的余额',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
    primary key (ID),
    unique key AK_PLATFORM_TRADE_TYPE_AND_ORDER (PLATFORM_TRADE_TYPE, ORDER_ID),
