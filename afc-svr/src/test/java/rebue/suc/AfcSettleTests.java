@@ -22,12 +22,13 @@ import rebue.wheel.idworker.IdWorker3;
 
 public class AfcSettleTests {
 
-    private String       _hostUrl          = "http://localhost:9300";
+//    private String       _hostUrl          = "http://localhost:9300";
+    private String       _hostUrl          = "http://192.168.1.201/afc-svr";
 
-    private Long         buyerAccountId    = 471579798452436998L;                                                                                                                                                                                                                                                                                                                                                                                                                                                     // 买家账户ID
-    private Long         sellerAccountId   = 471579798246916101L;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // 卖家账户ID
-    private Long         supplierAccountId = 471579797462581252L;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // 供应商账户ID
-    private String       orderId           = "471581669858476032";
+    private Long         buyerAccountId    = 472230411963990026L;                                                                                                                                                                                                                                                                                                                                                                                                                                                     // 买家账户ID
+    private Long         sellerAccountId   = 472230410986717193L;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // 卖家账户ID
+    private Long         supplierAccountId = 472230408788901896L;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // 供应商账户ID
+    private String       orderId           = "472237712041050112";
 
     @Value("${appid:0}")
     private int          _appid;
@@ -57,26 +58,42 @@ public class AfcSettleTests {
         to.setSettleSupplierTime(supplierTime);
         to.setSettleSellerTime(sellerTime);
         to.setSettleDepositUsedTime(sellerTime);
-        to.setMac("测试MAC地址");
-        to.setIp("测试IP地址");
+        to.setMac("测试MAC地址1");
+        to.setIp("测试IP地址1");
 
         List<AddSettleTasksDetailTo> details = new LinkedList<>();
         AddSettleTasksDetailTo detail = new AddSettleTasksDetailTo();
         detail.setOrderDetailId(_idWorker.getIdStr());
         detail.setSupplierAccountId(supplierAccountId);
         detail.setSettleBuyerCashbackAmount(BigDecimal.valueOf(1.01));
-        detail.setSettleBuyerCashbackTitle("结算给买家返现金的标题");
-        detail.setSettleBuyerCashbackDetail("结算给买家返现金的详情");
+        detail.setSettleBuyerCashbackTitle("结算给买家返现金的标题1");
+        detail.setSettleBuyerCashbackDetail("结算给买家返现金的详情1");
         detail.setSettlePlatformServiceFeeAmount(BigDecimal.valueOf(0.30));
         detail.setSettleSupplierAmount(BigDecimal.valueOf(7.00));
-        detail.setSettleSupplierTitle("结算供应商的标题");
-        detail.setSettleSupplierDetail("结算供应商的详情");
+        detail.setSettleSupplierTitle("结算供应商的标题1");
+        detail.setSettleSupplierDetail("结算供应商的详情1");
         detail.setSettleSellerAmount(BigDecimal.valueOf(1.21));
-        detail.setSettleSellerTitle("结算卖家的标题");
-        detail.setSettleSellerDetail("结算卖家的详情");
+        detail.setSettleSellerTitle("结算卖家的标题1");
+        detail.setSettleSellerDetail("结算卖家的详情1");
         detail.setSettleDepositUsedAmount(BigDecimal.valueOf(7.00));
-        detail.setSettleDepositUsedTitle("结算已占用保证金的标题");
-        detail.setSettleDepositUsedDetail("结算已占用保证金的详情");
+        detail.setSettleDepositUsedTitle("结算已占用保证金的标题1");
+        detail.setSettleDepositUsedDetail("结算已占用保证金的详情1");
+
+        detail.setOrderDetailId(_idWorker.getIdStr());
+        detail.setSupplierAccountId(supplierAccountId);
+        detail.setSettleBuyerCashbackAmount(BigDecimal.valueOf(1.01));
+        detail.setSettleBuyerCashbackTitle("结算给买家返现金的标题2");
+        detail.setSettleBuyerCashbackDetail("结算给买家返现金的详情2");
+        detail.setSettlePlatformServiceFeeAmount(BigDecimal.valueOf(0.30));
+        detail.setSettleSupplierAmount(BigDecimal.valueOf(7.00));
+        detail.setSettleSupplierTitle("结算供应商的标题2");
+        detail.setSettleSupplierDetail("结算供应商的详情2");
+        detail.setSettleSellerAmount(BigDecimal.valueOf(1.21));
+        detail.setSettleSellerTitle("结算卖家的标题2");
+        detail.setSettleSellerDetail("结算卖家的详情2");
+        detail.setSettleDepositUsedAmount(BigDecimal.valueOf(7.00));
+        detail.setSettleDepositUsedTitle("结算已占用保证金的标题2");
+        detail.setSettleDepositUsedDetail("结算已占用保证金的详情2");
         details.add(detail);
         to.setDetails(details);
 

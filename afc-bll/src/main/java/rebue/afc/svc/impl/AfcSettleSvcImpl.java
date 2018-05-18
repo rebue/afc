@@ -65,6 +65,7 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
      *            当前时间
      */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public void settleAccountFee(AfcSettleTaskMo taskMo, Date now) {
         _log.info("结算此账户的费用: {}", taskMo);
 
@@ -96,7 +97,7 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
         AfcPlatformTradeMo tradeMo = dozerMapper.map(taskMo, AfcPlatformTradeMo.class);
         tradeMo.setPlatformTradeType((byte) PlatformTradeTypeDic.CHARGE_SEVICE_FEE.getCode());  // 交易类型（1：收取服务费(购买交易成功) 2：退回服务费(用户退款)）
         tradeMo.setModifiedTimestamp(now.getTime());                                            // 修改时间戳
-        platformTradeSvc.add(tradeMo);      // 如果重复提交，会抛出DuplicateKeyException运行时异常
+        platformTradeSvc.addTrade(tradeMo);      // 如果重复提交，会抛出DuplicateKeyException运行时异常
     }
 
 }

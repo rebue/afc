@@ -24,7 +24,7 @@ public class AfcVpayTests {
 
     private ObjectMapper _objectMapper = new ObjectMapper();
 
-    private Long         userId        = 471853827675389958L;
+    private Long         buyerAccountId        = 472230411963990026L;
 
     @Value("${appid:0}")
     private int          _appid;
@@ -35,7 +35,7 @@ public class AfcVpayTests {
         // 预支付
         String url = _hostUrl + "/vpay/prepay";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
-        paramsMap.put("userId", userId);
+        paramsMap.put("userId", buyerAccountId);
         long orderId = _idWorker.getId();
         paramsMap.put("orderId", orderId);
         paramsMap.put("tradeTitle", "V支付交易的标题");
