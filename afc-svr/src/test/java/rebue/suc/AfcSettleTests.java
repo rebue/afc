@@ -25,10 +25,10 @@ public class AfcSettleTests {
 //    private String       _hostUrl          = "http://localhost:9300";
     private String       _hostUrl          = "http://192.168.1.201/afc-svr";
 
-    private Long         buyerAccountId    = 472230411963990026L;                                                                                                                                                                                                                                                                                                                                                                                                                                                     // 买家账户ID
-    private Long         sellerAccountId   = 472230410986717193L;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // 卖家账户ID
-    private Long         supplierAccountId = 472230408788901896L;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // 供应商账户ID
-    private String       orderId           = "472237712041050112";
+    private Long         buyerAccountId    = 472560891909373961L;                                                                                                                                                                                                                                                                                                                                                                                                                                                     // 买家账户ID
+    private Long         sellerAccountId   = 472558220674596864L;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // 卖家账户ID
+    private Long         supplierAccountId = 472558225653235713L;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // 供应商账户ID
+    private String       orderId           = "472572485557157888";
 
     @Value("${appid:0}")
     private int          _appid;
@@ -37,7 +37,7 @@ public class AfcSettleTests {
 
     @Test
     public void test01() throws IOException {
-        IdWorker3 _idWorker = new IdWorker3();
+        IdWorker3 idWorker = new IdWorker3();
         Calendar calendar = Calendar.getInstance();
         // 返现时间
         calendar.add(Calendar.SECOND, 10);
@@ -63,7 +63,7 @@ public class AfcSettleTests {
 
         List<AddSettleTasksDetailTo> details = new LinkedList<>();
         AddSettleTasksDetailTo detail = new AddSettleTasksDetailTo();
-        detail.setOrderDetailId(_idWorker.getIdStr());
+        detail.setOrderDetailId(idWorker.getIdStr());
         detail.setSupplierAccountId(supplierAccountId);
         detail.setSettleBuyerCashbackAmount(BigDecimal.valueOf(1.01));
         detail.setSettleBuyerCashbackTitle("结算给买家返现金的标题1");
@@ -78,8 +78,10 @@ public class AfcSettleTests {
         detail.setSettleDepositUsedAmount(BigDecimal.valueOf(7.00));
         detail.setSettleDepositUsedTitle("结算已占用保证金的标题1");
         detail.setSettleDepositUsedDetail("结算已占用保证金的详情1");
+        details.add(detail);
 
-        detail.setOrderDetailId(_idWorker.getIdStr());
+        detail = new AddSettleTasksDetailTo();
+        detail.setOrderDetailId(idWorker.getIdStr());
         detail.setSupplierAccountId(supplierAccountId);
         detail.setSettleBuyerCashbackAmount(BigDecimal.valueOf(1.01));
         detail.setSettleBuyerCashbackTitle("结算给买家返现金的标题2");

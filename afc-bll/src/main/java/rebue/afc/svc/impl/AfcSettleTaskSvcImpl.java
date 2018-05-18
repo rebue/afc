@@ -112,7 +112,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
                 taskMo.setMac(to.getMac());
                 taskMo.setIp(to.getIp());
                 taskMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACKING.getCode());
-                taskMo.setExecutePlanTime(now);                                                 // 计划执行时间（立即执行）
+                taskMo.setExecutePlanTime(new Date(now.getTime() + 60000));                 // 计划执行时间（延迟1分钟立即执行）
                 taskMo.setAccountId(to.getBuyerAccountId());                                // 买家的账户ID
                 taskMo.setTradeAmount(detail.getSettleBuyerCashbackAmount());                   // 返现金
                 taskMo.setTradeTitle(detail.getSettleBuyerCashbackTitle());                     // 结算给买家返现金的标题
@@ -224,9 +224,9 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      *            要执行的任务
      */
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public void executeTask(Long id) {
-        _log.info("执行任务: {}", id);
+        _log.info("准备执行任务: {}", id);
 
         // 获取任务信息
         AfcSettleTaskMo taskMo = getById(id);
@@ -241,24 +241,28 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
 
         // 计算当前时间
         Date now = new Date();
-
-        // 判断交易类型
-        switch (TradeTypeDic.getItem(taskMo.getTradeType())) {
-        // 结算平台服务费
-        case SETTLE_PLATFORM_SERVICE_FEE:
-            settleSvc.settlePlatformServiceFee(taskMo, now);
-            break;
-        case SETTLE_CASHBACKING:
-        case SETTLE_CASHBACK:
-        case SETTLE_SUPPLIER:
-        case SETTLE_SELLER:
-        case SETTLE_DEPOSIT_USED:
-            settleSvc.settleAccountFee(taskMo, now);
-            break;
-        default:
-            String msg = "任务执行不支持此结算类型";
-            _log.error(msg + ": {}", taskMo.getTradeType());
-            throw new RuntimeException(msg);
+        _log.info("开始执行任务");
+        try {
+            // 判断交易类型
+            switch (TradeTypeDic.getItem(taskMo.getTradeType())) {
+            // 结算平台服务费
+            case SETTLE_PLATFORM_SERVICE_FEE:
+                settleSvc.settlePlatformServiceFee(taskMo, now);
+                break;
+            case SETTLE_CASHBACKING:
+            case SETTLE_CASHBACK:
+            case SETTLE_SUPPLIER:
+            case SETTLE_SELLER:
+            case SETTLE_DEPOSIT_USED:
+                settleSvc.settleAccountFee(taskMo, now);
+                break;
+            default:
+                String msg = "任务执行不支持此结算类型";
+                _log.error(msg + ": {}", taskMo.getTradeType());
+                throw new RuntimeException(msg);
+            }
+        } catch (RuntimeException e) {
+            _log.error("执行结算的任务出现运行时异常", e);
         }
 
         _log.info("将任务状态改为已经执行");
