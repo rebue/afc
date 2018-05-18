@@ -54,7 +54,7 @@ public class VpayNotifyPub implements ApplicationListener<ApplicationStartedEven
      * V支付-发送支付完成的消息
      */
     public void send(VpayNotifyRo ro) {
-        _log.info("V支付-发送支付完成的消息");
+        _log.info("V支付-发送支付完成的消息: {}", ro);
         producer.send(VpayNotifyCo.PAY_NOTIFY_EXCHANGE_NAME, ro);
     }
 

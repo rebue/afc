@@ -73,24 +73,24 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
         }
 
         _log.info("退款查询操作人信息的参数为：{}", to.getOpId());
-        SucUserMo opUserMo = userSvc.getById(to.getOpId());
-        _log.info("退款查询操作人信息的返回值为：{}", opUserMo.toString());
-        if (opUserMo.getId() == null) {
+        SucUserMo opMo = userSvc.getById(to.getOpId());
+        _log.info("退款查询操作人信息的返回值为：{}", opMo);
+        if (opMo == null) {
             String msg = "退款时发现没有此操作人";
             _log.error("{}，操作人编号为：{}", msg, to.getOpId());
             throw new RuntimeException(msg);
         }
 
-        if (opUserMo.getIsLock()) {
+        if (opMo.getIsLock()) {
             String msg = "退款时发现操作人已被锁定";
-            _log.error("{}，操作人编号为：{}", msg, opUserMo);
+            _log.error("{}，操作人编号为：{}", msg, opMo);
             throw new RuntimeException(msg);
         }
 
         _log.info("退款查询买家信息的参数为：{}", to.getBuyerAccountId());
         SucUserMo buyerMo = userSvc.getById(to.getBuyerAccountId());
-        _log.info("退款查询买家信息的返回值为：{}", buyerMo.toString());
-        if (buyerMo.getId() == null) {
+        _log.info("退款查询买家信息的返回值为：{}", buyerMo);
+        if (buyerMo == null) {
             String msg = "退款时发现没有此买家";
             _log.error("{}，账户ID为：{}", msg, to.getBuyerAccountId());
             throw new RuntimeException(msg);
@@ -105,7 +105,7 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
         AfcPayMo condition = new AfcPayMo();
         condition.setAccountId(to.getBuyerAccountId());
         condition.setOrderId(to.getOrderId());
-        _log.info("退款查询支付订单信息的参数为：{}", condition.toString());
+        _log.info("退款查询支付订单信息的参数为：{}", condition);
         List<AfcPayMo> pays = paySvc.list(condition);
         _log.info("退款查询支付订单信息的返回值为：{}", String.valueOf(pays));
         if (pays.isEmpty()) {
@@ -144,6 +144,8 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
             tradeMo.setTradeType((byte) TradeTypeDic.REFUND_TO_BUYER.getCode());
             tradeMo.setAccountId(to.getBuyerAccountId());
             tradeMo.setTradeAmount(tradeAmount);
+            tradeMo.setChangeAmount1(to.getReturnCashbackToBuyer());
+            tradeMo.setChangeAmount1(to.getReturnBalanceToBuyer());
             tradeMo.setTradeTime(now);
             tradeSvc.addTrade(tradeMo);
         }
@@ -164,19 +166,21 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
             _log.info("收回供应商款项(结算给供应商的金额)");
             AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
             tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_SUPPLIER.getCode());
+            tradeMo.setAccountId(to.getSupplierAccountId());
             tradeMo.setTradeAmount(to.getGetbackCostFromSupplier());
             tradeMo.setTradeTitle("收回供应商款项(结算给供应商的金额)");
             tradeMo.setTradeTime(now);
             tradeSvc.addTrade(tradeMo);
         }
 
-        // 如果要收回卖家款项(结算给卖家利润的金额)
+        // 如果要收回卖家款项(结算给卖家利润和释放已占用保证金的金额)
         if (to.getGetbackProfitFromSeller() != null && to.getGetbackProfitFromSeller().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("收回卖家款项(结算给卖家利润的金额)");
+            _log.info("收回卖家款项(结算给卖家利润和释放已占用保证金的金额)");
             AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
             tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_SELLER.getCode());
+            tradeMo.setAccountId(to.getSellerAccountId());
             tradeMo.setTradeAmount(to.getGetbackProfitFromSeller());
-            tradeMo.setTradeTitle("收回卖家款项(结算给卖家利润的金额)");
+            tradeMo.setTradeTitle("收回卖家款项(结算给卖家利润和释放已占用保证金的金额)");
             tradeMo.setTradeTime(now);
             tradeSvc.addTrade(tradeMo);
         }
@@ -186,14 +190,15 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
             _log.info("收回已占用保证金(结算给卖家释放已占用保证金的金额)");
             AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
             tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_DEPOSIT_USED.getCode());
+            tradeMo.setAccountId(to.getSellerAccountId());
             tradeMo.setTradeAmount(to.getGetbackDepositUsedFromSeller());
             tradeMo.setTradeTitle("收回已占用保证金(结算给卖家释放已占用保证金的金额)");
-            tradeMo.setTradeTime(now);
+            tradeMo.setTradeTime(new Date());   // 两个卖家款项，独立使用当前时间
             tradeSvc.addTrade(tradeMo);
         }
 
         // 返回成功
-        _log.info("退货-买家退货成功: {}", to);
+        _log.info("退款-买家退款成功: {}", to);
         RefundRo ro = new RefundRo();
         ro.setResult(RefundResultDic.SUCCESS);
         return ro;

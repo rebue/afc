@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/17 10:08:33                           */
+/* Created on:     2018/5/18 17:04:01                           */
 /*==============================================================*/
 
 
@@ -144,7 +144,6 @@ create table AFC_SETTLE_TASK
    MAC                  varchar(30) not null comment 'MAC地址',
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID),
-   unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER (ACCOUNT_ID, TRADE_TYPE, ORDER_ID),
    unique key AK_TRADE_TYPE_AND_ACCOUNT_AND_ORDER_DETAIL (ACCOUNT_ID, TRADE_TYPE, ORDER_DETAIL_ID)
 );
 
@@ -165,7 +164,7 @@ create table AFC_TRADE
    TRADE_DETAIL         varchar(150) comment '交易详情',
    TRADE_TIME           datetime not null comment '交易时间',
    ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
-   ORDER_DETAIL_ID      varchar(150) comment '订单详情ID(业务订单ID，结算是销售订单详情ID，退货是退货订单ID)',
+   ORDER_DETAIL_ID      varchar(150) default '' comment '订单详情ID(业务订单ID，结算是销售订单详情ID，退货是退货订单ID)',
    TRADE_VOUCHER_NO     varchar(150) comment '交易凭证号',
    OP_ID                bigint not null comment '操作人ID',
    MAC                  varchar(30) not null comment 'MAC地址',

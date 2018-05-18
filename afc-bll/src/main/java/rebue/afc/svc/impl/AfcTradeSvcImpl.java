@@ -79,7 +79,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public void addTrade(AfcTradeMo tradeMo) {
-        _log.info("添加一笔交易记录");
+        _log.info("添加一笔交易记录: {}", tradeMo);
         // 账户ID
         Long accountId = tradeMo.getAccountId();
         // 交易金额
@@ -132,9 +132,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             tradeMo.setChangeAmount2(subtractBalance);          // 扣除的余额
             break;
         // XXX AFC : 交易 : （ 余额+ ）结算-结算成本(将成本打到供应商的余额)
-        // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额)
         case SETTLE_SUPPLIER:
-        case SETTLE_SELLER:
             // 余额+
             newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
@@ -149,7 +147,12 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             newAccountMo.setCashbacking(oldAccountMo.getCashbacking().subtract(tradeAmount));
             newAccountMo.setCashback(oldAccountMo.getCashback().add(tradeAmount));
             break;
-        // XXX AFC : 交易 : （ 已占用保证金+ ）结算-结算已占用保证金(释放卖家的已占用保证金相应金额)
+        // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额)
+        case SETTLE_SELLER:
+            // 余额+
+            newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
+            break;
+        // XXX AFC : 交易 : （ 已占用保证金- ）结算-结算已占用保证金(释放卖家的已占用保证金相应金额)
         case SETTLE_DEPOSIT_USED:
             // 已占用保证金+
             newAccountMo.setDepositUsed(oldAccountMo.getDepositUsed().subtract(tradeAmount));
