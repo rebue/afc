@@ -25,8 +25,8 @@ import rebue.afc.ro.PrepayRo;
 import rebue.afc.svc.AfcAccountSvc;
 import rebue.afc.svc.AfcPaySvc;
 import rebue.afc.svc.AfcTradeSvc;
-import rebue.afc.vpay.pub.VpayNotifyPub;
-import rebue.afc.vpay.ro.VpayNotifyRo;
+import rebue.afc.vpay.msg.VpayPayDoneMsg;
+import rebue.afc.vpay.pub.VpayPayDonePub;
 import rebue.afc.vpay.svc.AfcVpaySvc;
 import rebue.afc.vpay.to.AfcVpayPayTo;
 import rebue.afc.vpay.to.AfcVpayPrepayTo;
@@ -70,7 +70,7 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
     private AfcPaySvc           paySvc;
 
     @Resource
-    private VpayNotifyPub       vpayNotifyPub;
+    private VpayPayDonePub      vpayDonePub;
 
     @Resource
     private RedisClient         redisClient;
@@ -191,16 +191,16 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
         tradeSvc.addTrade(tradeMo);
 
         // 加入支付完成通知的消息队列
-        VpayNotifyRo payNotifyRo = new VpayNotifyRo();
-        payNotifyRo.setUserId(prepay.getUserId());
-        payNotifyRo.setOrderId(prepay.getOrderId());
-        payNotifyRo.setPayAccountId(prepay.getUserId().toString());
-        payNotifyRo.setPayOrderId(tradeMo.getId().toString());
-        payNotifyRo.setPayAmount(tradeAmount);
-        payNotifyRo.setPayChangeAmount1(tradeMo.getChangeAmount1());
-        payNotifyRo.setPayChangeAmount2(tradeMo.getChangeAmount2());
-        payNotifyRo.setPayTime(now);
-        vpayNotifyPub.send(payNotifyRo);
+        VpayPayDoneMsg msg = new VpayPayDoneMsg();
+        msg.setUserId(prepay.getUserId());
+        msg.setOrderId(prepay.getOrderId());
+        msg.setPayAccountId(prepay.getUserId().toString());
+        msg.setPayOrderId(tradeMo.getId().toString());
+        msg.setPayAmount(tradeAmount);
+        msg.setPayChangeAmount1(tradeMo.getChangeAmount1());
+        msg.setPayChangeAmount2(tradeMo.getChangeAmount2());
+        msg.setPayTime(now);
+        vpayDonePub.send(msg);
 
         // 删除预支付的缓存
         redisClient.del(redisKey);

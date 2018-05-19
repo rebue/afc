@@ -1,4 +1,4 @@
-package rebue.afc.ro;
+package rebue.afc.vpay.msg;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -6,59 +6,43 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import rebue.afc.dic.PayTypeDic;
-
 /**
- * 支付完成通知的解析结果
+ * V支付的支付完成通知的解析结果
  */
-@ApiModel(value = "支付通知的解析结果", description = "支付通知的解析结果")
 @JsonInclude(Include.NON_NULL)
-public class PayNotifyRo {
-    /**
-     * 支付类型
-     */
-    @ApiModelProperty(value = "支付类型", required = true)
-    private PayTypeDic payType;
+public class VpayPayDoneMsg {
     /**
      * 用户ID
      */
-    @ApiModelProperty(value = "用户ID", required = true)
     private Long       userId;
     /**
      * 支付账户ID
      */
-    @ApiModelProperty(value = "支付账户ID", required = true)
     private String     payAccountId;
     /**
      * 支付交易的金额(单位为元)
      */
-    @ApiModelProperty(value = "支付交易的金额(单位为元)", required = true)
     private BigDecimal payAmount;
+    /**
+     * 支付返现金的金额(单位为元)
+     */
+    private BigDecimal payChangeAmount1;
+    /**
+     * 支付余额的金额(单位为元)
+     */
+    private BigDecimal payChangeAmount2;
     /**
      * 支付订单号
      */
-    @ApiModelProperty(value = "支付订单号", required = true)
     private String     payOrderId;
     /**
      * 订单号
      */
-    @ApiModelProperty(value = "订单号", required = true)
     private String     orderId;
     /**
      * 支付完成时间
      */
-    @ApiModelProperty(value = "支付完成时间", required = true)
     private Date       payTime;
-
-    public PayTypeDic getPayType() {
-        return payType;
-    }
-
-    public void setPayType(PayTypeDic payType) {
-        this.payType = payType;
-    }
 
     public Long getUserId() {
         return userId;
@@ -82,6 +66,22 @@ public class PayNotifyRo {
 
     public void setPayAmount(BigDecimal payAmount) {
         this.payAmount = payAmount;
+    }
+
+    public BigDecimal getPayChangeAmount1() {
+        return payChangeAmount1;
+    }
+
+    public void setPayChangeAmount1(BigDecimal payChangeAmount1) {
+        this.payChangeAmount1 = payChangeAmount1;
+    }
+
+    public BigDecimal getPayChangeAmount2() {
+        return payChangeAmount2;
+    }
+
+    public void setPayChangeAmount2(BigDecimal payChangeAmount2) {
+        this.payChangeAmount2 = payChangeAmount2;
     }
 
     public String getPayOrderId() {
@@ -110,8 +110,8 @@ public class PayNotifyRo {
 
     @Override
     public String toString() {
-        return "PayNotifyRo [payType=" + payType + ", userId=" + userId + ", payAccountId=" + payAccountId + ", payAmount=" + payAmount + ", payOrderId=" + payOrderId
-                + ", orderId=" + orderId + ", payTime=" + payTime + "]";
+        return "VpayNotifyRo [userId=" + userId + ", payAccountId=" + payAccountId + ", payAmount=" + payAmount + ", payChangeAmount1=" + payChangeAmount1 + ", payChangeAmount2="
+                + payChangeAmount2 + ", payOrderId=" + payOrderId + ", orderId=" + orderId + ", payTime=" + payTime + "]";
     }
 
 }

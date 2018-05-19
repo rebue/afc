@@ -1,4 +1,4 @@
-package rebue.afc.vpay.ro;
+package rebue.afc.msg;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -6,11 +6,17 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import rebue.afc.dic.PayTypeDic;
+
 /**
- * V支付的支付完成通知的解析结果
+ * 支付完成的消息
  */
 @JsonInclude(Include.NON_NULL)
-public class VpayNotifyRo {
+public class PayDoneMsg {
+    /**
+     * 支付类型
+     */
+    private PayTypeDic payType;
     /**
      * 用户ID
      */
@@ -24,14 +30,6 @@ public class VpayNotifyRo {
      */
     private BigDecimal payAmount;
     /**
-     * 支付返现金的金额(单位为元)
-     */
-    private BigDecimal payChangeAmount1;
-    /**
-     * 支付余额的金额(单位为元)
-     */
-    private BigDecimal payChangeAmount2;
-    /**
      * 支付订单号
      */
     private String     payOrderId;
@@ -43,6 +41,14 @@ public class VpayNotifyRo {
      * 支付完成时间
      */
     private Date       payTime;
+
+    public PayTypeDic getPayType() {
+        return payType;
+    }
+
+    public void setPayType(PayTypeDic payType) {
+        this.payType = payType;
+    }
 
     public Long getUserId() {
         return userId;
@@ -66,22 +72,6 @@ public class VpayNotifyRo {
 
     public void setPayAmount(BigDecimal payAmount) {
         this.payAmount = payAmount;
-    }
-
-    public BigDecimal getPayChangeAmount1() {
-        return payChangeAmount1;
-    }
-
-    public void setPayChangeAmount1(BigDecimal payChangeAmount1) {
-        this.payChangeAmount1 = payChangeAmount1;
-    }
-
-    public BigDecimal getPayChangeAmount2() {
-        return payChangeAmount2;
-    }
-
-    public void setPayChangeAmount2(BigDecimal payChangeAmount2) {
-        this.payChangeAmount2 = payChangeAmount2;
     }
 
     public String getPayOrderId() {
@@ -110,8 +100,8 @@ public class VpayNotifyRo {
 
     @Override
     public String toString() {
-        return "VpayNotifyRo [userId=" + userId + ", payAccountId=" + payAccountId + ", payAmount=" + payAmount + ", payChangeAmount1=" + payChangeAmount1 + ", payChangeAmount2="
-                + payChangeAmount2 + ", payOrderId=" + payOrderId + ", orderId=" + orderId + ", payTime=" + payTime + "]";
+        return "PayNotifyRo [payType=" + payType + ", userId=" + userId + ", payAccountId=" + payAccountId + ", payAmount=" + payAmount + ", payOrderId=" + payOrderId
+                + ", orderId=" + orderId + ", payTime=" + payTime + "]";
     }
 
 }

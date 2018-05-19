@@ -8,16 +8,16 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import rebue.afc.co.PayNotifyCo;
-import rebue.afc.ro.PayNotifyRo;
+import rebue.afc.co.AfcExchangeCo;
+import rebue.afc.msg.PayDoneMsg;
 import rebue.sbs.rabbit.RabbitProducer;
 
 /**
  * 支付完成通知的发布者
  */
 @Component
-public class PayNotifyPub implements ApplicationListener<ApplicationStartedEvent> {
-    private static final Logger _log         = LoggerFactory.getLogger(PayNotifyPub.class);
+public class PayDonePub implements ApplicationListener<ApplicationStartedEvent> {
+    private static final Logger _log         = LoggerFactory.getLogger(PayDonePub.class);
 
     /**
      * 启动标志，防止多次启动
@@ -36,7 +36,7 @@ public class PayNotifyPub implements ApplicationListener<ApplicationStartedEvent
 
         try {
             _log.info("声明支付完成消息的Exchange");
-            producer.declareExchange(PayNotifyCo.PAY_NOTIFY_EXCHANGE_NAME);
+            producer.declareExchange(AfcExchangeCo.PAY_NOTIFY_EXCHANGE_NAME);
         } catch (Exception e) {
             String msg = "声明支付完成消息的Exchange失败";
             _log.error(msg, e);
@@ -47,9 +47,9 @@ public class PayNotifyPub implements ApplicationListener<ApplicationStartedEvent
     /**
      * 发送支付完成的消息
      */
-    public void send(PayNotifyRo ro) {
+    public void send(PayDoneMsg msg) {
         _log.info("发送支付完成的消息");
-        producer.send(PayNotifyCo.PAY_NOTIFY_EXCHANGE_NAME, ro);
+        producer.send(AfcExchangeCo.PAY_NOTIFY_EXCHANGE_NAME, msg);
     }
 
 }
