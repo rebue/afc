@@ -41,10 +41,10 @@ public class VpayPayDonePub implements ApplicationListener<ApplicationStartedEve
         bStartedFlag = true;
 
         try {
-            _log.info("V支付-声明支付完成消息的Exchange");
+            _log.info("声明V支付-支付完成消息的Exchange");
             producer.declareExchange(VpayExchangeCo.PAY_DONE_EXCHANGE_NAME);
         } catch (Exception e) {
-            String msg = "V支付-声明支付完成消息的Exchange失败";
+            String msg = "声明V支付-支付完成消息的Exchange失败";
             _log.error(msg, e);
             throw new RuntimeException(msg, e);
         }
