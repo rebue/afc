@@ -19,14 +19,14 @@ import rebue.suc.co.SucExchangeCo;
 import rebue.suc.msg.SucAddUserDoneMsg;
 
 /**
- * 订阅用户中心-添加用户的通知
+ * 订阅用户中心-添加用户完成的通知
  */
 @Service
 public class AfcSucAddUserDoneSub implements ApplicationListener<ContextRefreshedEvent> {
     private final static Logger _log                    = LoggerFactory.getLogger(AfcSucAddUserDoneSub.class);
 
     /**
-     * 处理V支付完成通知的队列
+     * 处理添加用户完成通知的队列
      */
     private final static String SUC_ADD_USER_QUEUE_NAME = "rebue.afc.suc.add.user.done.queue";
 

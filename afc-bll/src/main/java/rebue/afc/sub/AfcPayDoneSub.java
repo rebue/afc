@@ -60,8 +60,8 @@ public class AfcPayDoneSub implements ApplicationListener<ContextRefreshedEvent>
         if (!(event.getApplicationContext() instanceof AnnotationConfigServletWebServerApplicationContext))
             return;
 
-        _log.info("订阅V支付的支付完成的通知: {} - {}", VpayExchangeCo.PAY_NOTIFY_EXCHANGE_NAME, VPAY_DONE_QUEUE_NAME);
-        consumer.bind(VpayExchangeCo.PAY_NOTIFY_EXCHANGE_NAME, VPAY_DONE_QUEUE_NAME, VpayPayDoneMsg.class, (msg) -> {
+        _log.info("订阅V支付的支付完成的通知: {} - {}", VpayExchangeCo.PAY_DONE_EXCHANGE_NAME, VPAY_DONE_QUEUE_NAME);
+        consumer.bind(VpayExchangeCo.PAY_DONE_EXCHANGE_NAME, VPAY_DONE_QUEUE_NAME, VpayPayDoneMsg.class, (msg) -> {
             _log.info("V支付-收到支付完成的通知: {}", msg);
             PayDoneMsg payDoneMsg = dozerMapper.map(msg, PayDoneMsg.class);
             payDoneMsg.setPayType(PayTypeDic.VPAY);

@@ -39,5 +39,6 @@ spring:
     # Single类型需要配置连接Redis的url
     host: 127.0.0.1
     port: 6379
+    password: 74909328e61045da81edb44a1db6e8e7
 
 appid: 1
