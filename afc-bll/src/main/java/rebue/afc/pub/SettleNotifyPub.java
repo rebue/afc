@@ -8,7 +8,7 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import rebue.afc.co.SettleNotifyCo;
+import rebue.afc.co.SettleExchangeCo;
 import rebue.afc.ro.SettleNotifyRo;
 import rebue.sbs.rabbit.RabbitProducer;
 
@@ -36,7 +36,7 @@ public class SettleNotifyPub implements ApplicationListener<ApplicationStartedEv
 
         try {
             _log.info("声明结算完成消息的Exchange");
-            producer.declareExchange(SettleNotifyCo.SETTLE_NOTIFY_EXCHANGE_NAME);
+            producer.declareExchange(SettleExchangeCo.SETTLE_NOTIFY_EXCHANGE_NAME);
         } catch (Exception e) {
             String msg = "声明结算完成消息的Exchange失败";
             _log.error(msg, e);
@@ -49,7 +49,7 @@ public class SettleNotifyPub implements ApplicationListener<ApplicationStartedEv
      */
     public void send(SettleNotifyRo ro) {
         _log.info("发送结算完成的消息");
-        producer.send(SettleNotifyCo.SETTLE_NOTIFY_EXCHANGE_NAME, ro);
+        producer.send(SettleExchangeCo.SETTLE_NOTIFY_EXCHANGE_NAME, ro);
     }
 
 }
