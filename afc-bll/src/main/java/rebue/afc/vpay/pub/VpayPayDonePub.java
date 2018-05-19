@@ -42,7 +42,7 @@ public class VpayPayDonePub implements ApplicationListener<ApplicationStartedEve
 
         try {
             _log.info("V支付-声明支付完成消息的Exchange");
-            producer.declareExchange(VpayExchangeCo.PAY_NOTIFY_EXCHANGE_NAME);
+            producer.declareExchange(VpayExchangeCo.PAY_DONE_EXCHANGE_NAME);
         } catch (Exception e) {
             String msg = "V支付-声明支付完成消息的Exchange失败";
             _log.error(msg, e);
@@ -55,7 +55,7 @@ public class VpayPayDonePub implements ApplicationListener<ApplicationStartedEve
      */
     public void send(VpayPayDoneMsg msg) {
         _log.info("V支付-发送支付完成的消息: {}", msg);
-        producer.send(VpayExchangeCo.PAY_NOTIFY_EXCHANGE_NAME, msg);
+        producer.send(VpayExchangeCo.PAY_DONE_EXCHANGE_NAME, msg);
     }
 
 }

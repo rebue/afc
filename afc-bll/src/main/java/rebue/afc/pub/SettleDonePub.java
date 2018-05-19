@@ -8,16 +8,16 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import rebue.afc.co.SettleExchangeCo;
-import rebue.afc.ro.SettleNotifyRo;
+import rebue.afc.co.AfcExchangeCo;
+import rebue.afc.msg.SettleDoneMsg;
 import rebue.sbs.rabbit.RabbitProducer;
 
 /**
  * 结算完成通知的发布者
  */
 @Component
-public class SettleNotifyPub implements ApplicationListener<ApplicationStartedEvent> {
-    private static final Logger _log         = LoggerFactory.getLogger(SettleNotifyPub.class);
+public class SettleDonePub implements ApplicationListener<ApplicationStartedEvent> {
+    private static final Logger _log         = LoggerFactory.getLogger(SettleDonePub.class);
 
     /**
      * 启动标志，防止多次启动
@@ -35,8 +35,8 @@ public class SettleNotifyPub implements ApplicationListener<ApplicationStartedEv
         bStartedFlag = true;
 
         try {
-            _log.info("声明结算完成消息的Exchange");
-            producer.declareExchange(SettleExchangeCo.SETTLE_NOTIFY_EXCHANGE_NAME);
+            _log.info("声明结算完成消息的Exchange: {}",AfcExchangeCo.SETTLE_DONE_EXCHANGE_NAME);
+            producer.declareExchange(AfcExchangeCo.SETTLE_DONE_EXCHANGE_NAME);
         } catch (Exception e) {
             String msg = "声明结算完成消息的Exchange失败";
             _log.error(msg, e);
@@ -47,9 +47,9 @@ public class SettleNotifyPub implements ApplicationListener<ApplicationStartedEv
     /**
      * 发送结算完成的消息
      */
-    public void send(SettleNotifyRo ro) {
+    public void send(SettleDoneMsg msg) {
         _log.info("发送结算完成的消息");
-        producer.send(SettleExchangeCo.SETTLE_NOTIFY_EXCHANGE_NAME, ro);
+        producer.send(AfcExchangeCo.SETTLE_DONE_EXCHANGE_NAME, msg);
     }
 
 }

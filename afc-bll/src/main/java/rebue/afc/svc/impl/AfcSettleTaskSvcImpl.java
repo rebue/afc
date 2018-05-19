@@ -20,9 +20,9 @@ import rebue.afc.dic.SettleTaskExecuteStateDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcSettleTaskMapper;
 import rebue.afc.mo.AfcSettleTaskMo;
-import rebue.afc.pub.SettleNotifyPub;
+import rebue.afc.msg.SettleDoneMsg;
+import rebue.afc.pub.SettleDonePub;
 import rebue.afc.ro.AddSettleTasksRo;
-import rebue.afc.ro.SettleNotifyRo;
 import rebue.afc.svc.AfcSettleSvc;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.svc.AfcTradeSvc;
@@ -57,7 +57,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     private AfcSettleSvc        settleSvc;
 
     @Resource
-    private SettleNotifyPub     settleNotifyPub;
+    private SettleDonePub     settleNotifyPub;
 
     @Resource
     private Mapper              dozerMapper;
@@ -275,7 +275,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
 
         if (!thisSvc.isSettleCompleted(taskMo.getOrderId())) {
             _log.info("发送结算完成的通知");
-            SettleNotifyRo msg = new SettleNotifyRo();
+            SettleDoneMsg msg = new SettleDoneMsg();
             msg.setOrderId(taskMo.getOrderId());
             msg.setSettleTime(now);
             settleNotifyPub.send(msg);

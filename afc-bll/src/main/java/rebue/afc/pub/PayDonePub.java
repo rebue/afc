@@ -36,7 +36,7 @@ public class PayDonePub implements ApplicationListener<ApplicationStartedEvent> 
 
         try {
             _log.info("声明支付完成消息的Exchange");
-            producer.declareExchange(AfcExchangeCo.PAY_NOTIFY_EXCHANGE_NAME);
+            producer.declareExchange(AfcExchangeCo.PAY_DONE_EXCHANGE_NAME);
         } catch (Exception e) {
             String msg = "声明支付完成消息的Exchange失败";
             _log.error(msg, e);
@@ -49,7 +49,7 @@ public class PayDonePub implements ApplicationListener<ApplicationStartedEvent> 
      */
     public void send(PayDoneMsg msg) {
         _log.info("发送支付完成的消息");
-        producer.send(AfcExchangeCo.PAY_NOTIFY_EXCHANGE_NAME, msg);
+        producer.send(AfcExchangeCo.PAY_DONE_EXCHANGE_NAME, msg);
     }
 
 }

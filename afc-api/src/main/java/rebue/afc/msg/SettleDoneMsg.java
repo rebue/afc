@@ -1,4 +1,4 @@
-package rebue.afc.ro;
+package rebue.afc.msg;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * 结算完成通知的解析结果
  */
 @JsonInclude(Include.NON_NULL)
-public class SettleNotifyRo {
+public class SettleDoneMsg {
     /**
      * 订单ID
      * (销售订单ID)
