@@ -126,7 +126,7 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
         _log.info("退款查询退货总额的参数为：{}", to.getOrderId());
         // 计算已退款总额
         BigDecimal refundTotal = tradeSvc.getRefundTotalAmountByOrderId(to.getOrderId());
-        _log.info("退款查询退款总额的返回值为：{}", refundTotal);
+        _log.info("退款查询已退款总额的返回值为：{}", refundTotal);
         if (refundTotal == null)
             refundTotal = BigDecimal.ZERO;
         // 比较大小
@@ -145,7 +145,7 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
             tradeMo.setAccountId(to.getBuyerAccountId());
             tradeMo.setTradeAmount(tradeAmount);
             tradeMo.setChangeAmount1(to.getReturnCashbackToBuyer());
-            tradeMo.setChangeAmount1(to.getReturnBalanceToBuyer());
+            tradeMo.setChangeAmount2(to.getReturnBalanceToBuyer());
             tradeMo.setTradeTime(now);
             tradeSvc.addTrade(tradeMo);
         }
