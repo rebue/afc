@@ -1,8 +1,5 @@
 debug: true
 
-server:
-  port: 9300
-
 eureka:
   client:
     service-url:
@@ -21,5 +18,3 @@ spring:
       port: 5672
       username: guest
       password: guest
-
-appid: 1

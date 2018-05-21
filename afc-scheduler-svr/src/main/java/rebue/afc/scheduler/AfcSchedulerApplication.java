@@ -12,4 +12,5 @@ public class AfcSchedulerApplication {
     public static void main(String[] args) {
         SpringApplication.run(AfcSchedulerApplication.class, args);
     }
+
 }

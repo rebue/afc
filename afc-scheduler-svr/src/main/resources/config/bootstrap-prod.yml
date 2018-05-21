@@ -1,6 +1,3 @@
-server:
-  port: 0
-
 logging:
   config: classpath:config/log4j2.xml
   level:
@@ -39,5 +36,3 @@ spring:
 endpoints:
   bus-refresh:
     enabled: true
-
-appid: 0
