@@ -2,9 +2,13 @@ package rebue.afc.to;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * 退款到买家的传输对象（参数）
  */
+@JsonInclude(Include.NON_NULL)
 public class RefundTo {
     /**
      * 订单ID

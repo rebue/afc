@@ -1,11 +1,15 @@
 package rebue.afc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 
 /**
  * 进货保证金-调货的传输对象(参数)
  */
 @ApiModel(value = "进货保证金-调货的传输对象(参数)")
+@JsonInclude(Include.NON_NULL)
 public class DepositGoodsTransferTo {
     /**
      * 调入加盟商的用户ID

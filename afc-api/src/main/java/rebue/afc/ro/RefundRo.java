@@ -38,7 +38,7 @@ public class RefundRo {
 
     @Override
     public String toString() {
-        return "RefundToBuyerRo [result=" + result + ", msg=" + msg + "]";
+        return "RefundRo [result=" + result + ", msg=" + msg + "]";
     }
 
 }

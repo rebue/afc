@@ -18,13 +18,14 @@ import rebue.wheel.idworker.IdWorker3;
 public class AfcRefundTests {
 
 //    private String       _hostUrl      = "http://localhost:9300";
-    private String       _hostUrl          = "http://192.168.1.201/afc-svr";
+//    private String       _hostUrl          = "http://192.168.1.201/afc-svr";
+    private String       _hostUrl          = "http://www.duamai.com/afc-svr";
 
-    private Long         buyerAccountId    = 472560891909373961L;
-    private Long         sellerAccountId   = 472572157856186368L;
-    private Long         supplierAccountId = 472560891162787848L;
-    private Long         opId              = 472560883663372292L;
-    private String       orderId           = "472561374023647232";
+    private Long         buyerAccountId    = 474407031743184904L;
+    private Long         sellerAccountId   = 474407031193731079L;
+    private Long         supplierAccountId = 474407028786200582L;
+    private Long         opId              = 474407028299661317L;
+    private String       orderId           = "474408021036892160";
 
     @Value("${appid:0}")
     private int          _appid;

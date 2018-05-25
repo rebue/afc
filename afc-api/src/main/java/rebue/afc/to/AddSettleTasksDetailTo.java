@@ -2,6 +2,10 @@ package rebue.afc.to;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class AddSettleTasksDetailTo {
     /**
      * 供应商的账户ID

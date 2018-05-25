@@ -1,11 +1,15 @@
 package rebue.afc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 
 /**
  * 账户-充值的传输对象（参数）
  */
 @ApiModel(value = "账户-充值的传输对象（参数）")
+@JsonInclude(Include.NON_NULL)
 public class ChargeTo {
     /**
      * 账户ID
