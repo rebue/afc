@@ -35,8 +35,7 @@ public class AfcWithdrawCtrl {
 
     @ApiOperation("获取提现记录")
     @GetMapping("/withdraw")
-    PageInfo<AfcWithdrawMo> list(AfcWithdrawMo qo, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
+    PageInfo<AfcWithdrawMo> list(AfcWithdrawMo qo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         _log.info("获取提现记录: {} pageNum-{} pageSize-{}", qo, pageNum, pageSize);
         if (pageSize > 50) {
             String msg = "pageSize不能大于50";
@@ -44,8 +43,8 @@ public class AfcWithdrawCtrl {
             throw new IllegalArgumentException(msg);
         }
 
-        PageInfo<AfcWithdrawMo> result = svc.list(qo, pageNum, pageSize);
-        _log.info("result: " + result);
+        PageInfo<AfcWithdrawMo> result = svc.list(qo, pageNum, pageSize, "ID desc");
+        _log.info("result: {}", result);
         return result;
     }
 
