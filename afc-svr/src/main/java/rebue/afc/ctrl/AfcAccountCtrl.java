@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.ro.AccountFundsRo;
 import rebue.afc.svc.AfcAccountSvc;
 
-@Api(tags = "账户财务中心")
+/**
+ * 账户财务中心
+ */
 @RestController
 public class AfcAccountCtrl {
     private final static Logger _log = LoggerFactory.getLogger(AfcAccountCtrl.class);
@@ -26,7 +26,9 @@ public class AfcAccountCtrl {
     @Resource
     private Mapper              dozerMapper;
 
-    @ApiOperation("查询账户款项(余额/返现金/提现中)")
+    /**
+     * 查询账户款项(余额/返现金/提现中)
+     */
     @GetMapping("/account/funds")
     AccountFundsRo getFunds(@RequestParam("userId") Long accountId) {
         _log.info("查询账户款项(余额/返现金/提现中): {}", accountId);

@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import rebue.afc.ro.PayOrderQueryRo;
 import rebue.afc.ro.PayRo;
 import rebue.afc.ro.PrepayRo;
@@ -18,7 +16,9 @@ import rebue.afc.vpay.svc.AfcVpaySvc;
 import rebue.afc.vpay.to.AfcVpayPayTo;
 import rebue.afc.vpay.to.AfcVpayPrepayTo;
 
-@Api(tags = "V支付")
+/**
+ * V支付
+ */
 @RestController
 public class AfcVpayCtrl {
     private final static Logger _log = LoggerFactory.getLogger(AfcVpayCtrl.class);
@@ -26,21 +26,27 @@ public class AfcVpayCtrl {
     @Resource
     private AfcVpaySvc          svc;
 
-    @ApiOperation("V支付-预支付")
+    /**
+     * V支付-预支付
+     */
     @PostMapping("/vpay/prepay")
     PrepayRo prepay(AfcVpayPrepayTo to) {
         _log.info("V支付-预支付: {}", to);
         return svc.prepay(to);
     }
 
-    @ApiOperation("V支付-支付")
+    /**
+     * V支付-支付
+     */
     @PostMapping("/vpay/pay")
     PayRo pay(AfcVpayPayTo to) {
         _log.info("V支付-支付: {}", to);
         return svc.pay(to);
     }
 
-    @ApiOperation("V支付-查询订单")
+    /**
+     * V支付-查询订单
+     */
     @GetMapping("/vpay/queryorder")
     PayOrderQueryRo queryOrder(@RequestParam("orderId") String orderId) {
         _log.info("V支付-查询订单: {}", orderId);

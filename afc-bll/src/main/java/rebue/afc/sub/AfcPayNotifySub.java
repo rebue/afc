@@ -26,7 +26,6 @@ import rebue.afc.vpay.co.VpayNotifyCo;
 import rebue.afc.vpay.ro.VpayNotifyRo;
 import rebue.sbs.rabbit.RabbitConsumer;
 import rebue.wheel.OkhttpUtils;
-import rebue.wxx.wxpay.co.WxpayNotifyCo;
 import rebue.wxx.wxpay.ro.WxpayNotifyRo;
 
 /**
@@ -69,7 +68,7 @@ public class AfcPayNotifySub implements ApplicationListener<ContextRefreshedEven
             return handlePayNotify(msg);
         });
         _log.info("订阅微信支付的支付完成的通知");
-        consumer.bind(WxpayNotifyCo.PAY_NOTIFY_EXCHANGE_NAME, WxpayNotifyCo.PAY_NOTIFY_WXPAY_QUEUE_NAME, WxpayNotifyRo.class, (ro) -> {
+        consumer.bind("rebue.wxx.wxpay.pay.notify", "rebue.afc.wxpay.sub.pay", WxpayNotifyRo.class, (ro) -> {
             _log.info("微信支付-收到支付完成的通知: {}", ro);
             PayNotifyRo msg = dozerMapper.map(ro, PayNotifyRo.class);
             msg.setPayType(PayTypeDic.WXPAY);

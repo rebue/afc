@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import rebue.afc.ro.RebateRo;
 import rebue.afc.svc.AfcRebateSvc;
 import rebue.afc.to.RebateTo;
 
-@Api(tags = "返款")
+/**
+ * 返款
+ */
 @RestController
 public class AfcRebateCtrl {
     private final static Logger _log = LoggerFactory.getLogger(AfcRebateCtrl.class);
@@ -21,28 +21,36 @@ public class AfcRebateCtrl {
     @Resource
     private AfcRebateSvc        svc;
 
-    @ApiOperation("返款到供应商的余额")
+    /**
+     * 返款到供应商的余额
+     */
     @PostMapping("/rebate/provider/balance")
     RebateRo rebateProviderBalance(RebateTo to) {
         _log.info("返款到供应商的余额： {}", to);
         return svc.rebateProviderBalance(to);
     }
 
-    @ApiOperation("返款到买家的返现金")
+    /**
+     * 返款到买家的返现金
+     */
     @PostMapping("/rebate/buyer/cashback")
     RebateRo rebateBuyerCashback(RebateTo to) {
         _log.info("返款到买家的返现金： {}", to);
         return svc.rebateBuyerCashback(to);
     }
 
-    @ApiOperation("返款到加盟商的已占用保证金")
+    /**
+     * 返款到加盟商的已占用保证金
+     */
     @PostMapping("/rebate/seller/depositused")
     RebateRo rebateSellerDepositUsed(RebateTo to) {
         _log.info("返款到加盟商的已占用保证金： {}", to);
         return svc.rebateSellerDepositUsed(to);
     }
 
-    @ApiOperation("返款到加盟商的余额")
+    /**
+     * 返款到加盟商的余额
+     */
     @PostMapping("/rebate/seller/balance")
     RebateRo rebateSellerBalance(RebateTo to) {
         _log.info("返款到加盟商的余额： {}", to);
