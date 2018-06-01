@@ -1,10 +1,12 @@
 package rebue.afc.svc;
 
 import java.util.List;
+import java.util.Map;
 
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.to.AddSettleTasksTo;
+import rebue.afc.to.GetCashBackTaskTo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.lang.Long> {
@@ -34,4 +36,10 @@ public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.l
      *            销售订单ID
      */
     Boolean isSettleCompleted(String orderId);
+    
+    /**
+     * 获取用户的待返现任务
+     */
+    List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to);
+    
 }

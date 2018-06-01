@@ -1,8 +1,11 @@
 package rebue.afc.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import rebue.afc.mo.AfcSettleTaskMo;
+import rebue.afc.to.GetCashBackTaskTo;
 import rebue.robotech.mapper.MybatisBaseMapper;
 import java.util.Date;
 import org.apache.ibatis.annotations.Param;
@@ -126,4 +129,11 @@ public interface AfcSettleTaskMapper
 	@Select("select CASE WHEN COUNT(*) > 0 THEN FALSE ELSE TRUE END from AFC_SETTLE_TASK where ORDER_ID=#{orderId} and EXECUTE_STATE!=#{doneState}")
 	Boolean isSettleCompleted(@Param("orderId") String orderId,
 			@Param("doneState") Byte doneState);
+	/**
+	 * 获取用户待返现任务
+	 * @param map
+	 * @return
+	 */
+	List<AfcSettleTaskMo> selectCashBackTask(GetCashBackTaskTo to);
+	
 }

@@ -1,6 +1,7 @@
 package rebue.afc.ctrl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rebue.afc.dic.AddSettleTaskResultDic;
+import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.to.AddSettleTasksTo;
+import rebue.afc.to.GetCashBackTaskTo;
 
 /**
  * 交易任务
@@ -74,6 +77,14 @@ public class AfcSettleTaskCtrl {
     @PostMapping("/settle/task/execute")
     void executeTask(@RequestParam("id") Long id) {
         svc.executeTask(id);
+    }
+    
+    /**
+     * 获取用户的待返现任务
+     */
+    @GetMapping("/settle/task/cashbacktask")
+    List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to) {
+        return svc.getCashBackTask(to);
     }
 
 }
