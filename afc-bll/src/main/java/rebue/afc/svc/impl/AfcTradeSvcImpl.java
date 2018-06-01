@@ -161,7 +161,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         case REFUND_TO_BUYER:
             // 余额+，返现金+
             BigDecimal cashbackAmount = tradeMo.getChangeAmount1();   // 要退的返现金
-            BigDecimal balanceAmount = tradeMo.getChangeAmount1();    // 要退的余额
+            BigDecimal balanceAmount = tradeMo.getChangeAmount2();    // 要退的余额
             // 计算交易后的余额
             BigDecimal newBalanceAmount = oldAccountMo.getBalance().add(balanceAmount);
             // 计算交易后的返现金
