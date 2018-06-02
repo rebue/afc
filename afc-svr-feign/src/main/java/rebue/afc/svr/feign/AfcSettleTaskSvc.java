@@ -44,7 +44,7 @@ public interface AfcSettleTaskSvc {
      */
     @GetMapping("/settle/task/cashbacktask")
     List<AfcSettleTaskMo> getCashBackTask(@RequestParam("accountId") long accountId, @RequestParam("executestate") byte executestate,
-    		 @RequestParam("tradtype") byte tradtype,@RequestParam("start") byte start,@RequestParam("limit") byte limit);
+    		 @RequestParam("tradtype") byte tradtype,@RequestParam("pageNum") byte pageNum,@RequestParam("pageSize") byte pageSize);
     
     
 }

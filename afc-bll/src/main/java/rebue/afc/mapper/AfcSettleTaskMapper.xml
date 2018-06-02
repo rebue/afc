@@ -408,25 +408,4 @@
 		</where>
 	</select>
 
-	<!-- 查询用户订单信息 -->
-	<select id="selectCashBackTask" parameterType="rebue.afc.to.GetCashBackTaskTo"
-		resultMap="BaseResultMap">
-	select
-		<include refid="Base_Column_List" />
-		from AFC_SETTLE_TASK  where 1=1
-		<if test="accountId != null and accountId != ''">
-			and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
-		</if>
-		<if test="executeState != null and accountId != ''">
-			and EXECUTE_STATE = #{executeState,jdbcType=TINYINT}
-		</if>
-		<if test="tradType != null and accountId != ''">
-			and TRADE_TYPE = #{tradType,jdbcType=TINYINT}
-		</if>
-		ORDER BY EXECUTE_PLAN_TIME DESC
-		<if test="start != null and start != '' and limit != null and limit != '' ">
-    		limit ${start},${limit}
-    	</if>
-	</select>
-
 </mapper>

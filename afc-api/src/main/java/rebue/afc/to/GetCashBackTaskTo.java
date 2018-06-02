@@ -23,14 +23,28 @@ public class GetCashBackTaskTo {
 	 * 任务类型
 	 */
 	private byte tradType;
+
 	/**
-	 * 从第几条记录开始查询
+	 * 查询页数
 	 */
-	private byte start;
+	private byte pageNum;
+	public byte getPageNum() {
+		return pageNum;
+	}
+	public void setPageNum(byte pageNum) {
+		this.pageNum = pageNum;
+	}
+	public byte getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(byte pageSize) {
+		this.pageSize = pageSize;
+	}
 	/**
-	 * 查询的记录的条数
+	 * 页面的记录数
 	 */
-	private byte limit;
+	private byte pageSize;
+	
 	public long getAccountId() {
 		return accountId;
 	}
@@ -49,23 +63,11 @@ public class GetCashBackTaskTo {
 	public void setTradType(byte tradType) {
 		this.tradType = tradType;
 	}
-	public byte getStart() {
-		return start;
-	}
-	public void setStart(byte start) {
-		this.start = start;
-	}
-	public byte getLimit() {
-		return limit;
-	}
-	public void setLimit(byte limit) {
-		this.limit = limit;
-	}
 	
 	@Override
 	public String toString() {
 		return "GetCashBackTaskTo [accountId=" + accountId + ", executeState=" + executeState + ", tradType=" + tradType
-				+ ", start=" + start + ", limit=" + limit + "]";
+				+ ", pageNum=" + pageNum + ", pageSize=" + pageSize + "]";
 	}
 
 }

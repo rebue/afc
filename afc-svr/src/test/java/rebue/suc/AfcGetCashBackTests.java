@@ -20,14 +20,8 @@ public class AfcGetCashBackTests {
     public void test01() throws IOException {
     	//查询用户待返现任务
     	GetCashBackTaskTo to = new GetCashBackTaskTo();
-    	to.setAccountId(buyerAcountId);
-    	to.setExecuteState((byte)SettleTaskExecuteStateDic.NONE.getCode());
-    	to.setTradType((byte)TradeTypeDic.SETTLE_CASHBACK.getCode());
-    	to.setStart((byte)0);
-    	to.setLimit((byte)10);    	
-//		String cashBackTask = OkhttpUtils.(_hostUrl, to);
-//        Assert.assertNotNull(cashBackTask);
-//        System.out.println(cashBackTask);
+     	
+
     }
 
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -33,7 +34,7 @@ public class AfcSettleTaskCtrl {
 
     @Resource
     private AfcSettleTaskSvc    svc;
-
+    
     /**
      * 添加结算任务
      * 任务调度器会定时检查当前要执行的任务
@@ -86,5 +87,5 @@ public class AfcSettleTaskCtrl {
     List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to) {
         return svc.getCashBackTask(to);
     }
-
+    
 }
