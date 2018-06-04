@@ -28,6 +28,10 @@ public class GetCashBackTaskTo {
 	 * 查询页数
 	 */
 	private byte pageNum;
+	/**
+	 * 页面的记录数
+	 */
+	private byte pageSize;
 	public byte getPageNum() {
 		return pageNum;
 	}
@@ -40,10 +44,6 @@ public class GetCashBackTaskTo {
 	public void setPageSize(byte pageSize) {
 		this.pageSize = pageSize;
 	}
-	/**
-	 * 页面的记录数
-	 */
-	private byte pageSize;
 	
 	public long getAccountId() {
 		return accountId;

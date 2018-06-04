@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 import rebue.afc.dic.AddSettleTaskResultDic;
@@ -297,9 +298,11 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
 
 	@Override
 	public List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to) {
+		to.setTradType((byte)TradeTypeDic.SETTLE_CASHBACK.getCode());
 		_log.info("查找用户待返现任务参数为: {}", String.valueOf(to));
 		AfcSettleTaskMo qo = dozerMapper.map(to, AfcSettleTaskMo.class);
-		PageInfo<AfcSettleTaskMo> result = list(qo, to.getPageNum(), to.getPageSize());
+		PageInfo<AfcSettleTaskMo> result = PageHelper.startPage(to.getPageNum(), to.getPageSize(), //
+				true, false, null).doSelectPageInfo(() -> _mapper.selectSelective(qo));
 		_log.info("查询的结果为: {}", String.valueOf(result));
 		return result.getList();
 	}
