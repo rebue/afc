@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.github.rebue.common-pom</groupId>
 		<artifactId>sb-parent</artifactId>
-		<version>1.0.7</version>
+		<version>1.0.8</version>
 		<relativePath />
 	</parent>
 
@@ -28,28 +28,28 @@
 			<dependency>
 				<groupId>com.github.rebue.afc</groupId>
 				<artifactId>afc-api</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.rebue.afc</groupId>
 				<artifactId>afc-svr-feign</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.github.rebue.suc</groupId>
 				<artifactId>suc-api</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.rebue.suc</groupId>
 				<artifactId>suc-svr-feign</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.rebue.wxx</groupId>
 				<artifactId>wxx-api</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
