@@ -3014,9 +3014,9 @@ LABL 0 新宋体,8,N</a:FontList>
 <a:Code>ACCOUNT_ID</a:Code>
 <a:CreationDate>1517356844</a:CreationDate>
 <a:Creator>zbz</a:Creator>
-<a:ModificationDate>1517357248</a:ModificationDate>
-<a:Modifier>zbz</a:Modifier>
-<a:Comment>申请时记录-账户ID（方便查询）</a:Comment>
+<a:ModificationDate>1528185672</a:ModificationDate>
+<a:Modifier>nnzbz</a:Modifier>
+<a:Comment>申请时记录-账户ID（买家账户ID）</a:Comment>
 <a:DataType>LI</a:DataType>
 <a:LogicalAttribute.Mandatory>1</a:LogicalAttribute.Mandatory>
 </o:EntityAttribute>
