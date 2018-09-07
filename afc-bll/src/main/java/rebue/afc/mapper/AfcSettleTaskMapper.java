@@ -1,13 +1,15 @@
 package rebue.afc.mapper;
 
-import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
-import rebue.afc.mo.AfcSettleTaskMo;
-import rebue.robotech.mapper.MybatisBaseMapper;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import rebue.afc.mo.AfcSettleTaskMo;
+import rebue.robotech.mapper.MybatisBaseMapper;
 
 @Mapper
 public interface AfcSettleTaskMapper
@@ -126,4 +128,5 @@ public interface AfcSettleTaskMapper
 	@Select("select CASE WHEN COUNT(*) > 0 THEN FALSE ELSE TRUE END from AFC_SETTLE_TASK where ORDER_ID=#{orderId} and EXECUTE_STATE!=#{doneState}")
 	Boolean isSettleCompleted(@Param("orderId") String orderId,
 			@Param("doneState") Byte doneState);
+	
 }

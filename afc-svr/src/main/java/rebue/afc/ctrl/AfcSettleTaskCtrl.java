@@ -1,9 +1,11 @@
 package rebue.afc.ctrl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rebue.afc.dic.AddSettleTaskResultDic;
+import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.to.AddSettleTasksTo;
+import rebue.afc.to.GetCashBackTaskTo;
 
 /**
  * 交易任务
@@ -30,7 +34,7 @@ public class AfcSettleTaskCtrl {
 
     @Resource
     private AfcSettleTaskSvc    svc;
-
+    
     /**
      * 添加结算任务
      * 任务调度器会定时检查当前要执行的任务
@@ -75,5 +79,13 @@ public class AfcSettleTaskCtrl {
     void executeTask(@RequestParam("id") Long id) {
         svc.executeTask(id);
     }
-
+    
+    /**
+     * 获取用户的待返现任务
+     */
+    @GetMapping("/settle/task/cashbacktask")
+    List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to) {
+        return svc.getCashBackTask(to);
+    }
+    
 }
