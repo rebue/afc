@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/18 17:04:01                           */
+/* Created on:     2018/9/8 15:22:04                            */
 /*==============================================================*/
 
 
@@ -22,6 +22,8 @@ drop table if exists AFC_WITHDRAW;
 
 drop table if exists AFC_WITHDRAW_ACCOUNT;
 
+drop table if exists AFC_WITHDRAW_ACCOUNT_BIND_FLOW;
+
 /*==============================================================*/
 /* Table: AFC_ACCOUNT                                           */
 /*==============================================================*/
@@ -31,6 +33,8 @@ create table AFC_ACCOUNT
    BALANCE              decimal(18,4) not null default 0 comment '余额',
    SETTLE_BALANCE       decimal(18,4) not null default 0 comment '最后结算余额',
    SETTLE_TIME          datetime not null comment '最后结算时间',
+   COMMISSION_TOTAL     decimal(18,4) not null default 0 comment '已返佣金总额',
+   COMMISSIONING        decimal(18,4) not null default 0 comment '待返佣金',
    WITHDRAWING          decimal(18,4) not null default 0 comment '提现中总额',
    CASHBACK             decimal(18,4) not null default 0 comment '返现金余额',
    CASHBACKING          decimal(18,4) not null default 0 comment '返现中的金额',
@@ -54,6 +58,8 @@ create table AFC_FLOW
    BALANCE              decimal(18,4) not null default 0 comment '余额',
    SETTLE_BALANCE       decimal(18,4) not null default 0 comment '最后结算余额',
    SETTLE_TIME          datetime not null comment '最后结算时间',
+   COMMISSION_TOTAL     decimal(18,4) not null comment '已返佣金总额',
+   COMMISSIONING        decimal(18,4) not null comment '待返佣金',
    WITHDRAWING          decimal(18,4) not null default 0 comment '提现中总额',
    CASHBACK             decimal(18,4) not null default 0 comment '返现金余额',
    CASHBACKING          decimal(18,4) not null default 0 comment '返现中的金额',
@@ -182,7 +188,7 @@ alter table AFC_TRADE comment '账户交易(账户交易流水)';
 create table AFC_WITHDRAW
 (
    ID                   bigint not null comment '提现记录',
-   ACCOUNT_ID           bigint not null comment '申请时记录-账户ID（方便查询）',
+   ACCOUNT_ID           bigint not null comment '申请时记录-账户ID（买家账户ID）',
    ORDER_ID             varchar(150) not null comment '申请单号（唯一约束，以防重复申请）',
    WITHDRAW_STATE       tinyint not null comment '提现状态(-1-作废；1-申请；2-处理中；3-已提现)',
    TRADE_TITLE          varchar(50) not null comment '交易标题',
@@ -235,4 +241,32 @@ create table AFC_WITHDRAW_ACCOUNT
 );
 
 alter table AFC_WITHDRAW_ACCOUNT comment '提现账户';
+
+/*==============================================================*/
+/* Table: AFC_WITHDRAW_ACCOUNT_BIND_FLOW                        */
+/*==============================================================*/
+create table AFC_WITHDRAW_ACCOUNT_BIND_FLOW
+(
+   ID                   bigint not null comment '流程ID',
+   FLOW_STATE           tinyint not null comment '流程状态(-1：已拒绝；1：待审核； 2：已审核)
+            ',
+   REJECT_REASON        varchar(100) comment '拒绝原因',
+   APPLICANT_ID         bigint not null comment '申请人ID',
+   APPLY_TIME           datetime not null comment '申请时间',
+   APPLICANT_IP         varchar(150) not null comment '申请人IP地址',
+   REVIEWER_ID          bigint comment '审核人ID',
+   REVIEW_TIME          datetime comment '审核时间',
+   REVIEWER_IP          varchar(150) comment '审核人IP地址',
+   ACCOUNT_ID           bigint not null comment '账户ID（绑定账户的ID）',
+   WITHDRAW_TYPE        tinyint not null comment '提现类型(1-银行卡,2-支付宝)',
+   CONTACT_TEL          varchar(50) not null comment '联系电话',
+   BANK_ACCOUNT_NO      varchar(100) not null comment '银行账号',
+   BANK_ACCOUNT_NAME    varchar(150) not null comment '银行账户名称',
+   OPEN_ACCOUNT_BANK    varchar(150) not null comment '开户银行',
+   IP                   varchar(150) not null comment 'IP地址',
+   MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳(添加或更新本条记录时的时间戳)',
+   primary key (ID)
+);
+
+alter table AFC_WITHDRAW_ACCOUNT_BIND_FLOW comment '提现账户绑定流程';
 
