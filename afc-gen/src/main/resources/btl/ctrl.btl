@@ -22,7 +22,6 @@ import com.github.pagehelper.PageInfo;
 
 import ${moClassFullName};
 import ${modulePackage}.svc.${entityName}Svc;
-import ${modulePackage}.ro.${entityName}GetRo;
 
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;

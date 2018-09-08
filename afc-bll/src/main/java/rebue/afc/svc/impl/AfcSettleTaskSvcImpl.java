@@ -311,9 +311,9 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         _log.info("查找用户待返现任务参数为: {}", String.valueOf(to));
         AfcSettleTaskMo qo = dozerMapper.map(to, AfcSettleTaskMo.class);
         // 
-        PageInfo<AfcSettleTaskMo> result = // 
-        PageHelper.startPage(// 
-        to.getPageNum(), to.getPageSize(), true, false, null).doSelectPageInfo(() -> _mapper.selectSelective(qo));
+        // 
+        // 
+        PageInfo<AfcSettleTaskMo> result = PageHelper.startPage(to.getPageNum(), to.getPageSize(), true, false, null).doSelectPageInfo(() -> _mapper.selectSelective(qo));
         _log.info("查询的结果为: {}", String.valueOf(result));
         return result.getList();
     }

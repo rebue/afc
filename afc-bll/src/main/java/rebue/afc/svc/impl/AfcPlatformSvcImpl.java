@@ -1,16 +1,13 @@
 package rebue.afc.svc.impl;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import rebue.afc.mapper.AfcPlatformMapper;
 import rebue.afc.mo.AfcPlatformMo;
 import rebue.afc.svc.AfcPlatformSvc;
-
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 
 /**
@@ -30,11 +27,11 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 @Service
 public class AfcPlatformSvcImpl extends MybatisBaseSvcImpl<AfcPlatformMo, java.lang.Long, AfcPlatformMapper> implements AfcPlatformSvc {
-	
+
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-	private static final Logger _log = LoggerFactory.getLogger(AfcPlatformSvcImpl.class);
+    private static final Logger _log = LoggerFactory.getLogger(AfcPlatformSvcImpl.class);
 
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
@@ -42,12 +39,11 @@ public class AfcPlatformSvcImpl extends MybatisBaseSvcImpl<AfcPlatformMo, java.l
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public int add(AfcPlatformMo mo) {
-    	_log.info("添加平台信息");
+        _log.info("添加平台信息");
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
             mo.setId(_idWorker.getId());
         }
         return super.add(mo);
     }
-
 }

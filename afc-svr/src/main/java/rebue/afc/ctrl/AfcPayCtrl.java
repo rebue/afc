@@ -1,12 +1,9 @@
 package rebue.afc.ctrl;
 
+import com.github.pagehelper.PageInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-
 import javax.annotation.Resource;
-
-import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -17,13 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.github.pagehelper.PageInfo;
-
 import rebue.afc.mo.AfcPayMo;
 import rebue.afc.svc.AfcPaySvc;
-import rebue.afc.ro.AfcPayGetRo;
-
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 
@@ -34,10 +26,11 @@ import rebue.robotech.ro.Ro;
  */
 @RestController
 public class AfcPayCtrl {
+
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private final static Logger _log = LoggerFactory.getLogger(AfcPayCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(AfcPayCtrl.class);
 
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
@@ -133,11 +126,12 @@ public class AfcPayCtrl {
 
     /**
      * 删除支付信息
-     * 
+     *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @DeleteMapping("/afc/pay")
-    Ro del(@RequestParam("id") java.lang.Long id) {        _log.info("save AfcPayMo:" + id);
+    Ro del(@RequestParam("id") java.lang.Long id) {
+        _log.info("save AfcPayMo:" + id);
         int result = svc.del(id);
         Ro ro = new Ro();
         if (result == 1) {
@@ -157,7 +151,7 @@ public class AfcPayCtrl {
 
     /**
      * 查询支付信息
-     * 
+     *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @GetMapping("/afc/pay")
@@ -175,7 +169,7 @@ public class AfcPayCtrl {
 
     /**
      * 获取单个支付信息
-     * 
+     *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @GetMapping("/afc/pay/getbyid")
@@ -183,5 +177,4 @@ public class AfcPayCtrl {
         _log.info("get AfcPayMo by id: " + id);
         return svc.getById(id);
     }
-
 }

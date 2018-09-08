@@ -1,16 +1,13 @@
 package rebue.afc.svc.impl;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import rebue.afc.mapper.AfcWithdrawAccountBindFlowMapper;
 import rebue.afc.mo.AfcWithdrawAccountBindFlowMo;
 import rebue.afc.svc.AfcWithdrawAccountBindFlowSvc;
-
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 
 /**
@@ -30,11 +27,11 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 @Service
 public class AfcWithdrawAccountBindFlowSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAccountBindFlowMo, java.lang.Long, AfcWithdrawAccountBindFlowMapper> implements AfcWithdrawAccountBindFlowSvc {
-	
+
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-	private static final Logger _log = LoggerFactory.getLogger(AfcWithdrawAccountBindFlowSvcImpl.class);
+    private static final Logger _log = LoggerFactory.getLogger(AfcWithdrawAccountBindFlowSvcImpl.class);
 
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
@@ -42,12 +39,11 @@ public class AfcWithdrawAccountBindFlowSvcImpl extends MybatisBaseSvcImpl<AfcWit
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public int add(AfcWithdrawAccountBindFlowMo mo) {
-    	_log.info("添加提现账户绑定流程");
+        _log.info("添加提现账户绑定流程");
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
             mo.setId(_idWorker.getId());
         }
         return super.add(mo);
     }
-
 }
