@@ -11,6 +11,11 @@ import rebue.afc.withdraw.to.WithdrawDealTo;
 import rebue.afc.withdraw.to.WithdrawOkTo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
+/**
+ * 提现信息
+ *
+ * @mbg.generated 自动生成的注释，如需修改本注释，请删除本行
+ */
 public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.Long> {
 
     /**
@@ -32,5 +37,4 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
      * 作废提现
      */
     WithdrawCancelRo cancel(WithdrawCancelTo to);
-
 }

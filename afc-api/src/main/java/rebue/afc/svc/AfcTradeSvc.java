@@ -1,10 +1,14 @@
 package rebue.afc.svc;
 
 import java.math.BigDecimal;
-
 import rebue.afc.mo.AfcTradeMo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
+/**
+ * 账户交易(账户交易流水)
+ *
+ * @mbg.generated 自动生成的注释，如需修改本注释，请删除本行
+ */
 public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> {
 
     /**
@@ -19,5 +23,4 @@ public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> 
      * 计算此订单的退款总额(通过销售订单ID)
      */
     BigDecimal getRefundTotalAmountByOrderId(String saleOrderId);
-
 }
