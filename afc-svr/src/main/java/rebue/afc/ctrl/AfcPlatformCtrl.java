@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcPlatformMo;
-import rebue.afc.svc.AfcPlatformSvc;
+import rebue.afc.platform.svc.AfcPlatformSvc;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 

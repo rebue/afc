@@ -1,9 +1,11 @@
 package rebue.afc.ctrl;
 
-import com.github.pagehelper.PageInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.svc.AfcWithdrawAccountSvc;
 import rebue.robotech.dic.ResultDic;
@@ -30,7 +35,7 @@ public class AfcWithdrawAccountCtrl {
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private static final Logger _log = LoggerFactory.getLogger(AfcWithdrawAccountCtrl.class);
+    private static final Logger   _log             = LoggerFactory.getLogger(AfcWithdrawAccountCtrl.class);
 
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
@@ -43,7 +48,7 @@ public class AfcWithdrawAccountCtrl {
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private String _uniqueFilesName = "某字段内容";
+    private String                _uniqueFilesName = "某字段内容";
 
     /**
      * 添加提现账户
@@ -176,5 +181,17 @@ public class AfcWithdrawAccountCtrl {
     AfcWithdrawAccountMo getById(@RequestParam("id") java.lang.Long id) {
         _log.info("get AfcWithdrawAccountMo by id: " + id);
         return svc.getById(id);
+    }
+
+    @GetMapping("/withdraw/account/exist/byuserid")
+    Boolean existByUserId(@RequestParam("userId") Long userId) {
+        _log.info("用户是否已有提现账户： {}", userId);
+        return svc.existByUserId(userId);
+    }
+
+    @GetMapping("/withdraw/account")
+    List<AfcWithdrawAccountMo> listByUserId(@RequestParam("userId") Long userId) {
+        _log.info("查询用户的账户信息: {}", userId);
+        return svc.listByUserId(userId);
     }
 }

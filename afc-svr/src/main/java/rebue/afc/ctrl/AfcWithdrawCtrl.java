@@ -1,9 +1,10 @@
 package rebue.afc.ctrl;
 
-import com.github.pagehelper.PageInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -14,8 +15,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+
 import rebue.afc.mo.AfcWithdrawMo;
 import rebue.afc.svc.AfcWithdrawSvc;
+import rebue.afc.withdraw.ro.WithdrawApplyRo;
+import rebue.afc.withdraw.ro.WithdrawCancelRo;
+import rebue.afc.withdraw.ro.WithdrawDealRo;
+import rebue.afc.withdraw.ro.WithdrawOkRo;
+import rebue.afc.withdraw.to.WithdrawApplyTo;
+import rebue.afc.withdraw.to.WithdrawCancelTo;
+import rebue.afc.withdraw.to.WithdrawDealTo;
+import rebue.afc.withdraw.to.WithdrawOkTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 
@@ -30,20 +42,20 @@ public class AfcWithdrawCtrl {
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private static final Logger _log = LoggerFactory.getLogger(AfcWithdrawCtrl.class);
+    private static final Logger _log             = LoggerFactory.getLogger(AfcWithdrawCtrl.class);
 
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Resource
-    private AfcWithdrawSvc svc;
+    private AfcWithdrawSvc      svc;
 
     /**
      * 有唯一约束的字段名称
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private String _uniqueFilesName = "某字段内容";
+    private String              _uniqueFilesName = "某字段内容";
 
     /**
      * 添加提现信息
@@ -150,24 +162,6 @@ public class AfcWithdrawCtrl {
     }
 
     /**
-     * 查询提现信息
-     *
-     * @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    @GetMapping("/afc/withdraw")
-    PageInfo<AfcWithdrawMo> list(AfcWithdrawMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        _log.info("list AfcWithdrawMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
-        if (pageSize > 50) {
-            String msg = "pageSize不能大于50";
-            _log.error(msg);
-            throw new IllegalArgumentException(msg);
-        }
-        PageInfo<AfcWithdrawMo> result = svc.list(mo, pageNum, pageSize);
-        _log.info("result: " + result);
-        return result;
-    }
-
-    /**
      * 获取单个提现信息
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
@@ -177,4 +171,57 @@ public class AfcWithdrawCtrl {
         _log.info("get AfcWithdrawMo by id: " + id);
         return svc.getById(id);
     }
+
+    /**
+     * 查询提现信息
+     */
+    @GetMapping("/afc/withdraw")
+    PageInfo<AfcWithdrawMo> list(AfcWithdrawMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        _log.info("list AfcWithdrawMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        PageInfo<AfcWithdrawMo> result = svc.list(mo, pageNum, pageSize, "ID desc");
+        _log.info("result: " + result);
+        return result;
+    }
+
+    /**
+     * 申请提现
+     */
+    @PostMapping("/withdraw/apply")
+    WithdrawApplyRo apply(WithdrawApplyTo to) {
+        _log.info("申请提现： {}", to);
+        return svc.apply(to);
+    }
+
+    /**
+     * 处理提现
+     */
+    @PutMapping("/withdraw/deal")
+    WithdrawDealRo deal(WithdrawDealTo to) {
+        _log.info("处理提现： {}", to);
+        return svc.deal(to);
+    }
+
+    /**
+     * 确认提现成功（手动）
+     */
+    @PutMapping("/withdraw/ok")
+    WithdrawOkRo ok(WithdrawOkTo to) {
+        _log.info("确认提现成功（手动）： {}", to);
+        return svc.ok(to);
+    }
+
+    /**
+     * 作废提现
+     */
+    @PutMapping("/withdraw/cancel")
+    WithdrawCancelRo cancel(WithdrawCancelTo to) {
+        _log.info("作废提现： {}", to);
+        return svc.cancel(to);
+    }
+
 }
