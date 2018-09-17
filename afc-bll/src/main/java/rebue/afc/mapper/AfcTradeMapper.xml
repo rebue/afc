@@ -374,4 +374,24 @@
 		where ORDER_ID=#{orderId}
 		and TRADE_TYPE=#{tradeType}
 	</select>
+	
+	<select id="selectCashbackTrade" parameterType="rebue.afc.mo.AfcTradeMo" resultMap="BaseResultMap">
+		<!-- 查询账号返现金交易信息 -->
+	    select ID, TRADE_TITLE, IFNULL(IFNULL(CHANGE_AMOUNT2, (TRADE_AMOUNT-CHANGE_AMOUNT1)), 0.00) AS TRADE_AMOUNT, TRADE_TIME 
+	    from AFC_TRADE
+	    <where>
+	        and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
+	        and TRADE_TYPE in (11, 20, 51, 54, 60, 61)
+	    </where>
+	</select>
+	
+	<!-- 查询账号余额交易信息 -->
+	<select id="selectBalanceTrade" parameterType="rebue.afc.mo.AfcTradeMo" resultMap="BaseResultMap">
+		select ID, TRADE_TITLE, IFNULL(IFNULL(CHANGE_AMOUNT1, (TRADE_AMOUNT-CHANGE_AMOUNT2)), 0.00) AS TRADE_AMOUNT, TRADE_TIME 
+		from AFC_TRADE
+		<where>
+	        and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
+	        and TRADE_TYPE in (10, 20, 30, 31, 32, 50, 53, 60)
+	    </where>
+	</select>
 </mapper>
