@@ -89,6 +89,14 @@ public enum TradeTypeDic implements EnumBase {
      */
     SETTLE_PLATFORM_SERVICE_FEE(55),
     /**
+     * 51: 结算-结算返佣金(将返佣中的金额移到返佣金，注意是上家在本次交易中应获得的返佣金金额，而不是上家的全部返佣中的金额)
+     */
+    SETTLE_COMMISSION(56),
+    /**
+     * 54: 结算-结算返佣中金额(打到上家的返佣中金额)
+     */
+    SETTLE_COMMISSIONING(57),
+    /**
      * 60: 退款-退款给买家（退到买家的余额和返现金）
      */
     REFUND_TO_BUYER(60),

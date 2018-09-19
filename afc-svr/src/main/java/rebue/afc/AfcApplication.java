@@ -29,7 +29,7 @@ public class AfcApplication {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("账户财务中心APIs").contact(new Contact("张柏子", "", "")).version("1.0.7").build();
+        return new ApiInfoBuilder().title("账户财务中心APIs").contact(new Contact("张柏子", "", "")).version("1.0.8").build();
     }
 
 }

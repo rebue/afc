@@ -1,11 +1,13 @@
 package rebue.afc.svc.impl;
 
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import rebue.afc.mapper.AfcWithdrawAccountMapper;
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.svc.AfcWithdrawAccountSvc;
@@ -37,6 +39,7 @@ public class AfcWithdrawAccountSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAcc
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public int add(AfcWithdrawAccountMo mo) {
+        _log.info("添加提现账户信息");
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
             mo.setId(_idWorker.getId());

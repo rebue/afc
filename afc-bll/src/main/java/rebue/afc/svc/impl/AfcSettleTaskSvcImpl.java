@@ -1,11 +1,11 @@
 package rebue.afc.svc.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
@@ -14,6 +14,10 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
 import rebue.afc.dic.AddSettleTaskResultDic;
 import rebue.afc.dic.SettleTaskExecuteStateDic;
 import rebue.afc.dic.TradeTypeDic;
@@ -66,25 +70,25 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     private static final Logger _log = LoggerFactory.getLogger(AfcSettleTaskSvcImpl.class);
 
     @Resource
-    private AfcSettleTaskSvc thisSvc;
+    private AfcSettleTaskSvc    thisSvc;
 
     @Resource
-    private SucUserSvc userSvc;
+    private SucUserSvc          userSvc;
 
     @Resource
-    private AfcTradeSvc tradeSvc;
+    private AfcTradeSvc         tradeSvc;
 
     @Resource
-    private AfcSettleSvc settleSvc;
+    private AfcSettleSvc        settleSvc;
 
     @Resource
-    private SettleDonePub settleNotifyPub;
+    private SettleDonePub       settleNotifyPub;
 
     @Resource
-    private Mapper dozerMapper;
+    private Mapper              dozerMapper;
 
     /**
-     *  添加结算任务 任务调度器会定时检查当前要执行的任务
+     * 添加结算任务 任务调度器会定时检查当前要执行的任务
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -132,6 +136,37 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
                 taskMo.setTradeType((byte) TradeTypeDic.SETTLE_CASHBACK.getCode());
                 // 计划执行时间
                 taskMo.setExecutePlanTime(to.getSettleBuyerCashbackTime());
+                // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+                thisSvc.add(taskMo);
+            }
+            // 如果要结算佣金
+            if (detail.getSettleUplineCommissionAmount() != null && detail.getSettleUplineCommissionAmount().compareTo(BigDecimal.ZERO) > 0) {
+                _log.info("添加结算返佣中金额的任务");
+                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                taskMo.setMac(to.getMac());
+                taskMo.setIp(to.getIp());
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_COMMISSIONING.getCode());
+                // 计划执行时间（延迟1分钟立即执行）
+                taskMo.setExecutePlanTime(new Date(now.getTime() + 60000));
+                // 上家的账户ID
+                taskMo.setAccountId(detail.getUplineAccountId());
+                // 上家的订单ID
+                taskMo.setOrderId(detail.getUplineOrderId().toString());
+                // 上家的订单详情ID
+                taskMo.setOrderDetailId(detail.getUplineOrderDetailId().toString());
+                // 返佣金
+                taskMo.setTradeAmount(detail.getSettleUplineCommissionAmount());
+                // 结算给上家返佣金的标题
+                taskMo.setTradeTitle(detail.getSettleUplineCommissionTitle());
+                // 结算给上家返佣金的详情
+                taskMo.setTradeDetail(detail.getSettleUplineCommissionDetail());
+                // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+                thisSvc.add(taskMo);
+                _log.info("添加结算返佣金的任务");
+                taskMo.setId(null);
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_COMMISSION.getCode());
+                // 计划执行时间
+                taskMo.setExecutePlanTime(to.getSettleUplineCommissionTime());
                 // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
                 thisSvc.add(taskMo);
             }
@@ -226,7 +261,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     }
 
     /**
-     *  获取将要执行的任务列表
+     * 获取将要执行的任务列表
      */
     @Override
     public List<Long> getTaskIdsThatShouldExecute() {
@@ -234,10 +269,10 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     }
 
     /**
-     *  订单是否已经结算完成
+     * 订单是否已经结算完成
      *
-     *  @param orderId
-     *             销售订单ID
+     * @param orderId
+     *            销售订单ID
      */
     @Override
     public Boolean isSettleCompleted(String orderId) {
@@ -245,10 +280,10 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
     }
 
     /**
-     *  执行任务
+     * 执行任务
      *
-     *  @param taskMo
-     *             要执行的任务
+     * @param taskMo
+     *            要执行的任务
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
@@ -269,25 +304,29 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         _log.info("开始执行任务");
         try {
             // 判断交易类型
-            switch(TradeTypeDic.getItem(taskMo.getTradeType())) {
-                // 结算平台服务费
-                case SETTLE_PLATFORM_SERVICE_FEE:
-                    settleSvc.settlePlatformServiceFee(taskMo, now);
-                    break;
-                case SETTLE_CASHBACKING:
-                case SETTLE_CASHBACK:
-                case SETTLE_SUPPLIER:
-                case SETTLE_SELLER:
-                case SETTLE_DEPOSIT_USED:
-                    settleSvc.settleAccountFee(taskMo, now);
-                    break;
-                default:
-                    String msg = "任务执行不支持此结算类型";
-                    _log.error(msg + ": {}", taskMo.getTradeType());
-                    throw new RuntimeException(msg);
+            switch (TradeTypeDic.getItem(taskMo.getTradeType())) {
+            // 结算平台服务费
+            case SETTLE_PLATFORM_SERVICE_FEE:
+                settleSvc.settlePlatformServiceFee(taskMo, now);
+                break;
+            case SETTLE_CASHBACKING:
+            case SETTLE_CASHBACK:
+            case SETTLE_COMMISSIONING:
+            case SETTLE_COMMISSION:
+            case SETTLE_SUPPLIER:
+            case SETTLE_SELLER:
+            case SETTLE_DEPOSIT_USED:
+                settleSvc.settleAccountFee(taskMo, now);
+                break;
+            default:
+                String msg = "任务执行不支持此结算类型";
+                _log.error(msg + ": {}", taskMo.getTradeType());
+                throw new RuntimeException(msg);
             }
         } catch (RuntimeException e) {
-            _log.error("执行结算的任务出现运行时异常", e);
+            String msg = "执行结算的任务出现运行时异常";
+            _log.error(msg, e);
+            throw new RuntimeException(msg);
         }
         _log.info("将任务状态改为已经执行");
         int rowCount = _mapper.done(now, taskMo.getId(), (byte) SettleTaskExecuteStateDic.DONE.getCode(), (byte) SettleTaskExecuteStateDic.NONE.getCode());
@@ -310,9 +349,9 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         to.setTradType((byte) TradeTypeDic.SETTLE_CASHBACK.getCode());
         _log.info("查找用户待返现任务参数为: {}", String.valueOf(to));
         AfcSettleTaskMo qo = dozerMapper.map(to, AfcSettleTaskMo.class);
-        // 
-        // 
-        // 
+        //
+        //
+        //
         PageInfo<AfcSettleTaskMo> result = PageHelper.startPage(to.getPageNum(), to.getPageSize(), true, false, null).doSelectPageInfo(() -> _mapper.selectSelective(qo));
         _log.info("查询的结果为: {}", String.valueOf(result));
         return result.getList();

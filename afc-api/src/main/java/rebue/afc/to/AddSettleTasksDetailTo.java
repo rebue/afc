@@ -5,13 +5,11 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-@JsonInclude(Include.NON_NULL)
-public class AddSettleTasksDetailTo {
-    /**
-     * 供应商的账户ID
-     */
-    private Long       supplierAccountId;
+import lombok.Data;
 
+@JsonInclude(Include.NON_NULL)
+@Data
+public class AddSettleTasksDetailTo {
     /**
      * 结算给买家返现金的金额
      */
@@ -26,10 +24,39 @@ public class AddSettleTasksDetailTo {
     private String     settleBuyerCashbackDetail;
 
     /**
+     * 上家的账户ID
+     */
+    private Long       uplineAccountId;
+    /**
+     * 上家的订单ID
+     */
+    private Long       uplineOrderId;
+    /**
+     * 上家的订单详情ID
+     */
+    private Long       uplineOrderDetailId;
+    /**
+     * 结算给上家佣金的金额
+     */
+    private BigDecimal settleUplineCommissionAmount;
+    /**
+     * 结算给上家佣金的标题
+     */
+    private String     settleUplineCommissionTitle;
+    /**
+     * 结算给上家佣金的详情
+     */
+    private String     settleUplineCommissionDetail;
+
+    /**
      * 结算给平台服务费的金额
      */
     private BigDecimal settlePlatformServiceFeeAmount;
 
+    /**
+     * 供应商的账户ID
+     */
+    private Long       supplierAccountId;
     /**
      * 结算给供应商的金额（成本，打到余额）
      */
@@ -74,135 +101,5 @@ public class AddSettleTasksDetailTo {
      * (销售订单详情ID)
      */
     private String     orderDetailId;
-
-    public Long getSupplierAccountId() {
-        return supplierAccountId;
-    }
-
-    public void setSupplierAccountId(Long supplierAccountId) {
-        this.supplierAccountId = supplierAccountId;
-    }
-
-    public BigDecimal getSettleBuyerCashbackAmount() {
-        return settleBuyerCashbackAmount;
-    }
-
-    public void setSettleBuyerCashbackAmount(BigDecimal settleBuyerCashbackAmount) {
-        this.settleBuyerCashbackAmount = settleBuyerCashbackAmount;
-    }
-
-    public String getSettleBuyerCashbackTitle() {
-        return settleBuyerCashbackTitle;
-    }
-
-    public void setSettleBuyerCashbackTitle(String settleBuyerCashbackTitle) {
-        this.settleBuyerCashbackTitle = settleBuyerCashbackTitle;
-    }
-
-    public String getSettleBuyerCashbackDetail() {
-        return settleBuyerCashbackDetail;
-    }
-
-    public void setSettleBuyerCashbackDetail(String settleBuyerCashbackDetail) {
-        this.settleBuyerCashbackDetail = settleBuyerCashbackDetail;
-    }
-
-    public BigDecimal getSettlePlatformServiceFeeAmount() {
-        return settlePlatformServiceFeeAmount;
-    }
-
-    public void setSettlePlatformServiceFeeAmount(BigDecimal settlePlatformServiceFeeAmount) {
-        this.settlePlatformServiceFeeAmount = settlePlatformServiceFeeAmount;
-    }
-
-    public BigDecimal getSettleSupplierAmount() {
-        return settleSupplierAmount;
-    }
-
-    public void setSettleSupplierAmount(BigDecimal settleSupplierAmount) {
-        this.settleSupplierAmount = settleSupplierAmount;
-    }
-
-    public String getSettleSupplierTitle() {
-        return settleSupplierTitle;
-    }
-
-    public void setSettleSupplierTitle(String settleSupplierTitle) {
-        this.settleSupplierTitle = settleSupplierTitle;
-    }
-
-    public String getSettleSupplierDetail() {
-        return settleSupplierDetail;
-    }
-
-    public void setSettleSupplierDetail(String settleSupplierDetail) {
-        this.settleSupplierDetail = settleSupplierDetail;
-    }
-
-    public BigDecimal getSettleSellerAmount() {
-        return settleSellerAmount;
-    }
-
-    public void setSettleSellerAmount(BigDecimal settleSellerAmount) {
-        this.settleSellerAmount = settleSellerAmount;
-    }
-
-    public String getSettleSellerTitle() {
-        return settleSellerTitle;
-    }
-
-    public void setSettleSellerTitle(String settleSellerTitle) {
-        this.settleSellerTitle = settleSellerTitle;
-    }
-
-    public String getSettleSellerDetail() {
-        return settleSellerDetail;
-    }
-
-    public void setSettleSellerDetail(String settleSellerDetail) {
-        this.settleSellerDetail = settleSellerDetail;
-    }
-
-    public BigDecimal getSettleDepositUsedAmount() {
-        return settleDepositUsedAmount;
-    }
-
-    public void setSettleDepositUsedAmount(BigDecimal settleDepositUsedAmount) {
-        this.settleDepositUsedAmount = settleDepositUsedAmount;
-    }
-
-    public String getSettleDepositUsedTitle() {
-        return settleDepositUsedTitle;
-    }
-
-    public void setSettleDepositUsedTitle(String settleDepositUsedTitle) {
-        this.settleDepositUsedTitle = settleDepositUsedTitle;
-    }
-
-    public String getSettleDepositUsedDetail() {
-        return settleDepositUsedDetail;
-    }
-
-    public void setSettleDepositUsedDetail(String settleDepositUsedDetail) {
-        this.settleDepositUsedDetail = settleDepositUsedDetail;
-    }
-
-    public String getOrderDetailId() {
-        return orderDetailId;
-    }
-
-    public void setOrderDetailId(String orderDetailId) {
-        this.orderDetailId = orderDetailId;
-    }
-
-    @Override
-    public String toString() {
-        return "AddSettleTasksDetailTo [supplierAccountId=" + supplierAccountId + ", settleBuyerCashbackAmount=" + settleBuyerCashbackAmount + ", settleBuyerCashbackTitle="
-                + settleBuyerCashbackTitle + ", settleBuyerCashbackDetail=" + settleBuyerCashbackDetail + ", settlePlatformServiceFeeAmount=" + settlePlatformServiceFeeAmount
-                + ", settleSupplierAmount=" + settleSupplierAmount + ", settleSupplierTitle=" + settleSupplierTitle + ", settleSupplierDetail=" + settleSupplierDetail
-                + ", settleSellerAmount=" + settleSellerAmount + ", settleSellerTitle=" + settleSellerTitle + ", settleSellerDetail=" + settleSellerDetail
-                + ", settleDepositUsedAmount=" + settleDepositUsedAmount + ", settleDepositUsedTitle=" + settleDepositUsedTitle + ", settleDepositUsedDetail="
-                + settleDepositUsedDetail + ", orderDetailId=" + orderDetailId + "]";
-    }
 
 }
