@@ -1,3 +1,6 @@
+server:
+  port: 0
+
 logging:
   config: classpath:config/log4j2.xml
   level:
