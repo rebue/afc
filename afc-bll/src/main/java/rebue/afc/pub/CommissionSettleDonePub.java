@@ -14,7 +14,7 @@ import rebue.afc.msg.SettleDoneMsg;
 import rebue.sbs.rabbit.RabbitProducer;
 
 /**
- * 结算完成通知的发布者
+ * 返佣结算完成通知的发布者
  */
 @Component
 public class CommissionSettleDonePub implements ApplicationListener<ApplicationStartedEvent> {
