@@ -1,5 +1,8 @@
 debug: true
 
+server:
+  port: 0
+
 eureka:
   client:
     service-url:

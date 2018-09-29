@@ -1,13 +1,9 @@
--- 2018-09-08
+-- 2018-09-19 更新到大卖网线上
 -- 添加返佣金的字段
 alter table AFC_ACCOUNT add COMMISSION_TOTAL Decimal(18,4) default 0 not null comment '已返佣金总额';
 alter table AFC_ACCOUNT add COMMISSIONING Decimal(18,4) default 0 not null comment '待返佣金';
 alter table AFC_FLOW add COMMISSION_TOTAL Decimal(18,4) not null comment '已返佣金总额';
 alter table AFC_FLOW add COMMISSIONING Decimal(18,4) not null comment '待返佣金';
--- 添加提现账户绑定流程表
-/*==============================================================*/
-/* Table: AFC_WITHDRAW_ACCOUNT_BIND_FLOW                        */
-/*==============================================================*/
 create table AFC_WITHDRAW_ACCOUNT_BIND_FLOW
 (
    ID                   bigint not null comment '流程ID',
@@ -32,3 +28,4 @@ create table AFC_WITHDRAW_ACCOUNT_BIND_FLOW
 );
 
 alter table AFC_WITHDRAW_ACCOUNT_BIND_FLOW comment '提现账户绑定流程';
+
