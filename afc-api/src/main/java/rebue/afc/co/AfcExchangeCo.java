@@ -9,5 +9,10 @@ public class AfcExchangeCo {
 	 * 结算完成通知的Exchange
 	 */
 	public final static String SETTLE_DONE_EXCHANGE_NAME = "rebue.afc.settle.done.exchage";
+	
+	/**
+	 * 返佣结算完成通知的Exchange
+	 */
+	public final static String COMMISSION_SETTLE_DONE_EXCHANGE_NAME = "rebue.afc.commission.settle.done.exchage";
 
 }

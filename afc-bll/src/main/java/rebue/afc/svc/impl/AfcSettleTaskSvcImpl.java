@@ -23,7 +23,9 @@ import rebue.afc.dic.SettleTaskExecuteStateDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcSettleTaskMapper;
 import rebue.afc.mo.AfcSettleTaskMo;
+import rebue.afc.msg.CommissionSettleDoneMsg;
 import rebue.afc.msg.SettleDoneMsg;
+import rebue.afc.pub.CommissionSettleDonePub;
 import rebue.afc.pub.SettleDonePub;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.svc.AfcSettleSvc;
@@ -83,6 +85,9 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
 
     @Resource
     private SettleDonePub       settleNotifyPub;
+    
+    @Resource
+    private CommissionSettleDonePub       commissionSettleNotifyPub;
 
     @Resource
     private Mapper              dozerMapper;
@@ -334,6 +339,13 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             String msg = "执行结算任务不成功: 出现并发问题";
             _log.error("{}-{}", msg, taskMo);
             throw new RuntimeException(msg);
+        }
+        if(taskMo.getTradeType()==TradeTypeDic.SETTLE_COMMISSION.getCode()) {
+        	_log.info("发送返佣结算完成通知");
+        	CommissionSettleDoneMsg msg = new CommissionSettleDoneMsg();
+            msg.setOrderDetailId(taskMo.getOrderDetailId());
+            msg.setSettleTime(now);
+            commissionSettleNotifyPub.send(msg);
         }
         if (!thisSvc.isSettleCompleted(taskMo.getOrderId())) {
             _log.info("发送结算完成的通知");
