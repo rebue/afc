@@ -1,6 +1,7 @@
 package rebue.afc.svc.impl;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Date;
 import java.util.List;
 
@@ -121,7 +122,7 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
         // 计算支付总额 TODO SQL直查
         BigDecimal payTotal = BigDecimal.ZERO;
         for (AfcPayMo afcPayMo : pays) {
-            payTotal = payTotal.add(afcPayMo.getPayAmount());
+            payTotal = payTotal.add(afcPayMo.getPayAmount(), new MathContext(4));
         }
         _log.info("退款查询退货总额的参数为：{}", to.getOrderId());
         // 计算已退款总额
@@ -129,8 +130,10 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
         _log.info("退款查询已退款总额的返回值为：{}", refundTotal);
         if (refundTotal == null)
             refundTotal = BigDecimal.ZERO;
+        
+        _log.info("退款比较大小的参数为：payTotal==={}, refundTotal==={}, tradeAmount==={}, refundTotal.add(tradeAmount, new MathContext(4)) === {}", payTotal, refundTotal, tradeAmount, refundTotal.add(tradeAmount, new MathContext(4)));
         // 比较大小
-        if (payTotal.compareTo(refundTotal.add(tradeAmount)) < 0) {
+        if (payTotal.compareTo(refundTotal.add(tradeAmount, new MathContext(4))) < 0) {
             String msg = "退款总额不能超过支付总额";
             _log.error("{}: {}", to);
             throw new RuntimeException(msg);
