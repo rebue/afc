@@ -1,6 +1,6 @@
 -- 2018年10月12日18:53:18 
 -- 删除提现账号绑定流程表（AFC_WITHDRAW_ACCOUNT_BIND_FLOW）字段ip地址（IP）
-alter table onl.ONL_ONLINE_SPEC drop column IP;
+alter table AFC_WITHDRAW_ACCOUNT_BIND_FLOW drop column IP;
 -- 2018-09-19 更新到大卖网线上
 -- 添加返佣金的字段
 alter table AFC_ACCOUNT add COMMISSION_TOTAL Decimal(18,4) default 0 not null comment '已返佣金总额';
