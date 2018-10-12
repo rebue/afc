@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/9/8 15:22:04                            */
+/* Created on:     2018/10/12 18:48:50                          */
 /*==============================================================*/
 
 
@@ -248,8 +248,7 @@ alter table AFC_WITHDRAW_ACCOUNT comment '提现账户';
 create table AFC_WITHDRAW_ACCOUNT_BIND_FLOW
 (
    ID                   bigint not null comment '流程ID',
-   FLOW_STATE           tinyint not null comment '流程状态(-1：已拒绝；1：待审核； 2：已审核)
-            ',
+   FLOW_STATE           tinyint not null comment '流程状态(-1：已拒绝；1：待审核； 2：已审核)',
    REJECT_REASON        varchar(100) comment '拒绝原因',
    APPLICANT_ID         bigint not null comment '申请人ID',
    APPLY_TIME           datetime not null comment '申请时间',
@@ -263,7 +262,6 @@ create table AFC_WITHDRAW_ACCOUNT_BIND_FLOW
    BANK_ACCOUNT_NO      varchar(100) not null comment '银行账号',
    BANK_ACCOUNT_NAME    varchar(150) not null comment '银行账户名称',
    OPEN_ACCOUNT_BANK    varchar(150) not null comment '开户银行',
-   IP                   varchar(150) not null comment 'IP地址',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳(添加或更新本条记录时的时间戳)',
    primary key (ID)
 );
