@@ -157,15 +157,6 @@ public class AfcWithdrawAccountBindFlowMo implements Serializable {
     private String openAccountBank;
 
     /**
-     *    IP地址
-     *
-     *    数据库字段: AFC_WITHDRAW_ACCOUNT_BIND_FLOW.IP
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    private String ip;
-
-    /**
      *    修改时间戳(添加或更新本条记录时的时间戳)
      *
      *    数据库字段: AFC_WITHDRAW_ACCOUNT_BIND_FLOW.MODIFIED_TIMESTAMP
@@ -510,28 +501,6 @@ public class AfcWithdrawAccountBindFlowMo implements Serializable {
     }
 
     /**
-     *    IP地址
-     *
-     *    数据库字段: AFC_WITHDRAW_ACCOUNT_BIND_FLOW.IP
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public String getIp() {
-        return ip;
-    }
-
-    /**
-     *    IP地址
-     *
-     *    数据库字段: AFC_WITHDRAW_ACCOUNT_BIND_FLOW.IP
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    /**
      *    修改时间戳(添加或更新本条记录时的时间戳)
      *
      *    数据库字段: AFC_WITHDRAW_ACCOUNT_BIND_FLOW.MODIFIED_TIMESTAMP
@@ -577,7 +546,6 @@ public class AfcWithdrawAccountBindFlowMo implements Serializable {
         sb.append(", bankAccountNo=").append(bankAccountNo);
         sb.append(", bankAccountName=").append(bankAccountName);
         sb.append(", openAccountBank=").append(openAccountBank);
-        sb.append(", ip=").append(ip);
         sb.append(", modifiedTimestamp=").append(modifiedTimestamp);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

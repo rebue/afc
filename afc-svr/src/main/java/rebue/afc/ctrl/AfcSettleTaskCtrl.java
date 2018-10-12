@@ -1,11 +1,10 @@
 package rebue.afc.ctrl;
 
+import com.github.pagehelper.PageInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -16,9 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.github.pagehelper.PageInfo;
-
 import rebue.afc.dic.AddSettleTaskResultDic;
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
@@ -179,7 +175,7 @@ public class AfcSettleTaskCtrl {
     private static final Logger _log = LoggerFactory.getLogger(AfcSettleTaskCtrl.class);
 
     @Resource
-    private AfcSettleTaskSvc    svc;
+    private AfcSettleTaskSvc svc;
 
     /**
      * 添加结算任务

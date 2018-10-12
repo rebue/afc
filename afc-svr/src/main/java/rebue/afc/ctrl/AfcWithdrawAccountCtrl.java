@@ -1,11 +1,10 @@
 package rebue.afc.ctrl;
 
+import com.github.pagehelper.PageInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -16,9 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.github.pagehelper.PageInfo;
-
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.svc.AfcWithdrawAccountSvc;
 import rebue.robotech.dic.ResultDic;
@@ -35,7 +31,7 @@ public class AfcWithdrawAccountCtrl {
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private static final Logger   _log             = LoggerFactory.getLogger(AfcWithdrawAccountCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(AfcWithdrawAccountCtrl.class);
 
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
@@ -48,7 +44,7 @@ public class AfcWithdrawAccountCtrl {
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private String                _uniqueFilesName = "某字段内容";
+    private String _uniqueFilesName = "某字段内容";
 
     /**
      * 添加提现账户
