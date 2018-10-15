@@ -343,7 +343,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             msg.setSettleTime(now);
             commissionSettleNotifyPub.send(msg);
         }
-        if (!thisSvc.isSettleCompleted(taskMo.getOrderId())) {
+        if (thisSvc.isSettleCompleted(taskMo.getOrderId())) {
             _log.info("发送结算完成的通知");
             SettleDoneMsg msg = new SettleDoneMsg();
             msg.setOrderId(taskMo.getOrderId());
