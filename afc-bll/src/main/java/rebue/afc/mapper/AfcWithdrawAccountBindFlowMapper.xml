@@ -386,4 +386,22 @@
       </if>
     </where>
   </select>
+  <!-- 根据申请人id查询最新的一条申请记录 -->
+  <select id="selectNewOneByApplicantId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from AFC_WITHDRAW_ACCOUNT_BIND_FLOW where APPLICANT_ID = #{applicantId,jdbcType=BIGINT} order by APPLY_TIME desc limit 1
+  </select>
+  <!-- 拒绝审核 -->
+  <update id="rejectReview" parameterType="rebue.afc.mo.AfcWithdrawAccountBindFlowMo">
+  	update AFC_WITHDRAW_ACCOUNT_BIND_FLOW 
+  	SET 
+  	FLOW_STATE 		= #{flowState,jdbcType=TINYINT}, 
+  	REJECT_REASON 	= #{rejectReason,jdbcType=VARCHAR}, 
+  	REVIEWER_ID 	= #{reviewerId,jdbcType=BIGINT}, 
+  	REVIEW_TIME 	= #{reviewTime,jdbcType=TIMESTAMP}, 
+  	REVIEWER_IP		= #{reviewerIp,jdbcType=VARCHAR}, 
+  	MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT} 
+  	where ID = #{id,jdbcType=BIGINT} and FLOW_STATE=1
+  </update>
 </mapper>

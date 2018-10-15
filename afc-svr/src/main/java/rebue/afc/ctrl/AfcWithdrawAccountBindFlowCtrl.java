@@ -1,9 +1,13 @@
 package rebue.afc.ctrl;
 
 import com.github.pagehelper.PageInfo;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcWithdrawAccountBindFlowMo;
+import rebue.afc.ro.AfcWithdrawAccountBindFlowRo;
 import rebue.afc.svc.AfcWithdrawAccountBindFlowSvc;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
+import rebue.wheel.AgentUtils;
+import rebue.wheel.turing.JwtUtils;
 
 /**
  * 提现账户绑定流程
@@ -151,18 +158,16 @@ public class AfcWithdrawAccountBindFlowCtrl {
 
     /**
      * 查询提现账户绑定流程
-     *
-     * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @GetMapping("/afc/withdrawaccountbindflow")
-    PageInfo<AfcWithdrawAccountBindFlowMo> list(AfcWithdrawAccountBindFlowMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+    PageInfo<AfcWithdrawAccountBindFlowRo> list(AfcWithdrawAccountBindFlowMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         _log.info("list AfcWithdrawAccountBindFlowMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcWithdrawAccountBindFlowMo> result = svc.list(mo, pageNum, pageSize);
+        PageInfo<AfcWithdrawAccountBindFlowRo> result = svc.listEx(mo, pageNum, pageSize, "APPLY_TIME desc");
         _log.info("result: " + result);
         return result;
     }
@@ -172,9 +177,83 @@ public class AfcWithdrawAccountBindFlowCtrl {
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @GetMapping("/afc/withdrawaccountbindflow/getbyid")
-    AfcWithdrawAccountBindFlowMo getById(@RequestParam("id") java.lang.Long id) {
-        _log.info("get AfcWithdrawAccountBindFlowMo by id: " + id);
-        return svc.getById(id);
+    @GetMapping("/afc/withdrawaccountbindflow/getbyapplicantid")
+    AfcWithdrawAccountBindFlowMo getByApplicantId(@RequestParam("applicantId") java.lang.Long applicantId) {
+        _log.info("get by applicantId: " + applicantId);
+        return svc.getNewOneByApplicantId(applicantId);
+    }
+    
+    /**
+     * 添加提现账户绑定流程
+     * @param mo
+     * @return
+     */
+    @PostMapping("/afc/withdrawaccountbindflow/addex")
+    Ro addEx(@RequestBody AfcWithdrawAccountBindFlowMo mo) {
+    	_log.info("添加提现账户绑定流程的参数为：{}", mo);
+    	return svc.addEx(mo);
+    }
+    
+    /**
+     * 审核通过
+     * @param id
+     * @param req
+     * @return
+     * @throws NumberFormatException
+     * @throws ParseException
+     */
+    @PutMapping("/afc/withdrawaccountbindflow/review")
+    Ro review(@RequestParam("id") java.lang.Long id, HttpServletRequest req) throws NumberFormatException, ParseException {
+    	// 获取当前登录用户id
+    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	AfcWithdrawAccountBindFlowMo accountBindFlowMo = new AfcWithdrawAccountBindFlowMo();
+    	accountBindFlowMo.setId(id);
+    	accountBindFlowMo.setReviewerIp(AgentUtils.getIpAddr(req, "noproxy"));
+    	accountBindFlowMo.setReviewerId(193201L);
+    	accountBindFlowMo.setReviewTime(new Date());
+    	accountBindFlowMo.setModifiedTimestamp(System.currentTimeMillis());
+    	try {
+			return svc.review(accountBindFlowMo);
+		} catch (Exception e) {
+			_log.error("提现账号审核通过出错", e);
+			Ro ro = new Ro();
+			String msg = e.getMessage();
+			ro.setResult(ResultDic.FAIL);
+			ro.setMsg(msg);
+			return ro;
+		}
+    }
+    
+    /**
+     * 拒绝申请
+     * @param id
+     * @param rejectReason
+     * @param req
+     * @return
+     */
+    @PutMapping("/afc/withdrawaccountbindflow/reject")
+    Ro reject(@RequestParam("id") java.lang.Long id, @RequestParam("rejectReason") String rejectReason, HttpServletRequest req) {
+    	// 获取当前登录用户id
+    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	AfcWithdrawAccountBindFlowMo mo = new AfcWithdrawAccountBindFlowMo();
+    	mo.setId(id);
+    	mo.setFlowState((byte) -1);
+    	mo.setRejectReason(rejectReason);
+    	mo.setReviewerId(193201L);
+    	mo.setReviewTime(new Date());
+    	mo.setReviewerIp(AgentUtils.getIpAddr(req, "noproxy"));
+    	mo.setModifiedTimestamp(System.currentTimeMillis());
+    	int result = svc.reject(mo);
+    	Ro ro = new Ro();
+    	if (result != 1) {
+    		_log.error("拒绝申请提现账号时出现错误，申请id为: {}", id);
+			ro.setResult(ResultDic.FAIL);
+			ro.setMsg("操作失败");
+			return ro;
+		}
+    	_log.info("拒绝申请提现账号成功，申请id为：{}", id);
+    	ro.setResult(ResultDic.SUCCESS);
+		ro.setMsg("操作成功");
+		return ro;
     }
 }
