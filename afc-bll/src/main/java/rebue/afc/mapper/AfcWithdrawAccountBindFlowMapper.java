@@ -57,4 +57,18 @@ public interface AfcWithdrawAccountBindFlowMapper extends MybatisBaseMapper<AfcW
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     boolean existSelective(AfcWithdrawAccountBindFlowMo record);
+    
+    /**
+     * 根据申请人id查询最新的一条申请记录
+     * @param applicantId
+     * @return
+     */
+    AfcWithdrawAccountBindFlowMo selectNewOneByApplicantId(Long applicantId);
+    
+    /**
+     * 拒绝审核
+     * @param record
+     * @return
+     */
+    int rejectReview(AfcWithdrawAccountBindFlowMo record);
 }
