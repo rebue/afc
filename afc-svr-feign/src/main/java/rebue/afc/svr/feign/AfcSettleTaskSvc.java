@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.to.AddSettleTasksTo;
+import rebue.afc.to.TaskTo;
+import rebue.robotech.ro.Ro;
 import rebue.sbs.feign.FeignConfig;
 
 @FeignClient(name = "afc-svr", configuration = FeignConfig.class)
@@ -38,10 +39,28 @@ public interface AfcSettleTaskSvc {
     void executeTask(@RequestParam("id") Long id);
 
     /**
-     * 获取用户的待返现任务
+     * 暂停任务
      */
-    @GetMapping("/settle/task/cashbacktask")
-    List<AfcSettleTaskMo> getCashBackTask(@RequestParam("accountId") long accountId, @RequestParam("executestate") byte executestate, @RequestParam("tradtype") byte tradtype,
-            @RequestParam("pageNum") byte pageNum, @RequestParam("pageSize") byte pageSize);
+    @PostMapping("/settle/task/suspend")
+    Ro suspendTask(@RequestBody TaskTo to);
+
+    /**
+     * 恢复任务
+     */
+    @PostMapping("/settle/task/resume")
+    Ro resumeTask(@RequestBody TaskTo to);
+
+    /**
+     * 取消任务
+     */
+    @PostMapping("/settle/task/cancel")
+    Ro cancelTask(@RequestBody TaskTo to);
+
+//    /**
+//     * 获取用户的待返现任务
+//     */
+//    @GetMapping("/settle/task/cashbacktask")
+//    List<AfcSettleTaskMo> getCashBackTask(@RequestParam("accountId") long accountId, @RequestParam("executestate") byte executestate, @RequestParam("tradtype") byte tradtype,
+//            @RequestParam("pageNum") byte pageNum, @RequestParam("pageSize") byte pageSize);
 
 }

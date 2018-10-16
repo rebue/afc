@@ -1,10 +1,12 @@
 package rebue.afc.svc;
 
 import java.util.List;
+
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.to.AddSettleTasksTo;
-import rebue.afc.to.GetCashBackTaskTo;
+import rebue.afc.to.TaskTo;
+import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 /**
@@ -34,6 +36,21 @@ public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.l
     void executeTask(Long id);
 
     /**
+     * 暂停任务
+     */
+    Ro suspendTask(TaskTo to);
+
+    /**
+     * 恢复任务
+     */
+    Ro resumeTask(TaskTo to);
+
+    /**
+     * 取消任务
+     */
+    Ro cancelTask(TaskTo to);
+
+    /**
      * 订单是否已经结算完成
      *
      * @param orderId
@@ -41,8 +58,8 @@ public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.l
      */
     Boolean isSettleCompleted(String orderId);
 
-    /**
-     * 获取用户的待返现任务
-     */
-    List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to);
+//    /**
+//     * 获取用户的待返现任务
+//     */
+//    List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to);
 }

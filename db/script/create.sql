@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/10/12 18:48:50                          */
+/* Created on:     2018/10/16 11:01:20                          */
 /*==============================================================*/
 
 
@@ -135,7 +135,7 @@ alter table AFC_PLATFORM_TRADE comment '平台交易';
 create table AFC_SETTLE_TASK
 (
    ID                   bigint not null comment '任务ID',
-   EXECUTE_STATE        tinyint not null default 0 comment '执行状态(-1:取消；0:未执行；1:已执行)',
+   EXECUTE_STATE        tinyint not null default 0 comment '执行状态(-1:取消；0:未执行；1:已执行；暂停)',
    EXECUTE_PLAN_TIME    datetime not null comment '计划执行时间',
    EXECUTE_FACT_TIME    datetime comment '实际执行时间',
    ACCOUNT_ID           bigint comment '账户ID(账户ID也就是用户ID)',

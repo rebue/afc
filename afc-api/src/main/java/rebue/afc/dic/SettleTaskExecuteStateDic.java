@@ -13,6 +13,7 @@ import rebue.wheel.baseintf.EnumBase;
  * -1: 取消
  * 0: 未执行
  * 1: 已执行
+ * 2: 暂停
  */
 public enum SettleTaskExecuteStateDic implements EnumBase {
     /**
@@ -26,7 +27,11 @@ public enum SettleTaskExecuteStateDic implements EnumBase {
     /**
      * 1: 已执行
      */
-    DONE(1);
+    DONE(1),
+    /**
+     * 2: 暂停
+     */
+    SUSPEND(2);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的

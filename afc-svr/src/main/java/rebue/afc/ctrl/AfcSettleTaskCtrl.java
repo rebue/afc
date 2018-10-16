@@ -1,10 +1,11 @@
 package rebue.afc.ctrl;
 
-import com.github.pagehelper.PageInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,12 +16,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+
 import rebue.afc.dic.AddSettleTaskResultDic;
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.to.AddSettleTasksTo;
-import rebue.afc.to.GetCashBackTaskTo;
+import rebue.afc.to.TaskTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 
@@ -175,7 +179,7 @@ public class AfcSettleTaskCtrl {
     private static final Logger _log = LoggerFactory.getLogger(AfcSettleTaskCtrl.class);
 
     @Resource
-    private AfcSettleTaskSvc svc;
+    private AfcSettleTaskSvc    svc;
 
     /**
      * 添加结算任务
@@ -223,10 +227,37 @@ public class AfcSettleTaskCtrl {
     }
 
     /**
-     * 获取用户的待返现任务
+     * 暂停任务
      */
-    @GetMapping("/settle/task/cashbacktask")
-    List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to) {
-        return svc.getCashBackTask(to);
+    @PostMapping("/settle/task/suspend")
+    Ro suspendTask(@RequestBody TaskTo to) {
+        _log.info("suspendTask: {}", to);
+        return svc.suspendTask(to);
     }
+
+    /**
+     * 恢复任务
+     */
+    @PostMapping("/settle/task/resume")
+    Ro resumeTask(@RequestBody TaskTo to) {
+        _log.info("resumeTask: {}", to);
+        return svc.resumeTask(to);
+    }
+
+    /**
+     * 取消任务
+     */
+    @PostMapping("/settle/task/cancel")
+    Ro cancelTask(@RequestBody TaskTo to) {
+        _log.info("resumeTask: {}", to);
+        return svc.resumeTask(to);
+    }
+
+//    /**
+//     * 获取用户的待返现任务
+//     */
+//    @GetMapping("/settle/task/cashbacktask")
+//    List<AfcSettleTaskMo> getCashBackTask(GetCashBackTaskTo to) {
+//        return svc.getCashBackTask(to);
+//    }
 }
