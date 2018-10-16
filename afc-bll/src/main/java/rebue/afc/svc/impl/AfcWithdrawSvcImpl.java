@@ -2,10 +2,9 @@ package rebue.afc.svc.impl;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
@@ -14,16 +13,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcWithdrawMapper;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcPlatformTradeMo;
 import rebue.afc.mo.AfcTradeMo;
+import rebue.afc.mo.AfcWithdrawAccountBindFlowMo;
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.mo.AfcWithdrawMo;
 import rebue.afc.platform.dic.PlatformTradeTypeDic;
-import rebue.afc.platform.svc.AfcPlatformSvc;
 import rebue.afc.platform.svc.AfcPlatformTradeSvc;
+import rebue.afc.ro.AfcWithdrawAccountBindFlowRo;
+import rebue.afc.ro.AfcWithdrawRo;
 import rebue.afc.ro.WithdrawNumberForMonthRo;
 import rebue.afc.svc.AfcAccountSvc;
 import rebue.afc.svc.AfcFlowSvc;
@@ -102,6 +108,9 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 	
 	@Resource
 	private AfcPlatformTradeSvc afcPlatformTradeSvc;
+	
+	@Resource
+    private SucUserSvc sucUserSvc;
 
 	/**
 	 * 提现申请（ 余额-，提现中+ ）
@@ -420,10 +429,11 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 	 */
 	@Override
 	public WithdrawCancelRo cancel(WithdrawCancelTo to) {
-		if (to.getId() == null || StringUtils.isAnyBlank(to.getMac(), to.getIp())) {
+		if (to.getId() == null || StringUtils.isAnyBlank(to.getMac(), to.getIp(), to.getReason())) {
 			_log.warn("没有填写提现记录的ID/操作人的用户ID/MAC/IP: {}", to);
 			WithdrawCancelRo ro = new WithdrawCancelRo();
 			ro.setResult(WithdrawCancelResultDic.PARAM_ERROR);
+			ro.setMsg("参数错误");
 			return ro;
 		}
 		SucUserMo opUserMo = userSvc.getById(to.getOpId());
@@ -431,12 +441,14 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			_log.error("作废提现发现没有此操作人: " + to.getOpId());
 			WithdrawCancelRo ro = new WithdrawCancelRo();
 			ro.setResult(WithdrawCancelResultDic.NOT_FOUND_OP);
+			ro.setMsg("没有此操作人");
 			return ro;
 		}
 		if (opUserMo.getIsLock()) {
 			_log.error("作废提现发现操作人已被锁定: " + opUserMo);
 			WithdrawCancelRo ro = new WithdrawCancelRo();
 			ro.setResult(WithdrawCancelResultDic.OP_LOCKED);
+			ro.setMsg("操作人被锁定");
 			return ro;
 		}
 		AfcWithdrawMo withdrawMo = _mapper.selectByPrimaryKey(to.getId());
@@ -444,6 +456,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			_log.error("作废提现发现没有此申请: " + to.getId());
 			WithdrawCancelRo ro = new WithdrawCancelRo();
 			ro.setResult(WithdrawCancelResultDic.NOT_FOUND_APPLICATION);
+			ro.setMsg("没有此申请");
 			return ro;
 		}
 		if (withdrawMo.getWithdrawState() != WithdrawStateDic.APPLY.getCode()
@@ -451,6 +464,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			_log.error("作废提现发现此申请已被处理: withdrawState-" + withdrawMo.getWithdrawState());
 			WithdrawCancelRo ro = new WithdrawCancelRo();
 			ro.setResult(WithdrawCancelResultDic.ALREADY_DEALED);
+			ro.setMsg("此申请已被处理");
 			return ro;
 		}
 		// 计算当前时间
@@ -483,6 +497,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		// 返回成功
 		_log.info("作废提现成功: {}", to);
 		WithdrawCancelRo ro = new WithdrawCancelRo();
+		ro.setMsg("拒绝提现成功");
 		ro.setResult(WithdrawCancelResultDic.SUCCESS);
 		return ro;
 	}
@@ -497,7 +512,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		int withdrawCount = _mapper.selectWithdrawNumberForMonth(mo);
 		_log.info("查询提现次数的返回值为：{}", withdrawCount);
 		if (withdrawCount == 0) {
-			numberForMonthRo.setWithdrawNumber(1);
+			numberForMonthRo.setWithdrawNumber(0);
 			numberForMonthRo.setSeviceCharge(new BigDecimal("0"));
 			return numberForMonthRo;
 		}
@@ -506,5 +521,33 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		numberForMonthRo.setWithdrawNumber(withdrawCount);
 		numberForMonthRo.setSeviceCharge(new BigDecimal(pow));
 		return numberForMonthRo;
+	}
+	
+	/**
+	 * 重写查询提现信息
+	 * @param mo
+	 * @param pageNum
+	 * @param pageSize
+	 * @param orderBy
+	 * @return
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public PageInfo<AfcWithdrawRo> lisrEx(AfcWithdrawMo mo, int pageNum, int pageSize, String orderBy) {
+		PageInfo<AfcWithdrawRo> doSelectPageInfoEx = new PageInfo<AfcWithdrawRo>();
+    	List<AfcWithdrawRo> listEx = new ArrayList<AfcWithdrawRo>();
+    	PageInfo<AfcWithdrawMo> doSelectPageInfo = PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectSelective(mo));
+    	for (AfcWithdrawMo afcWithdrawMo : doSelectPageInfo.getList()) {
+    		AfcWithdrawRo afcWithdrawRo = dozerMapper.map(afcWithdrawMo, AfcWithdrawRo.class);
+    		_log.info("查询申请提现账号记录查询用户信息的参数为：{}", afcWithdrawMo.getApplicantId());
+    		SucUserMo sucUserMo = sucUserSvc.getById(afcWithdrawMo.getApplicantId());
+    		_log.info("查询申请提现账号记录查询用户信息的返回值为：{}", sucUserMo);
+    		afcWithdrawRo.setApplicantName(sucUserMo.getWxNickname());
+    		listEx.add(afcWithdrawRo);
+		}
+    	doSelectPageInfoEx = dozerMapper.map(doSelectPageInfo, PageInfo.class);
+    	doSelectPageInfoEx.setList(listEx);
+    	_log.info("查询申请提现账号记录的返回值为：{}", doSelectPageInfoEx);
+    	return doSelectPageInfoEx;
 	}
 }

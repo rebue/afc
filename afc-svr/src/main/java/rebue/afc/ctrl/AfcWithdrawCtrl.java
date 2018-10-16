@@ -1,6 +1,8 @@
 package rebue.afc.ctrl;
 
 import com.github.pagehelper.PageInfo;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.annotation.Resource;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcWithdrawMo;
+import rebue.afc.ro.AfcWithdrawRo;
 import rebue.afc.svc.AfcWithdrawSvc;
 import rebue.afc.withdraw.ro.WithdrawApplyRo;
 import rebue.afc.withdraw.ro.WithdrawCancelRo;
@@ -29,6 +32,7 @@ import rebue.afc.withdraw.to.WithdrawOkTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.wheel.AgentUtils;
+import rebue.wheel.turing.JwtUtils;
 
 /**
  * 提现信息
@@ -175,14 +179,14 @@ public class AfcWithdrawCtrl {
      * 查询提现信息
      */
     @GetMapping("/afc/withdraw")
-    PageInfo<AfcWithdrawMo> list(AfcWithdrawMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+    PageInfo<AfcWithdrawRo> list(AfcWithdrawMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         _log.info("list AfcWithdrawMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcWithdrawMo> result = svc.list(mo, pageNum, pageSize, "ID desc");
+        PageInfo<AfcWithdrawRo> result = svc.lisrEx(mo, pageNum, pageSize, "ID desc");
         _log.info("result: " + result);
         return result;
     }
@@ -207,24 +211,33 @@ public class AfcWithdrawCtrl {
 
     /**
      * 确认提现成功（手动）
+     * @throws ParseException 
+     * @throws NumberFormatException 
      */
     @PutMapping("/withdraw/ok")
-    WithdrawOkRo ok(WithdrawOkTo to, HttpServletRequest req) {
+    WithdrawOkRo ok(WithdrawOkTo to, HttpServletRequest req) throws NumberFormatException, ParseException {
         _log.info("确认提现成功（手动）： {}", to);
         // 获取当前登录用户id
-    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
-        to.setIp(AgentUtils.getIpAddr(req, "noproxy"));
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+        to.setIp(AgentUtils.getIpAddr(req, "nginx"));
         to.setMac("不再获取MAC地址");
-        to.setOpId(521494277558239235L);
+        to.setOpId(loginId);
         return svc.ok(to);
     }
 
     /**
      * 作废提现
+     * @throws ParseException 
+     * @throws NumberFormatException 
      */
     @PutMapping("/withdraw/cancel")
-    WithdrawCancelRo cancel(WithdrawCancelTo to) {
+    WithdrawCancelRo cancel(WithdrawCancelTo to, HttpServletRequest req) throws NumberFormatException, ParseException {
         _log.info("作废提现： {}", to);
+     // 获取当前登录用户id
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+        to.setIp(AgentUtils.getIpAddr(req, "nginx"));
+        to.setMac("不再获取MAC地址");
+        to.setOpId(loginId);
         return svc.cancel(to);
     }
 }

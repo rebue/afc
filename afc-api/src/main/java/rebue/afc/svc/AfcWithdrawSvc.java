@@ -1,6 +1,9 @@
 package rebue.afc.svc;
 
+import com.github.pagehelper.PageInfo;
+
 import rebue.afc.mo.AfcWithdrawMo;
+import rebue.afc.ro.AfcWithdrawRo;
 import rebue.afc.ro.WithdrawNumberForMonthRo;
 import rebue.afc.withdraw.ro.WithdrawApplyRo;
 import rebue.afc.withdraw.ro.WithdrawCancelRo;
@@ -45,4 +48,14 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
      * @return
      */
 	WithdrawNumberForMonthRo getWithdrawNumberForMonth(AfcWithdrawMo mo);
+
+	/**
+	 * 重写查询提现信息
+	 * @param mo
+	 * @param pageNum
+	 * @param pageSize
+	 * @param orderBy
+	 * @return
+	 */
+	PageInfo<AfcWithdrawRo> lisrEx(AfcWithdrawMo mo, int pageNum, int pageSize, String orderBy);
 }
