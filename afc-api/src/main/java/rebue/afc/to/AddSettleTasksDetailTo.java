@@ -47,6 +47,19 @@ public class AddSettleTasksDetailTo {
      * 结算给上家佣金的详情
      */
     private String     settleUplineCommissionDetail;
+    
+    /**
+     * 结算给本家佣金的金额
+     */
+    private BigDecimal settleSelfCommissionAmount;
+    /**
+     * 结算给本家佣金的标题
+     */
+    private String     settleSelfCommissionTitle;
+    /**
+     * 结算给本家佣金的详情
+     */
+    private String     settleSelfCommissionDetail;
 
     /**
      * 结算给平台服务费的金额

@@ -142,7 +142,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
                 // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
                 thisSvc.add(taskMo);
             }
-            // 如果要结算佣金
+            // 如果要结算上家佣金
             if (detail.getSettleUplineCommissionAmount() != null && detail.getSettleUplineCommissionAmount().compareTo(BigDecimal.ZERO) > 0) {
                 _log.info("添加结算返佣中金额的任务");
                 AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
@@ -163,6 +163,37 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
                 taskMo.setTradeTitle(detail.getSettleUplineCommissionTitle());
                 // 结算给上家返佣金的详情
                 taskMo.setTradeDetail(detail.getSettleUplineCommissionDetail());
+                // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+                thisSvc.add(taskMo);
+                _log.info("添加结算返佣金的任务");
+                taskMo.setId(null);
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_COMMISSION.getCode());
+                // 计划执行时间
+                taskMo.setExecutePlanTime(to.getSettleUplineCommissionTime());
+                // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
+                thisSvc.add(taskMo);
+            }
+            // 如果要结算本家佣金
+            if (detail.getSettleSelfCommissionAmount() != null && detail.getSettleSelfCommissionAmount().compareTo(BigDecimal.ZERO) > 0) {
+                _log.info("添加结算返佣中金额的任务");
+                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                taskMo.setMac(to.getMac());
+                taskMo.setIp(to.getIp());
+                taskMo.setTradeType((byte) TradeTypeDic.SETTLE_COMMISSIONING.getCode());
+                // 计划执行时间（延迟1分钟立即执行）
+                taskMo.setExecutePlanTime(new Date(now.getTime() + 60000));
+                // 本家的账户ID
+                taskMo.setAccountId(to.getBuyerAccountId());
+                // 本家的订单ID
+                taskMo.setOrderId(to.getOrderId().toString());
+                // 本家的订单详情ID
+                taskMo.setOrderDetailId(detail.getOrderDetailId().toString());
+                // 返佣金
+                taskMo.setTradeAmount(detail.getSettleSelfCommissionAmount());
+                // 结算给上家返佣金的标题
+                taskMo.setTradeTitle(detail.getSettleSelfCommissionTitle());
+                // 结算给上家返佣金的详情
+                taskMo.setTradeDetail(detail.getSettleSelfCommissionDetail());
                 // 如果交易类型+账户ID+销售订单详情ID重复，则抛出DuplicateKeyException异常
                 thisSvc.add(taskMo);
                 _log.info("添加结算返佣金的任务");
