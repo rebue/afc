@@ -205,11 +205,11 @@ public class AfcWithdrawAccountBindFlowCtrl {
     @PutMapping("/afc/withdrawaccountbindflow/review")
     Ro review(@RequestParam("id") java.lang.Long id, HttpServletRequest req) throws NumberFormatException, ParseException {
     	// 获取当前登录用户id
-    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
     	AfcWithdrawAccountBindFlowMo accountBindFlowMo = new AfcWithdrawAccountBindFlowMo();
     	accountBindFlowMo.setId(id);
-    	accountBindFlowMo.setReviewerIp(AgentUtils.getIpAddr(req, "noproxy"));
-    	accountBindFlowMo.setReviewerId(193201L);
+    	accountBindFlowMo.setReviewerIp(AgentUtils.getIpAddr(req, "nginx"));
+    	accountBindFlowMo.setReviewerId(loginId);
     	accountBindFlowMo.setReviewTime(new Date());
     	accountBindFlowMo.setModifiedTimestamp(System.currentTimeMillis());
     	try {
@@ -230,18 +230,20 @@ public class AfcWithdrawAccountBindFlowCtrl {
      * @param rejectReason
      * @param req
      * @return
+     * @throws ParseException 
+     * @throws NumberFormatException 
      */
     @PutMapping("/afc/withdrawaccountbindflow/reject")
-    Ro reject(@RequestParam("id") java.lang.Long id, @RequestParam("rejectReason") String rejectReason, HttpServletRequest req) {
+    Ro reject(@RequestParam("id") java.lang.Long id, @RequestParam("rejectReason") String rejectReason, HttpServletRequest req) throws NumberFormatException, ParseException {
     	// 获取当前登录用户id
-    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
     	AfcWithdrawAccountBindFlowMo mo = new AfcWithdrawAccountBindFlowMo();
     	mo.setId(id);
     	mo.setFlowState((byte) -1);
     	mo.setRejectReason(rejectReason);
-    	mo.setReviewerId(193201L);
+    	mo.setReviewerId(loginId);
     	mo.setReviewTime(new Date());
-    	mo.setReviewerIp(AgentUtils.getIpAddr(req, "noproxy"));
+    	mo.setReviewerIp(AgentUtils.getIpAddr(req, "nginx"));
     	mo.setModifiedTimestamp(System.currentTimeMillis());
     	int result = svc.reject(mo);
     	Ro ro = new Ro();

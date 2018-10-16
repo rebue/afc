@@ -1,6 +1,8 @@
 package rebue.afc.ctrl;
 
 import com.github.pagehelper.PageInfo;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.annotation.Resource;
@@ -30,6 +32,7 @@ import rebue.afc.withdraw.to.WithdrawOkTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.wheel.AgentUtils;
+import rebue.wheel.turing.JwtUtils;
 
 /**
  * 提现信息
@@ -208,29 +211,33 @@ public class AfcWithdrawCtrl {
 
     /**
      * 确认提现成功（手动）
+     * @throws ParseException 
+     * @throws NumberFormatException 
      */
     @PutMapping("/withdraw/ok")
-    WithdrawOkRo ok(WithdrawOkTo to, HttpServletRequest req) {
+    WithdrawOkRo ok(WithdrawOkTo to, HttpServletRequest req) throws NumberFormatException, ParseException {
         _log.info("确认提现成功（手动）： {}", to);
         // 获取当前登录用户id
-    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
-        to.setIp(AgentUtils.getIpAddr(req, "noproxy"));
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+        to.setIp(AgentUtils.getIpAddr(req, "nginx"));
         to.setMac("不再获取MAC地址");
-        to.setOpId(521494277558239235L);
+        to.setOpId(loginId);
         return svc.ok(to);
     }
 
     /**
      * 作废提现
+     * @throws ParseException 
+     * @throws NumberFormatException 
      */
     @PutMapping("/withdraw/cancel")
-    WithdrawCancelRo cancel(WithdrawCancelTo to, HttpServletRequest req) {
+    WithdrawCancelRo cancel(WithdrawCancelTo to, HttpServletRequest req) throws NumberFormatException, ParseException {
         _log.info("作废提现： {}", to);
      // 获取当前登录用户id
-    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
-        to.setIp(AgentUtils.getIpAddr(req, "noproxy"));
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+        to.setIp(AgentUtils.getIpAddr(req, "nginx"));
         to.setMac("不再获取MAC地址");
-        to.setOpId(521494277558239235L);
+        to.setOpId(loginId);
         return svc.cancel(to);
     }
 }
