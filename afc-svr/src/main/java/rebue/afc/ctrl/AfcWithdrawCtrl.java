@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcWithdrawMo;
+import rebue.afc.ro.AfcWithdrawRo;
 import rebue.afc.svc.AfcWithdrawSvc;
 import rebue.afc.withdraw.ro.WithdrawApplyRo;
 import rebue.afc.withdraw.ro.WithdrawCancelRo;
@@ -175,14 +176,14 @@ public class AfcWithdrawCtrl {
      * 查询提现信息
      */
     @GetMapping("/afc/withdraw")
-    PageInfo<AfcWithdrawMo> list(AfcWithdrawMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+    PageInfo<AfcWithdrawRo> list(AfcWithdrawMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         _log.info("list AfcWithdrawMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcWithdrawMo> result = svc.list(mo, pageNum, pageSize, "ID desc");
+        PageInfo<AfcWithdrawRo> result = svc.lisrEx(mo, pageNum, pageSize, "ID desc");
         _log.info("result: " + result);
         return result;
     }
@@ -223,8 +224,13 @@ public class AfcWithdrawCtrl {
      * 作废提现
      */
     @PutMapping("/withdraw/cancel")
-    WithdrawCancelRo cancel(WithdrawCancelTo to) {
+    WithdrawCancelRo cancel(WithdrawCancelTo to, HttpServletRequest req) {
         _log.info("作废提现： {}", to);
+     // 获取当前登录用户id
+    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+        to.setIp(AgentUtils.getIpAddr(req, "noproxy"));
+        to.setMac("不再获取MAC地址");
+        to.setOpId(521494277558239235L);
         return svc.cancel(to);
     }
 }
