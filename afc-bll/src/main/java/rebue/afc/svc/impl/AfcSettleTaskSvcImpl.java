@@ -31,6 +31,7 @@ import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.AddSettleTasksDetailTo;
 import rebue.afc.to.AddSettleTasksTo;
 import rebue.afc.to.TaskTo;
+import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.svr.feign.SucUserSvc;
@@ -365,7 +366,8 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         _log.info("将任务状态改为已经执行");
         int rowCount = _mapper.done(now, taskMo.getId(), (byte) SettleTaskExecuteStateDic.DONE.getCode(), (byte) SettleTaskExecuteStateDic.NONE.getCode());
         if (rowCount != 1) {
-            String msg = "执行结算任务不成功: 出现并发问题";
+            _log.info("影响行数为: {}", rowCount);
+            String msg = "执行结算任务不成功: 可能出现并发问题";
             _log.error("{}-{}", msg, taskMo);
             throw new RuntimeException(msg);
         }
@@ -385,22 +387,117 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         }
     }
 
+    /**
+     * 暂停任务
+     */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Ro suspendTask(TaskTo to) {
-        // TODO Auto-generated method stub
-        return null;
+        _log.info("暂停任务: {}", to);
+        Ro ro = new Ro();
+
+        // rowCount为影响的行数
+        int rowCount = _mapper.updateExecuteState(to.getTradeType().getCode(), to.getOrderDetailId(), SettleTaskExecuteStateDic.NONE.getCode(),
+                SettleTaskExecuteStateDic.SUSPEND.getCode());
+        if (rowCount != 1) {
+            _log.info("影响行数为: {}", rowCount);
+            String msg = "暂停任务失败: 可能出现并发问题";
+            _log.error("{}-{}", msg, to);
+            ro.setResult(ResultDic.FAIL);
+            ro.setMsg(msg);
+            return ro;
+        }
+
+        String msg = "任务暂停成功";
+        _log.info(msg);
+        ro.setResult(ResultDic.SUCCESS);
+        ro.setMsg(msg);
+        return ro;
     }
 
+    /**
+     * 恢复任务
+     */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Ro resumeTask(TaskTo to) {
-        // TODO Auto-generated method stub
-        return null;
+        _log.info("恢复任务: {}", to);
+        Ro ro = new Ro();
+
+        // rowCount为影响的行数
+        int rowCount = _mapper.updateExecuteState(to.getTradeType().getCode(), to.getOrderDetailId(), SettleTaskExecuteStateDic.SUSPEND.getCode(),
+                SettleTaskExecuteStateDic.NONE.getCode());
+        if (rowCount != 1) {
+            _log.info("影响行数为: {}", rowCount);
+            String msg = "恢复任务失败: 可能出现并发问题";
+            _log.error("{}-{}", msg, to);
+            ro.setResult(ResultDic.FAIL);
+            ro.setMsg(msg);
+            return ro;
+        }
+
+        String msg = "任务恢复成功";
+        _log.info(msg);
+        ro.setResult(ResultDic.SUCCESS);
+        ro.setMsg(msg);
+        return ro;
     }
 
+    /**
+     * 取消任务
+     */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Ro cancelTask(TaskTo to) {
-        // TODO Auto-generated method stub
-        return null;
+        _log.info("取消任务: {}", to);
+        Ro ro = new Ro();
+
+        // 根据交易类型和订单详情ID查找任务
+        AfcSettleTaskMo mo = new AfcSettleTaskMo();
+        mo.setTradeType((byte) to.getTradeType().getCode());
+        mo.setOrderDetailId(to.getOrderDetailId());
+        AfcSettleTaskMo task = getOne(mo);
+        if (task == null) {
+            String msg = "找不到任务";
+            _log.error("{}-{}", msg, to);
+            ro.setResult(ResultDic.FAIL);
+            ro.setMsg(msg);
+            return ro;
+        }
+        if (SettleTaskExecuteStateDic.DONE.getCode() == task.getExecuteState()) {
+            String msg = "任务已被执行，不能取消";
+            _log.error("{}-{}", msg, to);
+            ro.setResult(ResultDic.FAIL);
+            ro.setMsg(msg);
+            return ro;
+        }
+        if (SettleTaskExecuteStateDic.CANCEL.getCode() == task.getExecuteState()) {
+            String msg = "任务已被取消，不能重复取消";
+            _log.error("{}-{}", msg, to);
+            ro.setResult(ResultDic.FAIL);
+            ro.setMsg(msg);
+            return ro;
+        }
+
+        // 取消任务，rowCount为影响的行数
+        int rowCount = _mapper.cancelTask(mo.getId(), mo.getExecuteState(), SettleTaskExecuteStateDic.CANCEL.getCode());
+        if (rowCount != 1) {
+            _log.info("影响行数为: {}", rowCount);
+            String msg = "任务取消失败: 可能出现并发问题";
+            _log.error("{}-{}", msg, to);
+            ro.setResult(ResultDic.FAIL);
+            ro.setMsg(msg);
+            return ro;
+        }
+
+        _log.info("取消任务，需要补偿已经执行的结算");
+        settleSvc.compensateCanceledSettle(mo);
+
+        String msg = "任务取消成功";
+        _log.info(msg);
+        ro.setResult(ResultDic.SUCCESS);
+        ro.setMsg(msg);
+        return ro;
     }
 
 //    @Override

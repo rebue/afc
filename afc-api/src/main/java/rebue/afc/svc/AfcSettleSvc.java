@@ -32,4 +32,12 @@ public interface AfcSettleSvc {
      */
     void settlePlatformServiceFee(AfcSettleTaskMo taskMo, Date now);
 
+    /**
+     * 取消任务，需要补偿已经执行的结算
+     * 
+     * @param canceledTask
+     *            被取消的任务
+     */
+    void compensateCanceledSettle(AfcSettleTaskMo canceledTask);
+
 }

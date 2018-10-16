@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mo.AfcPlatformTradeMo;
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.mo.AfcTradeMo;
@@ -98,6 +99,32 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
         tradeMo.setPlatformTradeType((byte) PlatformTradeTypeDic.CHARGE_SEVICE_FEE.getCode());  // 交易类型（1：收取服务费(购买交易成功) 2：退回服务费(用户退款)）
         tradeMo.setModifiedTimestamp(now.getTime());                                            // 修改时间戳
         platformTradeSvc.addTrade(tradeMo);      // 如果重复提交，会抛出DuplicateKeyException运行时异常
+    }
+
+    /**
+     * 取消任务，需要补偿已经执行的结算
+     * 
+     * @param canceledTask
+     *            被取消的任务
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void compensateCanceledSettle(AfcSettleTaskMo canceledTask) {
+        // 判断交易类型
+        switch (TradeTypeDic.getItem(canceledTask.getTradeType())) {
+        // 取消返佣任务
+        case SETTLE_COMMISSION:
+            // 添加一笔扣除返佣中金额的交易
+            AfcTradeMo tradeMo = dozerMapper.map(canceledTask, AfcTradeMo.class);
+            tradeMo.setId(null);                    // 不能克隆取消任务的ID过来
+            tradeMo.setTradeTitle("退款补偿扣减返佣中金额");
+            tradeMo.setTradeDetail(canceledTask.getTradeDetail());
+            tradeMo.setTradeType((byte) TradeTypeDic.COMPENDSATE_SUBTRACT_COMMISSIONING.getCode());
+            tradeMo.setTradeTime(new Date());
+            tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
+            tradeSvc.addTrade(tradeMo);
+            break;
+        }
     }
 
 }
