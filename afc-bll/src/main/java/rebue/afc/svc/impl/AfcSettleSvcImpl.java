@@ -124,6 +124,8 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
             tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
             tradeSvc.addTrade(tradeMo);
             break;
+        default:
+            _log.info("不用补偿的交易类型");
         }
     }
 
