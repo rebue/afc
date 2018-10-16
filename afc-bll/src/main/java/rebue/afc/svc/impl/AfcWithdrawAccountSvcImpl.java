@@ -1,14 +1,25 @@
 package rebue.afc.svc.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rebue.afc.mapper.AfcWithdrawAccountMapper;
+import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcWithdrawAccountMo;
+import rebue.afc.mo.AfcWithdrawMo;
+import rebue.afc.ro.AfcWithdrawAccountInfoRo;
+import rebue.afc.ro.WithdrawNumberForMonthRo;
+import rebue.afc.svc.AfcAccountSvc;
 import rebue.afc.svc.AfcWithdrawAccountSvc;
+import rebue.afc.svc.AfcWithdrawSvc;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 
 /**
@@ -33,6 +44,18 @@ public class AfcWithdrawAccountSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAcc
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final Logger _log = LoggerFactory.getLogger(AfcWithdrawAccountSvcImpl.class);
+    
+    @Resource
+    private AfcWithdrawAccountSvc afcWithdrawAccountSvc;
+    
+    @Resource
+    private AfcAccountSvc afcAccountSvc;
+    
+    @Resource
+    private AfcWithdrawSvc afcWithdrawSvc;
+    
+    @Resource
+    private Mapper              dozerMapper;
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -75,5 +98,35 @@ public class AfcWithdrawAccountSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAcc
         AfcWithdrawAccountMo mo = new AfcWithdrawAccountMo();
         mo.setAccountId(userId);
         return list(mo);
+    }
+    
+    /**
+     * 获取提现账户信息
+     */
+    @Override
+    public AfcWithdrawAccountInfoRo getWithdrawAccountInfo(Long userId) {
+    	_log.info("根据用户id查询用户提现账户信息的参数为：{}", userId);
+    	AfcWithdrawAccountMo withdrawAccountMo = new AfcWithdrawAccountMo();
+    	_log.info("根据用户id查询用户提现账户信息查询用户提现账户信息的参数为：{}", userId);
+    	withdrawAccountMo.setAccountId(userId);
+    	AfcWithdrawAccountMo afcWithdrawAccountMo = afcWithdrawAccountSvc.getOne(withdrawAccountMo);
+    	_log.info("根据用户id查询用户提现账户信息查询用户提现账户信息的返回值为：{}", afcWithdrawAccountMo);
+    	
+    	_log.info("根据用户id查询用户提现账户信息查询用户账户信息的参数为：{}", userId);
+    	AfcAccountMo afcAccountMo = afcAccountSvc.getById(userId);
+    	_log.info("根据用户id查询用户提现账户信息查询用户账户信息的返回值为：{}", afcAccountMo);
+    	
+    	AfcWithdrawMo afcWithdrawMo = new AfcWithdrawMo();
+    	afcWithdrawMo.setAccountId(userId);
+    	_log.info("根据用户id查询用户提现账户信息查询用户提现信息的参数为：{}", afcWithdrawMo);
+    	WithdrawNumberForMonthRo withdrawNumberForMonth = afcWithdrawSvc.getWithdrawNumberForMonth(afcWithdrawMo);
+    	_log.info("根据用户id查询用户提现账户信息查询用户提现信息的返回值为：{}", withdrawNumberForMonth);
+    	
+    	AfcWithdrawAccountInfoRo withdrawAccountInfoRo = dozerMapper.map(afcWithdrawAccountMo, AfcWithdrawAccountInfoRo.class);
+    	withdrawAccountInfoRo.setBalance(afcAccountMo.getBalance().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+    	withdrawAccountInfoRo.setWithdrawNumber(withdrawNumberForMonth.getWithdrawNumber());
+    	withdrawAccountInfoRo.setSeviceCharge(withdrawNumberForMonth.getSeviceCharge());
+    	_log.info("根据用户id查询用户提现账户信息的返回值为：{}", withdrawAccountInfoRo);
+    	return withdrawAccountInfoRo;
     }
 }

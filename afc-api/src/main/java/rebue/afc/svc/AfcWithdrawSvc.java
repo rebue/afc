@@ -1,6 +1,7 @@
 package rebue.afc.svc;
 
 import rebue.afc.mo.AfcWithdrawMo;
+import rebue.afc.ro.WithdrawNumberForMonthRo;
 import rebue.afc.withdraw.ro.WithdrawApplyRo;
 import rebue.afc.withdraw.ro.WithdrawCancelRo;
 import rebue.afc.withdraw.ro.WithdrawDealRo;
@@ -37,4 +38,11 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
      * 作废提现
      */
     WithdrawCancelRo cancel(WithdrawCancelTo to);
+
+    /**
+     * 获取用户提现次数和手续费
+     * @param accountId
+     * @return
+     */
+	WithdrawNumberForMonthRo getWithdrawNumberForMonth(AfcWithdrawMo mo);
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcWithdrawAccountMo;
+import rebue.afc.ro.AfcWithdrawAccountInfoRo;
 import rebue.afc.svc.AfcWithdrawAccountSvc;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
@@ -189,5 +190,16 @@ public class AfcWithdrawAccountCtrl {
     List<AfcWithdrawAccountMo> listByUserId(@RequestParam("userId") Long userId) {
         _log.info("查询用户的账户信息: {}", userId);
         return svc.listByUserId(userId);
+    }
+    
+    /**
+     * 获取提现账户信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/withdraw/account/info")
+    AfcWithdrawAccountInfoRo getWithdrawAccountInfo(@RequestParam("userId") Long userId) {
+    	_log.info("获取提现账户信息的参数为：{}", userId);
+    	return svc.getWithdrawAccountInfo(userId);
     }
 }

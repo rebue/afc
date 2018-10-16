@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -26,6 +28,7 @@ import rebue.afc.withdraw.to.WithdrawDealTo;
 import rebue.afc.withdraw.to.WithdrawOkTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
+import rebue.wheel.AgentUtils;
 
 /**
  * 提现信息
@@ -206,8 +209,13 @@ public class AfcWithdrawCtrl {
      * 确认提现成功（手动）
      */
     @PutMapping("/withdraw/ok")
-    WithdrawOkRo ok(WithdrawOkTo to) {
+    WithdrawOkRo ok(WithdrawOkTo to, HttpServletRequest req) {
         _log.info("确认提现成功（手动）： {}", to);
+        // 获取当前登录用户id
+    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+        to.setIp(AgentUtils.getIpAddr(req, "noproxy"));
+        to.setMac("不再获取MAC地址");
+        to.setOpId(521494277558239235L);
         return svc.ok(to);
     }
 

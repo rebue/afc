@@ -180,4 +180,11 @@ public class AfcWithdrawTests {
         Assert.assertNotNull(list);
         System.out.println(list);
     }
+    
+    @Test
+    public void withdrawNumber() throws IOException {
+    	String url = _hostUrl + "/afc/withdraw/withdrawnumber?accountId=525616558689484801";
+    	String string = OkhttpUtils.get(url);
+    	System.out.println(string);
+    }
 }

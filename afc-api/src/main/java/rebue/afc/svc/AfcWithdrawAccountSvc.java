@@ -2,6 +2,7 @@ package rebue.afc.svc;
 
 import java.util.List;
 import rebue.afc.mo.AfcWithdrawAccountMo;
+import rebue.afc.ro.AfcWithdrawAccountInfoRo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 /**
@@ -22,4 +23,11 @@ public interface AfcWithdrawAccountSvc extends MybatisBaseSvc<AfcWithdrawAccount
      *  @return
      */
     List<AfcWithdrawAccountMo> listByUserId(Long userId);
+
+    /**
+     * 获取提现账户信息
+     * @param userId
+     * @return
+     */
+	AfcWithdrawAccountInfoRo getWithdrawAccountInfo(Long userId);
 }

@@ -83,6 +83,10 @@ public class AfcPlatformTradeSvcImpl extends MybatisBaseSvcImpl<AfcPlatformTrade
         case GETBACK_SEVICE_FEE:
             newBalance = oldBalance.subtract(tradeAmount);
             break;
+         // XXX AFC : 交易 : （ 余额+ ）结算-结算平台服务费(将交易结算的服务费打到平台的余额)
+        case WITHDRAW_SEVICE_CHARGE:
+            newBalance = oldBalance.add(tradeAmount);
+            break;
         default:
             String msg = "不支持此平台交易类型";
             _log.error("{}: {}", msg, tradeMo.getPlatformTradeType());

@@ -173,7 +173,7 @@ public class AfcPlatformTradeMo implements Serializable {
 
     /**
      *    订单详情ID
-     *                (如果平台交易类型是收取服务费，则填销售订单详情ID；如果是退款，则填写退款单ID)
+     *                (如果平台交易类型是收取服务费，则填销售订单详情ID；如果是退款，则填写退款单ID; 如果是提现服务费则填写提现id)
      *
      *    数据库字段: AFC_PLATFORM_TRADE.ORDER_DETAIL_ID
      *

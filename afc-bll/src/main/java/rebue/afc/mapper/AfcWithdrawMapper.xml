@@ -585,4 +585,12 @@
       </if>
     </where>
   </select>
+  <select id="selectWithdrawNumberForMonth" parameterType="rebue.afc.mo.AfcWithdrawMo" resultType="int">
+  	SELECT count(*) FROM afc.AFC_WITHDRAW 
+  	WHERE DATE_FORMAT( APPLY_TIME, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
+  	and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
+  	<if test="withdrawState != null and withdrawState != '' ">
+       and WITHDRAW_STATE = #{withdrawState,jdbcType=TINYINT}
+     </if>
+  </select>
 </mapper>

@@ -15,6 +15,7 @@ import rebue.wheel.baseintf.EnumBase;
  * 30: 申请提现
  * 31: 提现
  * 32: 作废提现
+ * 33: 提现服务费
  * 40: 进货保证金-充值
  * 41: 进货保证金-进货
  * 42: 进货保证金-出货
@@ -52,6 +53,10 @@ public enum TradeTypeDic implements EnumBase {
      * 32: 作废提现
      */
     WITHDRAW_CANCEL(32),
+    /**
+     * 33: 提现服务费
+     */
+    WITHDRAW_SEVICE_CHARGE(33),
     /**
      * 40: 进货保证金-充值
      */

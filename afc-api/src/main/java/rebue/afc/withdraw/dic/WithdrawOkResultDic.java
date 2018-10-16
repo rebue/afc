@@ -16,6 +16,8 @@ import rebue.wheel.baseintf.EnumBase;
  * -2: 确认人被锁定
  * -3: 没有此申请
  * -4: 此申请已被处理
+ * -5: 扣减服务费失败
+ * -6: 操作失败
  */
 @ApiModel(value = "确认提现成功（手动）返回结果字典")
 public enum WithdrawOkResultDic implements EnumBase {
@@ -48,7 +50,16 @@ public enum WithdrawOkResultDic implements EnumBase {
      * -4: 此申请已被处理
      */
     @ApiModelProperty(value = "此申请已被处理")
-    ALREADY_DEALED(-4);
+    ALREADY_DEALED(-4),
+    /**
+     * 扣减服务费失败
+     */
+    SUBTRACT_SERVICE_CHARGE_ERROR(-5),
+    
+    /**
+     * 操作失败
+     */
+    ERROR(-6);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的

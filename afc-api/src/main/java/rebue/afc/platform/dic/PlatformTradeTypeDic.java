@@ -21,8 +21,12 @@ public enum PlatformTradeTypeDic implements EnumBase {
     /**
      * 2：退回服务费(用户退款)
      */
-    GETBACK_SEVICE_FEE(2);
-
+    GETBACK_SEVICE_FEE(2),
+    /**
+     * 提现手续费
+     */
+    WITHDRAW_SEVICE_CHARGE(3);
+	
     /**
      * 枚举的所有项，注意这个变量是静态单例的
      */
