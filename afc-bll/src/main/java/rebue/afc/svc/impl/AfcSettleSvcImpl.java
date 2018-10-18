@@ -114,7 +114,7 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
         switch (TradeTypeDic.getItem(canceledTask.getTradeType())) {
         // 取消返佣任务
         case SETTLE_COMMISSION:
-            // 添加一笔扣除返佣中金额的交易
+            _log.info("添加一笔扣除返佣中金额的交易: {}", canceledTask);
             AfcTradeMo tradeMo = dozerMapper.map(canceledTask, AfcTradeMo.class);
             tradeMo.setId(null);                    // 不能克隆取消任务的ID过来
             tradeMo.setTradeTitle("退款补偿扣减返佣中金额");

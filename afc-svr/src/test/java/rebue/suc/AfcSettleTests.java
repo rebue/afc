@@ -25,13 +25,13 @@ public class AfcSettleTests {
     private String _hostUrl = "http://localhost:9300";
 //    private String       _hostUrl          = "http://192.168.1.201/afc-svr";
 
-    private Long         buyerAccountId      = 515489475074326530L;                                  // 买家的账户ID
-    private Long         sellerAccountId     = 515488916007157761L;                                  // 卖家的账户ID
-    private Long         supplierAccountId   = 515488683697242112L;                                  // 供应商的账户ID
-    private Long         uplineAccountId     = 507858523829436429L;                                  // 上家的账户ID
-    private String       orderId             = "517220619780096000";       // 订单ID
-    private Long         uplineOrderId       = 517220652621496320L;                               // 上家订单ID
-    private Long         uplineOrderDetailId = 517220652621496321L;                               // 上家订单详情ID
+    private Long         buyerAccountId      = 515489475074326530L;                                           // 买家的账户ID
+    private Long         sellerAccountId     = 515488916007157761L;                                           // 卖家的账户ID
+    private Long         supplierAccountId   = 515488683697242112L;                                           // 供应商的账户ID
+    private Long         uplineAccountId     = 507858523829436429L;                                           // 上家的账户ID
+    private String       orderId             = "528011364015276032";                                    // 订单ID
+    private Long         uplineOrderId       = 528011252153188352L;                                        // 上家订单ID
+    private Long         uplineOrderDetailId = 517220652621496327L;                                        // 上家订单详情ID
 
     @Value("${appid:0}")
     private int          _appid;

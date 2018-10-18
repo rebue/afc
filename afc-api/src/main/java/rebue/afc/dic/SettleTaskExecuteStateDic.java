@@ -19,7 +19,7 @@ public enum SettleTaskExecuteStateDic implements EnumBase {
     /**
      * -1: 取消
      */
-    CANCEL(1),
+    CANCEL(-1),
     /**
      * 0: 未执行
      */

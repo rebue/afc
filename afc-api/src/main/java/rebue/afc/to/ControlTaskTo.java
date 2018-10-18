@@ -11,7 +11,7 @@ import rebue.afc.dic.TradeTypeDic;
  */
 @Data
 @JsonInclude(Include.NON_NULL)
-public class TaskTo {
+public class ControlTaskTo {
     /**
      * 交易类型
      */

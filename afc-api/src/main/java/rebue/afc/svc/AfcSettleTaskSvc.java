@@ -5,7 +5,7 @@ import java.util.List;
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.to.AddSettleTasksTo;
-import rebue.afc.to.TaskTo;
+import rebue.afc.to.ControlTaskTo;
 import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.MybatisBaseSvc;
 
@@ -38,17 +38,17 @@ public interface AfcSettleTaskSvc extends MybatisBaseSvc<AfcSettleTaskMo, java.l
     /**
      * 暂停任务
      */
-    Ro suspendTask(TaskTo to);
+    Ro suspendTask(ControlTaskTo to);
 
     /**
      * 恢复任务
      */
-    Ro resumeTask(TaskTo to);
+    Ro resumeTask(ControlTaskTo to);
 
     /**
      * 取消任务
      */
-    Ro cancelTask(TaskTo to);
+    Ro cancelTask(ControlTaskTo to);
 
     /**
      * 订单是否已经结算完成
