@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.ro.AfcWithdrawAccountInfoRo;
+import rebue.afc.ro.AfcWithdrawAccountRo;
 import rebue.afc.svc.AfcWithdrawAccountSvc;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
@@ -157,14 +158,14 @@ public class AfcWithdrawAccountCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @GetMapping("/afc/withdrawaccount")
-    PageInfo<AfcWithdrawAccountMo> list(AfcWithdrawAccountMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+    PageInfo<AfcWithdrawAccountRo> list(AfcWithdrawAccountMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         _log.info("list AfcWithdrawAccountMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcWithdrawAccountMo> result = svc.list(mo, pageNum, pageSize);
+        PageInfo<AfcWithdrawAccountRo> result = svc.listEx(mo, pageNum, pageSize, "MODIFIED_TIMESTAMP desc");
         _log.info("result: " + result);
         return result;
     }

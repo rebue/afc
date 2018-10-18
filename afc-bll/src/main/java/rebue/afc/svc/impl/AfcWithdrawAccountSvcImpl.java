@@ -1,6 +1,7 @@
 package rebue.afc.svc.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,16 +12,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
 import rebue.afc.mapper.AfcWithdrawAccountMapper;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.mo.AfcWithdrawMo;
 import rebue.afc.ro.AfcWithdrawAccountInfoRo;
+import rebue.afc.ro.AfcWithdrawAccountRo;
 import rebue.afc.ro.WithdrawNumberForMonthRo;
 import rebue.afc.svc.AfcAccountSvc;
 import rebue.afc.svc.AfcWithdrawAccountSvc;
 import rebue.afc.svc.AfcWithdrawSvc;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
+import rebue.suc.mo.SucUserMo;
+import rebue.suc.svr.feign.SucUserSvc;
 
 /**
  * 提现账户
@@ -56,6 +64,9 @@ public class AfcWithdrawAccountSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAcc
     
     @Resource
     private Mapper              dozerMapper;
+    
+    @Resource
+    private SucUserSvc sucUserSvc;
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -128,5 +139,28 @@ public class AfcWithdrawAccountSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAcc
     	withdrawAccountInfoRo.setSeviceCharge(withdrawNumberForMonth.getSeviceCharge());
     	_log.info("根据用户id查询用户提现账户信息的返回值为：{}", withdrawAccountInfoRo);
     	return withdrawAccountInfoRo;
+    }
+    
+    /**
+     * 重写查询用户提现账号信息
+     */
+    @SuppressWarnings("unchecked")
+	@Override
+    public PageInfo<AfcWithdrawAccountRo> listEx(AfcWithdrawAccountMo mo, int pageNum, int pageSize, String orderBy) {
+    	PageInfo<AfcWithdrawAccountRo> doSelectPageInfoEx = new PageInfo<AfcWithdrawAccountRo>();
+    	List<AfcWithdrawAccountRo> listEx = new ArrayList<AfcWithdrawAccountRo>();
+    	PageInfo<AfcWithdrawAccountMo> doSelectPageInfo = PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectSelective(mo));
+    	for (AfcWithdrawAccountMo afcWithdrawAccountMo : doSelectPageInfo.getList()) {
+    		AfcWithdrawAccountRo afcWithdrawAccountRo = dozerMapper.map(afcWithdrawAccountMo, AfcWithdrawAccountRo.class);
+    		_log.info("查询申请提现账号记录查询用户信息的参数为：{}", afcWithdrawAccountMo.getAccountId());
+    		SucUserMo sucUserMo = sucUserSvc.getById(afcWithdrawAccountMo.getAccountId());
+    		_log.info("查询申请提现账号记录查询用户信息的返回值为：{}", sucUserMo);
+    		afcWithdrawAccountRo.setUserName(sucUserMo.getWxNickname());
+    		listEx.add(afcWithdrawAccountRo);
+		}
+    	doSelectPageInfoEx = dozerMapper.map(doSelectPageInfo, PageInfo.class);
+    	doSelectPageInfoEx.setList(listEx);
+    	_log.info("查询申请提现账号记录的返回值为：{}", doSelectPageInfoEx);
+    	return doSelectPageInfoEx;
     }
 }

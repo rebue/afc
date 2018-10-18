@@ -585,12 +585,13 @@
       </if>
     </where>
   </select>
+  <!-- 查询本月申请提现次数 -->
   <select id="selectWithdrawNumberForMonth" parameterType="rebue.afc.mo.AfcWithdrawMo" resultType="int">
   	SELECT count(*) FROM afc.AFC_WITHDRAW 
   	WHERE DATE_FORMAT( APPLY_TIME, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
-  	and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
+  	and ACCOUNT_ID = #{accountId,jdbcType=BIGINT} and WITHDRAW_STATE != -1
   	<if test="withdrawState != null and withdrawState != '' ">
-       and WITHDRAW_STATE = #{withdrawState,jdbcType=TINYINT}
-     </if>
+      and WITHDRAW_STATE = #{withdrawState,jdbcType=TINYINT}
+    </if>
   </select>
 </mapper>

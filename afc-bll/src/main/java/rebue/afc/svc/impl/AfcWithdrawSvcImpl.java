@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -23,12 +22,10 @@ import rebue.afc.mapper.AfcWithdrawMapper;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcPlatformTradeMo;
 import rebue.afc.mo.AfcTradeMo;
-import rebue.afc.mo.AfcWithdrawAccountBindFlowMo;
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.mo.AfcWithdrawMo;
 import rebue.afc.platform.dic.PlatformTradeTypeDic;
 import rebue.afc.platform.svc.AfcPlatformTradeSvc;
-import rebue.afc.ro.AfcWithdrawAccountBindFlowRo;
 import rebue.afc.ro.AfcWithdrawRo;
 import rebue.afc.ro.WithdrawNumberForMonthRo;
 import rebue.afc.svc.AfcAccountSvc;

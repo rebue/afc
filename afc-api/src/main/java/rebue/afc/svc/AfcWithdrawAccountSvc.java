@@ -1,8 +1,12 @@
 package rebue.afc.svc;
 
 import java.util.List;
+
+import com.github.pagehelper.PageInfo;
+
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.ro.AfcWithdrawAccountInfoRo;
+import rebue.afc.ro.AfcWithdrawAccountRo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 /**
@@ -30,4 +34,14 @@ public interface AfcWithdrawAccountSvc extends MybatisBaseSvc<AfcWithdrawAccount
      * @return
      */
 	AfcWithdrawAccountInfoRo getWithdrawAccountInfo(Long userId);
+
+	/**
+	 * 重写查询用户提现账号信息
+	 * @param mo
+	 * @param pageNum
+	 * @param pageSize
+	 * @param orderBy
+	 * @return
+	 */
+	PageInfo<AfcWithdrawAccountRo> listEx(AfcWithdrawAccountMo mo, int pageNum, int pageSize, String orderBy);
 }
