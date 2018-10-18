@@ -3452,14 +3452,15 @@ LABL 0 新宋体,8,N</a:FontList>
 <a:Code>PLATFORM_TRADE_TYPE_AND_ORDER</a:Code>
 <a:CreationDate>1525318620</a:CreationDate>
 <a:Creator>admin</a:Creator>
-<a:ModificationDate>1526369007</a:ModificationDate>
-<a:Modifier>nnzbz</a:Modifier>
+<a:ModificationDate>1539831441</a:ModificationDate>
+<a:Modifier>zbz</a:Modifier>
 <c:Identifier.Attributes>
 <o:EntityAttribute Ref="o134"/>
 <o:EntityAttribute Ref="o135"/>
+<o:EntityAttribute Ref="o136"/>
 </c:Identifier.Attributes>
 </o:Identifier>
-<o:Identifier Id="o136">
+<o:Identifier Id="o137">
 <a:ObjectID>3F60722E-4051-446B-A8AF-D6CCEEFE8AC5</a:ObjectID>
 <a:Name>修改时间戳</a:Name>
 <a:Code>MODIFIED_TIMESTAMP</a:Code>
@@ -3468,10 +3469,10 @@ LABL 0 新宋体,8,N</a:FontList>
 <a:ModificationDate>1525920931</a:ModificationDate>
 <a:Modifier>nnzbz</a:Modifier>
 <c:Identifier.Attributes>
-<o:EntityAttribute Ref="o137"/>
+<o:EntityAttribute Ref="o138"/>
 </c:Identifier.Attributes>
 </o:Identifier>
-<o:Identifier Id="o138">
+<o:Identifier Id="o139">
 <a:ObjectID>BF88102D-59D2-412A-900A-2491C976892E</a:ObjectID>
 <a:Name>平台交易类型/订单详情ID</a:Name>
 <a:Code>PLATFORM_TRADE_TYPE_AND_ORDER_DETAIL</a:Code>
@@ -3481,7 +3482,7 @@ LABL 0 新宋体,8,N</a:FontList>
 <a:Modifier>nnzbz</a:Modifier>
 <c:Identifier.Attributes>
 <o:EntityAttribute Ref="o134"/>
-<o:EntityAttribute Ref="o139"/>
+<o:EntityAttribute Ref="o136"/>
 </c:Identifier.Attributes>
 </o:Identifier>
 </c:Identifiers>
@@ -3526,14 +3527,14 @@ LABL 0 新宋体,8,N</a:FontList>
 <a:Length>150</a:Length>
 <a:LogicalAttribute.Mandatory>1</a:LogicalAttribute.Mandatory>
 </o:EntityAttribute>
-<o:EntityAttribute Id="o139">
+<o:EntityAttribute Id="o136">
 <a:ObjectID>1D90BAC0-46D4-4A48-AD25-2A7ADFED8F1E</a:ObjectID>
 <a:Name>订单详情ID</a:Name>
 <a:Code>ORDER_DETAIL_ID</a:Code>
 <a:CreationDate>1526369018</a:CreationDate>
 <a:Creator>nnzbz</a:Creator>
-<a:ModificationDate>1526369384</a:ModificationDate>
-<a:Modifier>nnzbz</a:Modifier>
+<a:ModificationDate>1539831441</a:ModificationDate>
+<a:Modifier>zbz</a:Modifier>
 <a:Comment>订单详情ID
 (如果平台交易类型是收取服务费，则填销售订单详情ID；如果是退款，则填写退款单ID)</a:Comment>
 <a:DataType>VA150</a:DataType>
@@ -3583,7 +3584,7 @@ LABL 0 新宋体,8,N</a:FontList>
 <a:Precision>4</a:Precision>
 <a:LogicalAttribute.Mandatory>1</a:LogicalAttribute.Mandatory>
 </o:EntityAttribute>
-<o:EntityAttribute Id="o137">
+<o:EntityAttribute Id="o138">
 <a:ObjectID>FCA0842B-68A5-4C8E-ABA4-7B263760F213</a:ObjectID>
 <a:Name>修改时间戳</a:Name>
 <a:Code>MODIFIED_TIMESTAMP</a:Code>
@@ -4191,12 +4192,12 @@ LABL 0 新宋体,8,N</a:FontList>
 <a:Code>afc-mysql</a:Code>
 <a:CreationDate>1539338022</a:CreationDate>
 <a:Creator>admin</a:Creator>
-<a:ModificationDate>1539658873</a:ModificationDate>
+<a:ModificationDate>1539831461</a:ModificationDate>
 <a:Modifier>zbz</a:Modifier>
 <a:TargetModelURL>file://Vboxsvr/02/afc/db/model/afc-mysql.pdm</a:TargetModelURL>
 <a:TargetModelID>467D574C-D213-4BFE-AA88-9CCC463A45B4</a:TargetModelID>
 <a:TargetModelClassID>CDE44E21-9669-11D1-9914-006097355D9B</a:TargetModelClassID>
-<a:TargetModelLastModificationDate>1539658873</a:TargetModelLastModificationDate>
+<a:TargetModelLastModificationDate>1539831461</a:TargetModelLastModificationDate>
 <c:SessionShortcuts>
 <o:Shortcut Ref="o7"/>
 </c:SessionShortcuts>

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/10/16 11:01:20                          */
+/* Created on:     2018/10/18 10:58:28                          */
 /*==============================================================*/
 
 
@@ -122,7 +122,7 @@ create table AFC_PLATFORM_TRADE
    NEW_BALANCE          decimal(18,4) not null default 0 comment '交易后的余额',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
    primary key (ID),
-   unique key AK_PLATFORM_TRADE_TYPE_AND_ORDER (PLATFORM_TRADE_TYPE, ORDER_ID),
+   unique key AK_PLATFORM_TRADE_TYPE_AND_ORDER (PLATFORM_TRADE_TYPE, ORDER_ID, ORDER_DETAIL_ID),
    unique key AK_MODIFIED_TIMESTAMP (MODIFIED_TIMESTAMP),
    unique key AK_PLATFORM_TRADE_TYPE_AND_ORDER_DETAIL (PLATFORM_TRADE_TYPE, ORDER_DETAIL_ID)
 );
