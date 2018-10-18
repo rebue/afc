@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import rebue.afc.dic.TradeTypeDic;
-import rebue.afc.to.ControlTaskTo;
+import rebue.afc.to.TaskTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.wheel.OkhttpUtils;
@@ -26,7 +26,7 @@ public class AfcSettleTaskTests {
     public void test01() throws IOException {
         // 暂停任务
         String url = _hostUrl + "/settle/task/suspend";
-        ControlTaskTo to = new ControlTaskTo();
+        TaskTo to = new TaskTo();
         to.setTradeType(TradeTypeDic.SETTLE_COMMISSION);
         to.setOrderDetailId(orderDetailId);
 

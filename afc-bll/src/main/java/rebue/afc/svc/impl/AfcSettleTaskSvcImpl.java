@@ -30,7 +30,7 @@ import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.AddSettleTasksDetailTo;
 import rebue.afc.to.AddSettleTasksTo;
-import rebue.afc.to.ControlTaskTo;
+import rebue.afc.to.TaskTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
@@ -392,7 +392,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Ro suspendTask(ControlTaskTo to) {
+    public Ro suspendTask(TaskTo to) {
         _log.info("暂停任务: {}", to);
         Ro ro = new Ro();
 
@@ -440,7 +440,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Ro resumeTask(ControlTaskTo to) {
+    public Ro resumeTask(TaskTo to) {
         _log.info("恢复任务: {}", to);
         Ro ro = new Ro();
 
@@ -488,7 +488,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Ro cancelTask(ControlTaskTo to) {
+    public Ro cancelTask(TaskTo to) {
         _log.info("取消任务: {}", to);
         Ro ro = new Ro();
 

@@ -24,7 +24,7 @@ import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.afc.ro.AddSettleTasksRo;
 import rebue.afc.svc.AfcSettleTaskSvc;
 import rebue.afc.to.AddSettleTasksTo;
-import rebue.afc.to.ControlTaskTo;
+import rebue.afc.to.TaskTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 
@@ -230,7 +230,7 @@ public class AfcSettleTaskCtrl {
      * 暂停任务
      */
     @PostMapping("/settle/task/suspend")
-    Ro suspendTask(@RequestBody ControlTaskTo to) {
+    Ro suspendTask(@RequestBody TaskTo to) {
         _log.info("suspendTask: {}", to);
         return svc.suspendTask(to);
     }
@@ -239,7 +239,7 @@ public class AfcSettleTaskCtrl {
      * 恢复任务
      */
     @PostMapping("/settle/task/resume")
-    Ro resumeTask(@RequestBody ControlTaskTo to) {
+    Ro resumeTask(@RequestBody TaskTo to) {
         _log.info("resumeTask: {}", to);
         return svc.resumeTask(to);
     }
@@ -248,7 +248,7 @@ public class AfcSettleTaskCtrl {
      * 取消任务
      */
     @PostMapping("/settle/task/cancel")
-    Ro cancelTask(@RequestBody ControlTaskTo to) {
+    Ro cancelTask(@RequestBody TaskTo to) {
         _log.info("cancelTask: {}", to);
         return svc.cancelTask(to);
     }
