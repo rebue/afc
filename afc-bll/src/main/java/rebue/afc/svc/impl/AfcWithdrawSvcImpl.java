@@ -195,7 +195,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		AfcWithdrawMo withdrawMo = new AfcWithdrawMo();
 		withdrawMo.setAccountId(to.getApplicantId());
 		withdrawMo.setOrderId(to.getOrderId());
-		withdrawMo.setWithdrawState((byte) 2);
+		withdrawMo.setWithdrawState((byte) 1);
 		withdrawMo.setTradeTitle(to.getTradeTitle());
 		withdrawMo.setTradeDetail(to.getTradeDetail());
 		withdrawMo.setAmount(to.getWithdrawAmount());
@@ -291,6 +291,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			_log.warn("没有填写处理人的用户ID/MAC/IP: {}", to);
 			WithdrawDealRo ro = new WithdrawDealRo();
 			ro.setResult(WithdrawDealResultDic.PARAM_ERROR);
+			ro.setMsg("参数错误");
 			return ro;
 		}
 		SucUserMo opUserMo = userSvc.getById(to.getOpId());
@@ -298,12 +299,14 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			_log.error("处理提现发现没有此处理人: " + to.getOpId());
 			WithdrawDealRo ro = new WithdrawDealRo();
 			ro.setResult(WithdrawDealResultDic.NOT_FOUND_OP);
+			ro.setMsg("您未登录");
 			return ro;
 		}
 		if (opUserMo.getIsLock()) {
 			_log.error("处理提现发现处理人已被锁定: " + opUserMo);
 			WithdrawDealRo ro = new WithdrawDealRo();
 			ro.setResult(WithdrawDealResultDic.OP_LOCKED);
+			ro.setMsg("您已被锁定");
 			return ro;
 		}
 		AfcWithdrawMo withdrawMo = _mapper.selectByPrimaryKey(to.getId());
@@ -311,12 +314,14 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			_log.error("处理提现发现没有此申请: " + to.getId());
 			WithdrawDealRo ro = new WithdrawDealRo();
 			ro.setResult(WithdrawDealResultDic.NOT_FOUND_APPLICATION);
+			ro.setMsg("没有此申请");
 			return ro;
 		}
 		if (withdrawMo.getWithdrawState() != WithdrawStateDic.APPLY.getCode()) {
 			_log.error("处理提现发现此申请已被处理: withdrawState-" + withdrawMo.getWithdrawState());
 			WithdrawDealRo ro = new WithdrawDealRo();
 			ro.setResult(WithdrawDealResultDic.ALREADY_DEALED);
+			ro.setMsg("此申请已被处理");
 			return ro;
 		}
 		// 查询提现账户的V支付账户信息
@@ -326,6 +331,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			_log.error("提现的用户已经被锁定: " + accountMo);
 			WithdrawDealRo ro = new WithdrawDealRo();
 			ro.setResult(WithdrawDealResultDic.WITHDRAW_USER_LOCKED);
+			ro.setMsg("提现的用户已经被锁定");
 			return ro;
 		}
 		// 处理提现
@@ -337,6 +343,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		_log.info("处理提现提交成功: {}", to);
 		WithdrawDealRo ro = new WithdrawDealRo();
 		ro.setResult(WithdrawDealResultDic.SUCCESS);
+		ro.setMsg("处理成功");
 		return ro;
 	}
 

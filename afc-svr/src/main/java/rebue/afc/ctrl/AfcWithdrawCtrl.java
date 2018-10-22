@@ -214,9 +214,18 @@ public class AfcWithdrawCtrl {
 
     /**
      * 处理提现
+     * @throws ParseException 
+     * @throws NumberFormatException 
      */
     @PutMapping("/withdraw/deal")
-    WithdrawDealRo deal(WithdrawDealTo to) {
+    WithdrawDealRo deal(@RequestParam("id") java.lang.Long id, HttpServletRequest req) throws NumberFormatException, ParseException {
+    	WithdrawDealTo to = new WithdrawDealTo();
+    	to.setId(id);
+    	// 获取当前登录用户id
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	to.setIp(AgentUtils.getIpAddr(req, "nginx"));
+    	to.setMac("不再获取MAC地址");
+    	to.setOpId(loginId);
         _log.info("处理提现： {}", to);
         return svc.deal(to);
     }
@@ -230,10 +239,10 @@ public class AfcWithdrawCtrl {
     WithdrawOkRo ok(WithdrawOkTo to, HttpServletRequest req) throws NumberFormatException, ParseException {
         _log.info("确认提现成功（手动）： {}", to);
         // 获取当前登录用户id
-    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	 Long loginId = JwtUtils.getJwtUserIdInCookie(req);
         to.setIp(AgentUtils.getIpAddr(req, "nginx"));
         to.setMac("不再获取MAC地址");
-        to.setOpId(525616558689484801L);
+        to.setOpId(loginId);
         try {
         	return svc.ok(to);
 		} catch (Exception e) {
@@ -254,10 +263,10 @@ public class AfcWithdrawCtrl {
     WithdrawCancelRo cancel(WithdrawCancelTo to, HttpServletRequest req) throws NumberFormatException, ParseException {
         _log.info("作废提现： {}", to);
      // 获取当前登录用户id
-    	// Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
         to.setIp(AgentUtils.getIpAddr(req, "nginx"));
         to.setMac("不再获取MAC地址");
-        to.setOpId(525616558689484801L);
+        to.setOpId(loginId);
         return svc.cancel(to);
     }
 }
