@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcWithdrawMo;
 import rebue.afc.ro.AfcWithdrawRo;
 import rebue.afc.svc.AfcWithdrawSvc;
+import rebue.afc.to.ApplyWithdrawTo;
+import rebue.afc.withdraw.dic.WithdrawApplyResultDic;
+import rebue.afc.withdraw.dic.WithdrawOkResultDic;
 import rebue.afc.withdraw.ro.WithdrawApplyRo;
 import rebue.afc.withdraw.ro.WithdrawCancelRo;
 import rebue.afc.withdraw.ro.WithdrawDealRo;
 import rebue.afc.withdraw.ro.WithdrawOkRo;
-import rebue.afc.withdraw.to.WithdrawApplyTo;
 import rebue.afc.withdraw.to.WithdrawCancelTo;
 import rebue.afc.withdraw.to.WithdrawDealTo;
 import rebue.afc.withdraw.to.WithdrawOkTo;
@@ -193,18 +195,37 @@ public class AfcWithdrawCtrl {
 
     /**
      * 申请提现
+     * @param to
+     * @return
      */
     @PostMapping("/withdraw/apply")
-    WithdrawApplyRo apply(WithdrawApplyTo to) {
+    WithdrawApplyRo apply(@RequestBody ApplyWithdrawTo to) {
         _log.info("申请提现： {}", to);
-        return svc.apply(to);
+        try {
+        	return svc.apply(to);
+		} catch (Exception e) {
+			_log.error("添加申请提现出错, {}", e);
+			WithdrawApplyRo ro = new WithdrawApplyRo();
+			ro.setResult(WithdrawApplyResultDic.ERROR);
+			ro.setMsg(e.getMessage());
+			return ro;
+		}
     }
 
     /**
      * 处理提现
+     * @throws ParseException 
+     * @throws NumberFormatException 
      */
     @PutMapping("/withdraw/deal")
-    WithdrawDealRo deal(WithdrawDealTo to) {
+    WithdrawDealRo deal(@RequestParam("id") java.lang.Long id, HttpServletRequest req) throws NumberFormatException, ParseException {
+    	WithdrawDealTo to = new WithdrawDealTo();
+    	to.setId(id);
+    	// 获取当前登录用户id
+    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	to.setIp(AgentUtils.getIpAddr(req, "nginx"));
+    	to.setMac("不再获取MAC地址");
+    	to.setOpId(loginId);
         _log.info("处理提现： {}", to);
         return svc.deal(to);
     }
@@ -218,11 +239,19 @@ public class AfcWithdrawCtrl {
     WithdrawOkRo ok(WithdrawOkTo to, HttpServletRequest req) throws NumberFormatException, ParseException {
         _log.info("确认提现成功（手动）： {}", to);
         // 获取当前登录用户id
-    	Long loginId = JwtUtils.getJwtUserIdInCookie(req);
+    	 Long loginId = JwtUtils.getJwtUserIdInCookie(req);
         to.setIp(AgentUtils.getIpAddr(req, "nginx"));
         to.setMac("不再获取MAC地址");
         to.setOpId(loginId);
-        return svc.ok(to);
+        try {
+        	return svc.ok(to);
+		} catch (Exception e) {
+			_log.error("确认提现失败，{}", e);
+			WithdrawOkRo ro = new WithdrawOkRo();
+			ro.setResult(WithdrawOkResultDic.ERROR);
+			ro.setMsg(e.getMessage());
+			return ro;
+		}
     }
 
     /**

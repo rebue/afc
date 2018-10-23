@@ -57,9 +57,14 @@ public enum WithdrawOkResultDic implements EnumBase {
     SUBTRACT_SERVICE_CHARGE_ERROR(-5),
     
     /**
+     * 添加提现账户出错
+     */
+    ADD_WITHDRAW_ACCOUNT_ERROR(-6),
+    
+    /**
      * 操作失败
      */
-    ERROR(-6);
+    ERROR(-7);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的

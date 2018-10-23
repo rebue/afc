@@ -60,7 +60,14 @@ public enum WithdrawApplyResultDic implements EnumBase {
      * -6: 提现用户的余额不足
      */
     @ApiModelProperty(value = "提现用户的余额不足")
-    NOT_ENOUGH_MONEY(-6);
+    NOT_ENOUGH_MONEY(-6),
+    
+    /*
+     * 身份证号不正确
+     */
+    ID_CARD_ERROR(-7),
+    
+    ERROR(-8);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的

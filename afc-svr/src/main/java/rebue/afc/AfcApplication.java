@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringCloudApplication
 @EnableSwagger2
-@EnableFeignClients(basePackages = { "rebue.wxx.svr.feign", "rebue.suc.svr.feign" })
+@EnableFeignClients(basePackages = { "rebue.wxx.svr.feign", "rebue.suc.svr.feign", "rebue.rna.svr.feign" })
 public class AfcApplication {
 
     public static void main(String[] args) {

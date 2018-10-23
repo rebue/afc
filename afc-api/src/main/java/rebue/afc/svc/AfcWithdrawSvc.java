@@ -5,11 +5,11 @@ import com.github.pagehelper.PageInfo;
 import rebue.afc.mo.AfcWithdrawMo;
 import rebue.afc.ro.AfcWithdrawRo;
 import rebue.afc.ro.WithdrawNumberForMonthRo;
+import rebue.afc.to.ApplyWithdrawTo;
 import rebue.afc.withdraw.ro.WithdrawApplyRo;
 import rebue.afc.withdraw.ro.WithdrawCancelRo;
 import rebue.afc.withdraw.ro.WithdrawDealRo;
 import rebue.afc.withdraw.ro.WithdrawOkRo;
-import rebue.afc.withdraw.to.WithdrawApplyTo;
 import rebue.afc.withdraw.to.WithdrawCancelTo;
 import rebue.afc.withdraw.to.WithdrawDealTo;
 import rebue.afc.withdraw.to.WithdrawOkTo;
@@ -25,7 +25,7 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
     /**
      * 申请提现
      */
-    WithdrawApplyRo apply(WithdrawApplyTo to);
+    WithdrawApplyRo apply(ApplyWithdrawTo to);
 
     /**
      * 处理提现
