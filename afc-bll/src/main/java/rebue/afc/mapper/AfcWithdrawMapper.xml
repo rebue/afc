@@ -594,4 +594,14 @@
       and WITHDRAW_STATE = #{withdrawState,jdbcType=TINYINT}
     </if>
   </select>
+  <!-- 查询用户提现中的信息 -->
+  <select id="selectWithdrawApplying" parameterType="long" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from AFC_WITHDRAW
+    <where>
+        and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
+        and WITHDRAW_STATE in (1, 2)
+    </where>
+  </select>
 </mapper>

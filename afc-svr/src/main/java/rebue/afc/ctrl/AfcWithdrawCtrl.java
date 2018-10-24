@@ -269,4 +269,24 @@ public class AfcWithdrawCtrl {
         to.setOpId(loginId);
         return svc.cancel(to);
     }
+    
+    /**
+     * 查询用户提现中的信息
+     * @param accountId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/withdraw/applting")
+    PageInfo<AfcWithdrawMo> selectWithdrawApplying(@RequestParam("accountId") Long accountId, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize){
+    	 _log.info("list accountId:" + accountId + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+         if (pageSize > 50) {
+             String msg = "pageSize不能大于50";
+             _log.error(msg);
+             throw new IllegalArgumentException(msg);
+         }
+         PageInfo<AfcWithdrawMo> result = svc.selectWithdrawApplying(accountId, pageNum, pageSize, "APPLY_TIME desc");
+         _log.info("result: " + result);
+         return result;
+    }
 }

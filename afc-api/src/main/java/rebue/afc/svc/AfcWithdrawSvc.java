@@ -58,4 +58,14 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
 	 * @return
 	 */
 	PageInfo<AfcWithdrawRo> lisrEx(AfcWithdrawMo mo, int pageNum, int pageSize, String orderBy);
+
+	/**
+	 * 查询用户提现中的信息
+	 * @param accountId
+	 * @param pageNum
+	 * @param pageSize
+	 * @param orderBy
+	 * @return
+	 */
+	PageInfo<AfcWithdrawMo> selectWithdrawApplying(Long accountId, int pageNum, int pageSize, String orderBy);
 }

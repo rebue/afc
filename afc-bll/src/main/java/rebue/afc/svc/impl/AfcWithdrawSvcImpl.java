@@ -694,4 +694,18 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		_log.info("查询申请提现账号记录的返回值为：{}", doSelectPageInfoEx);
 		return doSelectPageInfoEx;
 	}
+	
+	/**
+	 * 查询用户提现中的信息
+	 * @param accountId
+	 * @param pageNum
+	 * @param pageSize
+	 * @param orderBy
+	 * @return
+	 */
+	@Override
+	public PageInfo<AfcWithdrawMo> selectWithdrawApplying(Long accountId, int pageNum, int pageSize, String orderBy) {
+		_log.info("list: accountId-{}; pageNum-{}; orderBy-{}; pageSize-{}", accountId, pageNum, pageSize, orderBy);
+    	return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectWithdrawApplying(accountId));
+	}
 }
