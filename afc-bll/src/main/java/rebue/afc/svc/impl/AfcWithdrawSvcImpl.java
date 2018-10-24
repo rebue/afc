@@ -446,6 +446,24 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 				ro.setMsg("添加提现账户出错");
 				return ro;
 			}
+		} else {
+			withdrawAccountMo = new AfcWithdrawAccountMo();
+			withdrawAccountMo.setId(afcWithdrawAccountMo.getId());
+			withdrawAccountMo.setWithdrawType(withdrawMo.getWithdrawType());
+			withdrawAccountMo.setContactTel(withdrawMo.getContactTel());
+			withdrawAccountMo.setBankAccountNo(withdrawMo.getBankAccountNo());
+			withdrawAccountMo.setBankAccountName(withdrawMo.getBankAccountName());
+			withdrawAccountMo.setOpenAccountBank(withdrawMo.getOpenAccountBank());
+			withdrawAccountMo.setModifiedTimestamp(System.currentTimeMillis());
+			_log.info("添加提现账户修改提现账户信息的参数为：{}", withdrawAccountMo);
+			int modifyWithdrawAccountResult = withdrawAccountSvc.modify(withdrawAccountMo);
+			_log.info("添加提现账户修改提现账户信息的返回值为：{}", modifyWithdrawAccountResult);
+			if (modifyWithdrawAccountResult != 1) {
+				_log.error("确认提现修改提现账号信息出错，提现用户id为：{}", to.getAccountId());
+				ro.setResult(WithdrawOkResultDic.ADD_WITHDRAW_ACCOUNT_ERROR);
+				ro.setMsg("修改提现账户出错");
+				return ro;
+			}
 		}
 		
 		// 交易金额
