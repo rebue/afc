@@ -377,7 +377,7 @@
 	
 	<select id="selectCashbackTrade" parameterType="rebue.afc.mo.AfcTradeMo" resultMap="BaseResultMap">
 		<!-- 查询账号返现金交易信息 -->
-	    select ID, TRADE_TITLE, IFNULL(IFNULL(CHANGE_AMOUNT2, (TRADE_AMOUNT-CHANGE_AMOUNT1)), 0.00) AS TRADE_AMOUNT, TRADE_TIME 
+	    select ID, TRADE_TITLE, IFNULL(IFNULL(CHANGE_AMOUNT1, (TRADE_AMOUNT-CHANGE_AMOUNT1)), 0.00) AS TRADE_AMOUNT, TRADE_TIME 
 	    from AFC_TRADE
 	    <where>
 	        and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
@@ -387,7 +387,7 @@
 	
 	<!-- 查询账号余额交易信息 -->
 	<select id="selectBalanceTrade" parameterType="rebue.afc.mo.AfcTradeMo" resultMap="BaseResultMap">
-		select ID, TRADE_TITLE, IFNULL(IFNULL(CHANGE_AMOUNT1, (TRADE_AMOUNT-CHANGE_AMOUNT2)), 0.00) AS TRADE_AMOUNT, TRADE_TIME 
+		select ID, TRADE_TITLE, IFNULL(TRADE_AMOUNT, 0.00) AS TRADE_AMOUNT, TRADE_TIME 
 		from AFC_TRADE
 		<where>
 	        and ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
