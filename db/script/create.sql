@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/10/18 10:58:28                          */
+/* Created on:     2018/11/2 9:30:58                            */
 /*==============================================================*/
 
 
@@ -41,6 +41,7 @@ create table AFC_ACCOUNT
    DEPOSIT              decimal(18,4) not null default 0 comment '进货保证金
             提货时要检查此加盟商的已进货的金额+本次提货的货物成本不能超过此金额',
    DEPOSIT_USED         decimal(18,4) not null default 0 comment '已占用的进货保证金',
+   ACCOUNT_TYPE         tinyint not null comment '账户类型',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳(添加或更新本条记录时的时间戳)',
    primary key (ID)
 );

@@ -1,3 +1,5 @@
+-- 2018年11月2日14:38:50 AFC_ACCOUNT中添加账户类型（ACCOUNT_TYPE）
+	alter table AFC_ACCOUNT add ACCOUNT_TYPE         tinyint not null comment '账户类型';
 -- 2018年10月12日18:53:18 
 -- 删除提现账号绑定流程表（AFC_WITHDRAW_ACCOUNT_BIND_FLOW）字段ip地址（IP）
 alter table AFC_WITHDRAW_ACCOUNT_BIND_FLOW drop column IP;
