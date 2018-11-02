@@ -49,6 +49,7 @@ public class AfcSucAddUserDoneSub implements ApplicationListener<ContextRefreshe
                 // 添加用户的账户信息
                 AfcAccountMo accountMo = new AfcAccountMo();
                 accountMo.setId(msg.getId());
+                accountMo.setAccountType(msg.getAccountType());
                 Date now = new Date();
                 accountMo.setSettleTime(now);
                 accountMo.setModifiedTimestamp(now.getTime());

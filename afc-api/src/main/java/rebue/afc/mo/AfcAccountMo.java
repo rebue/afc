@@ -130,6 +130,15 @@ public class AfcAccountMo implements Serializable {
     private Long modifiedTimestamp;
 
     /**
+     *    账户类型(1：普通用户  2：组织用户)
+     *
+     *    数据库字段: AFC_ACCOUNT.ACCOUNT_TYPE
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Byte accountType;
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
@@ -401,6 +410,28 @@ public class AfcAccountMo implements Serializable {
     }
 
     /**
+     *    账户类型(1：普通用户  2：组织用户)
+     *
+     *    数据库字段: AFC_ACCOUNT.ACCOUNT_TYPE
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Byte getAccountType() {
+        return accountType;
+    }
+
+    /**
+     *    账户类型(1：普通用户  2：组织用户)
+     *
+     *    数据库字段: AFC_ACCOUNT.ACCOUNT_TYPE
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setAccountType(Byte accountType) {
+        this.accountType = accountType;
+    }
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
@@ -421,6 +452,7 @@ public class AfcAccountMo implements Serializable {
         sb.append(", deposit=").append(deposit);
         sb.append(", depositUsed=").append(depositUsed);
         sb.append(", modifiedTimestamp=").append(modifiedTimestamp);
+        sb.append(", accountType=").append(accountType);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
