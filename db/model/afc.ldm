@@ -2225,9 +2225,9 @@ LABL 0 新宋体,8,N</a:FontList>
 <a:Code>ACCOUNT_TYPE</a:Code>
 <a:CreationDate>1541121222</a:CreationDate>
 <a:Creator>admin</a:Creator>
-<a:ModificationDate>1541121330</a:ModificationDate>
+<a:ModificationDate>1541149899</a:ModificationDate>
 <a:Modifier>admin</a:Modifier>
-<a:Comment>账户类型</a:Comment>
+<a:Comment>账户类型(1：普通用户  2：组织用户)</a:Comment>
 <a:DataType>BT</a:DataType>
 <a:LogicalAttribute.Mandatory>1</a:LogicalAttribute.Mandatory>
 </o:EntityAttribute>
