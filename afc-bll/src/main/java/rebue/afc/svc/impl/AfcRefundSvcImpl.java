@@ -1,7 +1,6 @@
 package rebue.afc.svc.impl;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.Date;
 import java.util.List;
 
@@ -116,13 +115,13 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
         }
 
         // 得到退款总额
-        BigDecimal tradeAmount = to.getReturnBalanceToBuyer().add(to.getReturnCashbackToBuyer(),new MathContext(10));
+        BigDecimal tradeAmount = to.getReturnBalanceToBuyer().add(to.getReturnCashbackToBuyer()).setScale(4, BigDecimal.ROUND_HALF_UP);;
 
         // 检查退款金额不能超过支付金额
         // 计算支付总额 TODO SQL直查
         BigDecimal payTotal = BigDecimal.ZERO;
         for (AfcPayMo afcPayMo : pays) {
-            payTotal = payTotal.add(afcPayMo.getPayAmount(), new MathContext(10));
+            payTotal = payTotal.add(afcPayMo.getPayAmount()).setScale(4, BigDecimal.ROUND_HALF_UP);;
         }
         _log.info("退款查询退货总额的参数为：{}", to.getOrderId());
         // 计算已退款总额
@@ -131,9 +130,9 @@ public class AfcRefundSvcImpl implements AfcRefundSvc {
         if (refundTotal == null)
             refundTotal = BigDecimal.ZERO;
         
-        _log.info("退款比较大小的参数为：payTotal==={}, refundTotal==={}, tradeAmount==={}, refundTotal.add(tradeAmount, new MathContext(10)) === {}", payTotal, refundTotal, tradeAmount, refundTotal.add(tradeAmount, new MathContext(4)));
+        _log.info("退款比较大小的参数为：payTotal==={}, refundTotal==={}, tradeAmount==={}, refundTotal.add(tradeAmount) === {}", payTotal, refundTotal, tradeAmount, refundTotal.add(tradeAmount).setScale(4, BigDecimal.ROUND_HALF_UP));
         // 比较大小
-        if (payTotal.compareTo(refundTotal.add(tradeAmount, new MathContext(10))) < 0) {
+        if (payTotal.compareTo(refundTotal.add(tradeAmount).setScale(4, BigDecimal.ROUND_HALF_UP)) < 0) {
             String msg = "退款总额不能超过支付总额";
             _log.error("{}: {}", to);
             throw new RuntimeException(msg);

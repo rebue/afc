@@ -117,12 +117,16 @@ public class AfcWithdrawAccountSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAcc
     @Override
     public AfcWithdrawAccountInfoRo getWithdrawAccountInfo(Long userId) {
     	_log.info("根据用户id查询用户提现账户信息的参数为：{}", userId);
+    	AfcWithdrawAccountInfoRo withdrawAccountInfoRo = new AfcWithdrawAccountInfoRo();
     	AfcWithdrawAccountMo withdrawAccountMo = new AfcWithdrawAccountMo();
     	_log.info("根据用户id查询用户提现账户信息查询用户提现账户信息的参数为：{}", userId);
     	withdrawAccountMo.setAccountId(userId);
     	AfcWithdrawAccountMo afcWithdrawAccountMo = afcWithdrawAccountSvc.getOne(withdrawAccountMo);
     	_log.info("根据用户id查询用户提现账户信息查询用户提现账户信息的返回值为：{}", afcWithdrawAccountMo);
-    	
+    	if (afcWithdrawAccountMo == null) {
+    		_log.error("根据用户id查询用户提现账户信息查询用户提现账户信息为空，用户id为：{}", userId);
+			return withdrawAccountInfoRo;
+		}
     	_log.info("根据用户id查询用户提现账户信息查询用户账户信息的参数为：{}", userId);
     	AfcAccountMo afcAccountMo = afcAccountSvc.getById(userId);
     	_log.info("根据用户id查询用户提现账户信息查询用户账户信息的返回值为：{}", afcAccountMo);
@@ -133,7 +137,7 @@ public class AfcWithdrawAccountSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAcc
     	WithdrawNumberForMonthRo withdrawNumberForMonth = afcWithdrawSvc.getWithdrawNumberForMonth(afcWithdrawMo);
     	_log.info("根据用户id查询用户提现账户信息查询用户提现信息的返回值为：{}", withdrawNumberForMonth);
     	
-    	AfcWithdrawAccountInfoRo withdrawAccountInfoRo = dozerMapper.map(afcWithdrawAccountMo, AfcWithdrawAccountInfoRo.class);
+    	withdrawAccountInfoRo = dozerMapper.map(afcWithdrawAccountMo, AfcWithdrawAccountInfoRo.class);
     	withdrawAccountInfoRo.setBalance(afcAccountMo.getBalance().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
     	withdrawAccountInfoRo.setWithdrawNumber(withdrawNumberForMonth.getWithdrawNumber());
     	withdrawAccountInfoRo.setSeviceCharge(withdrawNumberForMonth.getSeviceCharge());

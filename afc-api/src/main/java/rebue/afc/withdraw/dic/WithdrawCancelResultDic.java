@@ -48,7 +48,12 @@ public enum WithdrawCancelResultDic implements EnumBase {
      * -4: 此申请已被处理
      */
     @ApiModelProperty(value = "此申请已被处理")
-    ALREADY_DEALED(-4);
+    ALREADY_DEALED(-4),
+    
+    /**
+     * 操作失败
+     */
+    ERROR(5);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的

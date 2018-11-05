@@ -67,4 +67,11 @@ public interface AfcWithdrawMapper extends MybatisBaseMapper<AfcWithdrawMo, Long
      * @return
      */
     int selectWithdrawNumberForMonth(AfcWithdrawMo record);
+    
+    /**
+     * 查询用户提现中的信息
+     * @param accountId
+     * @return
+     */
+    List<AfcWithdrawMo> selectWithdrawApplying(Long accountId);
 }
