@@ -16,19 +16,19 @@ import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.svc.AfcAccountSvc;
 import rebue.sbs.rabbit.RabbitConsumer;
 import rebue.suc.co.SucExchangeCo;
-import rebue.suc.msg.SucAddUserDoneMsg;
+import rebue.suc.msg.SucAddOrgDoneMsg;
 
 /**
- * 订阅用户中心-添加用户完成的通知
+ * 订阅用户中心-添加组织完成的通知
  */
 @Service
-public class AfcSucAddUserDoneSub implements ApplicationListener<ContextRefreshedEvent> {
-    private final static Logger _log                    = LoggerFactory.getLogger(AfcSucAddUserDoneSub.class);
+public class AfcSucAddOrgDoneSub implements ApplicationListener<ContextRefreshedEvent> {
+    private final static Logger _log                    = LoggerFactory.getLogger(AfcSucAddOrgDoneSub.class);
 
     /**
      * 处理添加用户完成通知的队列
      */
-    private final static String SUC_ADD_USER_QUEUE_NAME = "rebue.afc.suc.add.user.done.queue";
+    private final static String SUC_ADD_ORG_QUEUE_NAME = "rebue.afc.suc.add.org.done.queue";
 
     @Resource
     private AfcAccountSvc       accountSvc;
@@ -42,14 +42,14 @@ public class AfcSucAddUserDoneSub implements ApplicationListener<ContextRefreshe
         if (!(event.getApplicationContext() instanceof AnnotationConfigServletWebServerApplicationContext))
             return;
 
-        _log.info("订阅添加用户完成的通知: {} - {}", SucExchangeCo.SUC_ADD_USER_DONE_EXCHANGE_NAME, SUC_ADD_USER_QUEUE_NAME);
-        consumer.bind(SucExchangeCo.SUC_ADD_USER_DONE_EXCHANGE_NAME, SUC_ADD_USER_QUEUE_NAME, SucAddUserDoneMsg.class, (msg) -> {
+        _log.info("订阅添加组织完成的通知: {} - {}", SucExchangeCo.SUC_ADD_ORG_DONE_EXCHANGE_NAME, SUC_ADD_ORG_QUEUE_NAME);
+        consumer.bind(SucExchangeCo.SUC_ADD_ORG_DONE_EXCHANGE_NAME, SUC_ADD_ORG_QUEUE_NAME, SucAddOrgDoneMsg.class, (msg) -> {
             try {
-                _log.info("接收到添加用户的消息: {}", msg);
+                _log.info("接收到添加组织的消息: {}", msg);
                 // 添加用户的账户信息
                 AfcAccountMo accountMo = new AfcAccountMo();
                 accountMo.setId(msg.getId());
-                accountMo.setAccountType((byte) 1);
+                accountMo.setAccountType((byte) 2);
                 Date now = new Date();
                 accountMo.setSettleTime(now);
                 accountMo.setModifiedTimestamp(now.getTime());
