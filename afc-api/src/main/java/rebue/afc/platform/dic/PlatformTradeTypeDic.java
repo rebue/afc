@@ -25,7 +25,11 @@ public enum PlatformTradeTypeDic implements EnumBase {
     /**
      * 提现手续费
      */
-    WITHDRAW_SEVICE_CHARGE(3);
+    WITHDRAW_SEVICE_CHARGE(3),
+	/**
+	 * 平台充值
+	 */
+	CHARGE_BALANCE(4);
 	
     /**
      * 枚举的所有项，注意这个变量是静态单例的

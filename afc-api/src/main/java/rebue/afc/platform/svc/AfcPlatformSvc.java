@@ -3,6 +3,8 @@ package rebue.afc.platform.svc;
 import java.math.BigDecimal;
 
 import rebue.afc.mo.AfcPlatformMo;
+import rebue.afc.ro.ChargeRo;
+import rebue.afc.to.ChargeTo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 public interface AfcPlatformSvc extends MybatisBaseSvc<AfcPlatformMo, java.lang.Long> {
@@ -22,5 +24,10 @@ public interface AfcPlatformSvc extends MybatisBaseSvc<AfcPlatformMo, java.lang.
      *            要修改的平台的ID
      */
     void modifyBalance(BigDecimal newBalance, Long newModifiedTimestamp, BigDecimal oldBalance, Long oldModifiedTimestamp, Long id);
+    
+    /**
+     * 平台充值
+     */
+    ChargeRo chargeBalance(ChargeTo to);
 
 }

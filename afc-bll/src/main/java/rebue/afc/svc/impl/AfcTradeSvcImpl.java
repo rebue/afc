@@ -260,6 +260,17 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 返佣中金额-
             newAccountMo.setCommissioning(oldAccountMo.getCommissioning().subtract(tradeAmount));
             break;
+        //XXX AFC : 交易 : (余额+) 余额充值或扣款
+        case CHARGE_BALANCE:
+        	// 余额+
+        	newAccountMo.setBalance(oldAccountMo.getBalance().subtract(tradeAmount));
+            break;
+          //XXX AFC : 交易 : (返现金+) 返现金充值或扣款
+        case CHARGE_CASHBACK:
+        	// 余额+
+        	newAccountMo.setCashback(oldAccountMo.getBalance().subtract(tradeAmount));
+            break;
+        	
         default:
             String msg = "不支持此交易类型";
             _log.error("{}: {}", msg, tradeMo.getTradeType());
