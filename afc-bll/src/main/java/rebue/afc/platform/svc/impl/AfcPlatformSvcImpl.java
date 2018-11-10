@@ -17,7 +17,9 @@ import rebue.afc.dic.ChargeResultDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcPlatformMapper;
 import rebue.afc.mo.AfcPlatformMo;
+import rebue.afc.mo.AfcPlatformTradeMo;
 import rebue.afc.mo.AfcTradeMo;
+import rebue.afc.platform.dic.PlatformTradeTypeDic;
 import rebue.afc.platform.svc.AfcPlatformSvc;
 import rebue.afc.ro.ChargeRo;
 import rebue.afc.svc.AfcTradeSvc;
@@ -45,12 +47,15 @@ public class AfcPlatformSvcImpl extends MybatisBaseSvcImpl<AfcPlatformMo, java.l
 
 	@Resource
 	private SucUserSvc userSvc;
+	
+	@Resource
+	private AfcPlatformSvc platformSvc;
 
 	@Resource
 	private Mapper dozerMapper;
 
 	@Resource
-	private AfcTradeSvc tradeSvc;
+	private AfcPlatformTradeSvcImpl platFormTradeSvc;
 
 	/**
 	 * @mbg.generated
@@ -115,8 +120,8 @@ public class AfcPlatformSvcImpl extends MybatisBaseSvcImpl<AfcPlatformMo, java.l
 			return ro;
 		}
 
-		SucUserMo chargeUserMo = userSvc.getById(to.getUserId());
-		if (chargeUserMo == null) {
+		AfcPlatformMo afcPlatFormMo = platformSvc.getById(to.getUserId());
+		if (afcPlatFormMo == null) {
 			_log.error("充值发现没有此用户: " + to.getUserId());
 			ChargeRo ro = new ChargeRo();
 			ro.setResult(ChargeResultDic.NOT_FOUND_USER);
@@ -124,14 +129,14 @@ public class AfcPlatformSvcImpl extends MybatisBaseSvcImpl<AfcPlatformMo, java.l
 		}
 
 		// 添加一笔交易
-		AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
-		tradeMo.setAccountId(to.getUserId());
-		tradeMo.setTradeType((byte) TradeTypeDic.CHARGE_BALANCE.getCode());
-		tradeMo.setTradeTime(new Date());
-		tradeSvc.addTrade(tradeMo);
+		AfcPlatformTradeMo afcPlatFormTradMo = dozerMapper.map(to, AfcPlatformTradeMo.class);
+		afcPlatFormTradMo.setId(to.getUserId());
+		afcPlatFormTradMo.setPlatformTradeType((byte) PlatformTradeTypeDic.CHARGE_BALANCE.getCode());
+		afcPlatFormTradMo.setModifiedTimestamp(new Date().getTime());
+		platFormTradeSvc.addTrade(afcPlatFormTradMo);
 
 		// 返回成功
-		_log.info("进货保证金充值成功: {}", to);
+		_log.info("平台充值成功: {}", to);
 		ChargeRo ro = new ChargeRo();
 		ro.setResult(ChargeResultDic.SUCCESS);
 		return ro;

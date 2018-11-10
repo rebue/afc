@@ -13,6 +13,6 @@ public interface AfcChargeSvc extends MybatisBaseSvc<AfcAccountMo, java.lang.Lon
 	/**
      * 余额或返现金-充值
      */
-    ChargeRo chargeBalance(ChargeTo to);
+    ChargeRo charge(ChargeTo to);
 	
 }

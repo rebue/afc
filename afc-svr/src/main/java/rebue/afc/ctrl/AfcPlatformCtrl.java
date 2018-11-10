@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcPlatformMo;
 import rebue.afc.platform.svc.AfcPlatformSvc;
+import rebue.afc.ro.ChargeRo;
+import rebue.afc.to.ChargeTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 
@@ -177,4 +179,14 @@ public class AfcPlatformCtrl {
         _log.info("get AfcPlatformMo by id: " + id);
         return svc.getById(id);
     }
+    
+    /**
+     * 平台充值
+     */
+    @PostMapping("/afc/platform/charge")
+    ChargeRo charge(ChargeTo to) {
+        _log.info("平台-充值： {}", to);
+        return svc.chargeBalance(to);
+    }
+    
 }

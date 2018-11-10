@@ -263,12 +263,12 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         //XXX AFC : 交易 : (余额+) 余额充值或扣款
         case CHARGE_BALANCE:
         	// 余额+
-        	newAccountMo.setBalance(oldAccountMo.getBalance().subtract(tradeAmount));
+        	newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
           //XXX AFC : 交易 : (返现金+) 返现金充值或扣款
         case CHARGE_CASHBACK:
         	// 余额+
-        	newAccountMo.setCashback(oldAccountMo.getBalance().subtract(tradeAmount));
+        	newAccountMo.setCashback(oldAccountMo.getCashback().add(tradeAmount));
             break;
         	
         default:

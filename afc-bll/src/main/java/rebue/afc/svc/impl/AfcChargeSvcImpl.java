@@ -46,7 +46,7 @@ public class AfcChargeSvcImpl extends MybatisBaseSvcImpl<AfcAccountMo, java.lang
     private Mapper              dozerMapper;
 	
 	@Override
-	public ChargeRo chargeBalance(ChargeTo to) {
+	public ChargeRo charge(ChargeTo to) {
 		if (to.getUserId() == null || to.getTradeAmount() == null || to.getOpId() == null || StringUtils.isAnyBlank(to.getOrderId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
             _log.warn("没有填写充值的用户ID/充值单号/充值交易的标题/充值交易的金额/操作人账号/MAC/IP: {}", to);
             ChargeRo ro = new ChargeRo();
