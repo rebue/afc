@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import rebue.afc.dic.AddSettleTaskResultDic;
-import rebue.afc.dic.SettleTaskExecuteStateDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcSettleTaskMapper;
 import rebue.afc.mo.AfcSettleTaskMo;
@@ -32,6 +31,7 @@ import rebue.afc.to.AddSettleTasksDetailTo;
 import rebue.afc.to.AddSettleTasksTo;
 import rebue.afc.to.TaskTo;
 import rebue.robotech.dic.ResultDic;
+import rebue.robotech.dic.TaskExecuteStateDic;
 import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.svr.feign.SucUserSvc;
@@ -59,7 +59,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public int add(AfcSettleTaskMo mo) {
+    public int add(final AfcSettleTaskMo mo) {
         _log.info("添加结算任务");
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
@@ -96,29 +96,29 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public AddSettleTasksRo addSettleTasks(AddSettleTasksTo to) throws DuplicateKeyException {
+    public AddSettleTasksRo addSettleTasks(final AddSettleTasksTo to) throws DuplicateKeyException {
         _log.info("添加结算任务: {}", to);
         if (to.getBuyerAccountId() == null || StringUtils.isAnyBlank(to.getOrderId(), to.getMac(), to.getIp())) {
-            String msg = "参数有误";
+            final String msg = "参数有误";
             _log.error("{}: {}", msg, to);
-            AddSettleTasksRo ro = new AddSettleTasksRo();
+            final AddSettleTasksRo ro = new AddSettleTasksRo();
             ro.setResult(AddSettleTaskResultDic.PARAM_ERROR);
             ro.setMsg(msg);
             return ro;
         }
         // 立即执行的时间
-        Date now = new Date();
+        final Date now = new Date();
         // 遍历详情来添加任务
-        for (AddSettleTasksDetailTo detail : to.getDetails()) {
+        for (final AddSettleTasksDetailTo detail : to.getDetails()) {
             if (detail.getSettleBuyerCashbackAmount() == null || StringUtils.isAnyBlank(detail.getSettleBuyerCashbackTitle(), detail.getOrderDetailId())) {
-                String msg = "参数有误";
+                final String msg = "参数有误";
                 _log.error("{}: {}", msg, detail);
                 throw new RuntimeException(msg);
             }
             // 如果要结算返现
             if (detail.getSettleBuyerCashbackAmount() != null && detail.getSettleBuyerCashbackAmount().compareTo(BigDecimal.ZERO) > 0) {
                 _log.info("添加结算返现中金额的任务");
-                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                final AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
                 taskMo.setOrderId(to.getOrderId());
                 taskMo.setMac(to.getMac());
                 taskMo.setIp(to.getIp());
@@ -146,7 +146,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             // 如果要结算上家佣金
             if (detail.getSettleUplineCommissionAmount() != null && detail.getSettleUplineCommissionAmount().compareTo(BigDecimal.ZERO) > 0) {
                 _log.info("添加结算返佣中金额的任务");
-                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                final AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
                 taskMo.setMac(to.getMac());
                 taskMo.setIp(to.getIp());
                 taskMo.setTradeType((byte) TradeTypeDic.SETTLE_COMMISSIONING.getCode());
@@ -177,7 +177,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             // 如果要结算本家佣金
             if (detail.getSettleSelfCommissionAmount() != null && detail.getSettleSelfCommissionAmount().compareTo(BigDecimal.ZERO) > 0) {
                 _log.info("添加结算返佣中金额的任务");
-                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                final AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
                 taskMo.setMac(to.getMac());
                 taskMo.setIp(to.getIp());
                 taskMo.setTradeType((byte) TradeTypeDic.SETTLE_COMMISSIONING.getCode());
@@ -208,7 +208,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             // 如果要结算平台服务费
             if (detail.getSettlePlatformServiceFeeAmount() != null && detail.getSettlePlatformServiceFeeAmount().compareTo(BigDecimal.ZERO) > 0) {
                 _log.info("添加结算平台服务费的任务");
-                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                final AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
                 taskMo.setOrderId(to.getOrderId());
                 taskMo.setMac(to.getMac());
                 taskMo.setIp(to.getIp());
@@ -225,7 +225,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             // 如果要结算供应商
             if (detail.getSettleSupplierAmount() != null && detail.getSettleSupplierAmount().compareTo(BigDecimal.ZERO) > 0) {
                 _log.info("添加结算供应商的任务");
-                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                final AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
                 taskMo.setOrderId(to.getOrderId());
                 taskMo.setMac(to.getMac());
                 taskMo.setIp(to.getIp());
@@ -246,7 +246,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             // 如果要结算卖家
             if (detail.getSettleSellerAmount() != null && detail.getSettleSellerAmount().compareTo(BigDecimal.ZERO) > 0) {
                 _log.info("添加结算卖家的任务");
-                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                final AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
                 taskMo.setOrderId(to.getOrderId());
                 taskMo.setMac(to.getMac());
                 taskMo.setIp(to.getIp());
@@ -267,7 +267,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             // 如果要结算已占用保证金
             if (detail.getSettleDepositUsedAmount() != null && detail.getSettleDepositUsedAmount().compareTo(BigDecimal.ZERO) > 0) {
                 _log.info("添加结算供应商的任务");
-                AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
+                final AfcSettleTaskMo taskMo = dozerMapper.map(detail, AfcSettleTaskMo.class);
                 taskMo.setOrderId(to.getOrderId());
                 taskMo.setMac(to.getMac());
                 taskMo.setIp(to.getIp());
@@ -287,9 +287,9 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
             }
         }
         // 返回成功
-        String msg = "添加结算任务成功";
+        final String msg = "添加结算任务成功";
         _log.info("{}: {}", msg, to);
-        AddSettleTasksRo ro = new AddSettleTasksRo();
+        final AddSettleTasksRo ro = new AddSettleTasksRo();
         ro.setResult(AddSettleTaskResultDic.SUCCESS);
         ro.setMsg(msg);
         return ro;
@@ -310,8 +310,8 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      *            销售订单ID
      */
     @Override
-    public Boolean isSettleCompleted(String orderId) {
-        return _mapper.isSettleCompleted(orderId, (byte) SettleTaskExecuteStateDic.DONE.getCode());
+    public Boolean isSettleCompleted(final String orderId) {
+        return _mapper.isSettleCompleted(orderId, (byte) TaskExecuteStateDic.DONE.getCode());
     }
 
     /**
@@ -322,20 +322,21 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public void executeTask(Long id) {
+    public void executeTask(final Long id) {
         _log.info("准备执行任务: {}", id);
         // 获取任务信息
-        AfcSettleTaskMo taskMo = getById(id);
-        if (taskMo == null)
+        final AfcSettleTaskMo taskMo = getById(id);
+        if (taskMo == null) {
             return;
+        }
         _log.info("任务信息: {}", taskMo);
-        if (SettleTaskExecuteStateDic.NONE.getCode() != taskMo.getExecuteState().intValue()) {
-            String msg = "任务不是未执行状态，不能执行";
+        if (TaskExecuteStateDic.NONE.getCode() != taskMo.getExecuteState().intValue()) {
+            final String msg = "任务不是未执行状态，不能执行";
             _log.error("{}: {}", msg, taskMo);
             throw new RuntimeException(msg);
         }
         // 计算当前时间
-        Date now = new Date();
+        final Date now = new Date();
         _log.info("开始执行任务");
         try {
             // 判断交易类型
@@ -354,33 +355,33 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
                 settleSvc.settleAccountFee(taskMo, now);
                 break;
             default:
-                String msg = "任务执行不支持此结算类型";
+                final String msg = "任务执行不支持此结算类型";
                 _log.error(msg + ": {}", taskMo.getTradeType());
                 throw new RuntimeException(msg);
             }
-        } catch (RuntimeException e) {
-            String msg = "执行结算的任务出现运行时异常";
+        } catch (final RuntimeException e) {
+            final String msg = "执行结算的任务出现运行时异常";
             _log.error(msg, e);
             throw new RuntimeException(msg);
         }
         _log.info("将任务状态改为已经执行");
-        int rowCount = _mapper.done(now, taskMo.getId(), (byte) SettleTaskExecuteStateDic.DONE.getCode(), (byte) SettleTaskExecuteStateDic.NONE.getCode());
+        final int rowCount = _mapper.done(now, taskMo.getId(), (byte) TaskExecuteStateDic.DONE.getCode(), (byte) TaskExecuteStateDic.NONE.getCode());
         if (rowCount != 1) {
             _log.info("影响行数为: {}", rowCount);
-            String msg = "执行结算任务不成功: 可能出现并发问题";
+            final String msg = "执行结算任务不成功: 可能出现并发问题";
             _log.error("{}-{}", msg, taskMo);
             throw new RuntimeException(msg);
         }
         if (taskMo.getTradeType() == TradeTypeDic.SETTLE_COMMISSION.getCode()) {
             _log.info("发送返佣结算完成通知");
-            CommissionSettleDoneMsg msg = new CommissionSettleDoneMsg();
+            final CommissionSettleDoneMsg msg = new CommissionSettleDoneMsg();
             msg.setOrderDetailId(taskMo.getOrderDetailId());
             msg.setSettleTime(now);
             commissionSettleNotifyPub.send(msg);
         }
         if (thisSvc.isSettleCompleted(taskMo.getOrderId())) {
             _log.info("发送结算完成的通知");
-            SettleDoneMsg msg = new SettleDoneMsg();
+            final SettleDoneMsg msg = new SettleDoneMsg();
             msg.setOrderId(taskMo.getOrderId());
             msg.setSettleTime(now);
             settleNotifyPub.send(msg);
@@ -392,24 +393,24 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Ro suspendTask(TaskTo to) {
+    public Ro suspendTask(final TaskTo to) {
         _log.info("暂停任务: {}", to);
-        Ro ro = new Ro();
+        final Ro ro = new Ro();
 
         // 根据交易类型和订单详情ID查找任务
-        AfcSettleTaskMo condition = new AfcSettleTaskMo();
+        final AfcSettleTaskMo condition = new AfcSettleTaskMo();
         condition.setTradeType((byte) to.getTradeType().getCode());
         condition.setOrderDetailId(to.getOrderDetailId());
-        AfcSettleTaskMo task = getOne(condition);
+        final AfcSettleTaskMo task = getOne(condition);
         if (task == null) {
-            String msg = "找不到任务";
+            final String msg = "找不到任务";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.WARN);
             ro.setMsg(msg);
             return ro;
         }
-        if (SettleTaskExecuteStateDic.NONE.getCode() != task.getExecuteState()) {
-            String msg = "任务处在非执行状态，不能暂停";
+        if (TaskExecuteStateDic.NONE.getCode() != task.getExecuteState()) {
+            final String msg = "任务处在非执行状态，不能暂停";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.FAIL);
             ro.setMsg(msg);
@@ -417,18 +418,18 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         }
 
         // rowCount为影响的行数
-        int rowCount = _mapper.updateExecuteState(to.getTradeType().getCode(), to.getOrderDetailId(), SettleTaskExecuteStateDic.NONE.getCode(),
-                SettleTaskExecuteStateDic.SUSPEND.getCode());
+        final int rowCount = _mapper.updateExecuteState(to.getTradeType().getCode(), to.getOrderDetailId(), TaskExecuteStateDic.NONE.getCode(),
+                TaskExecuteStateDic.SUSPEND.getCode());
         if (rowCount != 1) {
             _log.info("影响行数为: {}", rowCount);
-            String msg = "任务暂停失败: 可能出现并发问题";
+            final String msg = "任务暂停失败: 可能出现并发问题";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.FAIL);
             ro.setMsg(msg);
             return ro;
         }
 
-        String msg = "任务暂停成功";
+        final String msg = "任务暂停成功";
         _log.info(msg);
         ro.setResult(ResultDic.SUCCESS);
         ro.setMsg(msg);
@@ -440,24 +441,24 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Ro resumeTask(TaskTo to) {
+    public Ro resumeTask(final TaskTo to) {
         _log.info("恢复任务: {}", to);
-        Ro ro = new Ro();
+        final Ro ro = new Ro();
 
         // 根据交易类型和订单详情ID查找任务
-        AfcSettleTaskMo condition = new AfcSettleTaskMo();
+        final AfcSettleTaskMo condition = new AfcSettleTaskMo();
         condition.setTradeType((byte) to.getTradeType().getCode());
         condition.setOrderDetailId(to.getOrderDetailId());
-        AfcSettleTaskMo task = getOne(condition);
+        final AfcSettleTaskMo task = getOne(condition);
         if (task == null) {
-            String msg = "找不到任务";
+            final String msg = "找不到任务";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.WARN);
             ro.setMsg(msg);
             return ro;
         }
-        if (SettleTaskExecuteStateDic.SUSPEND.getCode() != task.getExecuteState()) {
-            String msg = "任务处在非暂停状态，不能恢复执行";
+        if (TaskExecuteStateDic.SUSPEND.getCode() != task.getExecuteState()) {
+            final String msg = "任务处在非暂停状态，不能恢复执行";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.FAIL);
             ro.setMsg(msg);
@@ -465,18 +466,18 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         }
 
         // rowCount为影响的行数
-        int rowCount = _mapper.updateExecuteState(to.getTradeType().getCode(), to.getOrderDetailId(), SettleTaskExecuteStateDic.SUSPEND.getCode(),
-                SettleTaskExecuteStateDic.NONE.getCode());
+        final int rowCount = _mapper.updateExecuteState(to.getTradeType().getCode(), to.getOrderDetailId(), TaskExecuteStateDic.SUSPEND.getCode(),
+                TaskExecuteStateDic.NONE.getCode());
         if (rowCount != 1) {
             _log.info("影响行数为: {}", rowCount);
-            String msg = "恢复任务失败: 可能出现并发问题";
+            final String msg = "恢复任务失败: 可能出现并发问题";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.FAIL);
             ro.setMsg(msg);
             return ro;
         }
 
-        String msg = "任务恢复成功";
+        final String msg = "任务恢复成功";
         _log.info(msg);
         ro.setResult(ResultDic.SUCCESS);
         ro.setMsg(msg);
@@ -488,31 +489,31 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Ro cancelTask(TaskTo to) {
+    public Ro cancelTask(final TaskTo to) {
         _log.info("取消任务: {}", to);
-        Ro ro = new Ro();
+        final Ro ro = new Ro();
 
         // 根据交易类型和订单详情ID查找任务
-        AfcSettleTaskMo condition = new AfcSettleTaskMo();
+        final AfcSettleTaskMo condition = new AfcSettleTaskMo();
         condition.setTradeType((byte) to.getTradeType().getCode());
         condition.setOrderDetailId(to.getOrderDetailId());
-        AfcSettleTaskMo task = getOne(condition);
+        final AfcSettleTaskMo task = getOne(condition);
         if (task == null) {
-            String msg = "找不到任务";
+            final String msg = "找不到任务";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.WARN);
             ro.setMsg(msg);
             return ro;
         }
-        if (SettleTaskExecuteStateDic.DONE.getCode() == task.getExecuteState()) {
-            String msg = "任务已被执行，不能取消";
+        if (TaskExecuteStateDic.DONE.getCode() == task.getExecuteState()) {
+            final String msg = "任务已被执行，不能取消";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.FAIL);
             ro.setMsg(msg);
             return ro;
         }
-        if (SettleTaskExecuteStateDic.CANCEL.getCode() == task.getExecuteState()) {
-            String msg = "任务已被取消，不能重复取消";
+        if (TaskExecuteStateDic.CANCEL.getCode() == task.getExecuteState()) {
+            final String msg = "任务已被取消，不能重复取消";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.WARN);
             ro.setMsg(msg);
@@ -520,10 +521,10 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         }
 
         // 取消任务，rowCount为影响的行数
-        int rowCount = _mapper.cancelTask(task.getId(), task.getExecuteState(), SettleTaskExecuteStateDic.CANCEL.getCode());
+        final int rowCount = _mapper.cancelTask(task.getId(), task.getExecuteState(), TaskExecuteStateDic.CANCEL.getCode());
         if (rowCount != 1) {
             _log.info("影响行数为: {}", rowCount);
-            String msg = "任务取消失败: 可能出现并发问题";
+            final String msg = "任务取消失败: 可能出现并发问题";
             _log.error("{}-{}", msg, to);
             ro.setResult(ResultDic.FAIL);
             ro.setMsg(msg);
@@ -533,7 +534,7 @@ public class AfcSettleTaskSvcImpl extends MybatisBaseSvcImpl<AfcSettleTaskMo, ja
         _log.info("取消任务，需要补偿已经执行的结算");
         settleSvc.compensateCanceledSettle(task);
 
-        String msg = "任务取消成功";
+        final String msg = "任务取消成功";
         _log.info(msg);
         ro.setResult(ResultDic.SUCCESS);
         ro.setMsg(msg);

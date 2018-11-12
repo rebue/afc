@@ -7,7 +7,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import rebue.afc.dic.SettleTaskExecuteStateDic;
+import rebue.afc.dic.TaskExecuteStateDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.to.GetCashBackTaskTo;
 import rebue.wheel.OkhttpUtils;
