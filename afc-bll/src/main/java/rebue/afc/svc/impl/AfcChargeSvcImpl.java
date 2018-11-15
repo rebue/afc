@@ -88,7 +88,7 @@ public class AfcChargeSvcImpl extends MybatisBaseSvcImpl<AfcAccountMo, java.lang
         tradeSvc.addTrade(tradeMo);
 
         // 返回成功
-        _log.info("进货保证金充值成功: {}", to);
+        _log.info("充值成功: {}", to);
         ChargeRo ro = new ChargeRo();
         ro.setResult(ChargeResultDic.SUCCESS);
         return ro;

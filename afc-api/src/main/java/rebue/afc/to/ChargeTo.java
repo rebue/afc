@@ -4,15 +4,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.swagger.annotations.ApiModel;
+import lombok.Data;
 
 /**
  * 账户-充值的传输对象（参数）
  */
 @ApiModel(value = "账户-充值的传输对象（参数）")
 @JsonInclude(Include.NON_NULL)
+@Data
 public class ChargeTo {
+	/**
+     * 账号ID
+     */
+    private Long   id;
     /**
-     * 账户ID
+     * 用户ID
      */
     private Long   userId;
     /**
@@ -47,84 +53,11 @@ public class ChargeTo {
      * 操作人的IP地址
      */
     private String ip;
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getTradeTitle() {
-        return tradeTitle;
-    }
-
-    public void setTradeTitle(String tradeTitle) {
-        this.tradeTitle = tradeTitle;
-    }
-
-    public String getTradeDetail() {
-        return tradeDetail;
-    }
-
-    public void setTradeDetail(String tradeDetail) {
-        this.tradeDetail = tradeDetail;
-    }
-
-    public Double getTradeAmount() {
-        return tradeAmount;
-    }
-
-    public void setTradeAmount(Double tradeAmount) {
-        this.tradeAmount = tradeAmount;
-    }
-
-    public String getTradeVoucherNo() {
-        return tradeVoucherNo;
-    }
-
-    public void setTradeVoucherNo(String tradeVoucherNo) {
-        this.tradeVoucherNo = tradeVoucherNo;
-    }
-
-    public Long getOpId() {
-        return opId;
-    }
-
-    public void setOpId(Long opId) {
-        this.opId = opId;
-    }
-
-    public String getMac() {
-        return mac;
-    }
-
-    public void setMac(String mac) {
-        this.mac = mac;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    @Override
-    public String toString() {
-        return "ChargeTo [userId=" + userId + ", orderId=" + orderId + ", tradeTitle=" + tradeTitle + ", tradeDetail="
-                + tradeDetail + ", tradeAmount=" + tradeAmount + ", tradeVoucherNo=" + tradeVoucherNo + ", opId=" + opId
-                + ", mac=" + mac + ", ip=" + ip + "]";
-    }
+    
+    /**
+     * 充值类型
+     */
+    private int tradeType;
+    
 
 }
