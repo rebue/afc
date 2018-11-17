@@ -11,6 +11,7 @@
 
 	<groupId>com.github.rebue.afc</groupId>
 	<artifactId>afc</artifactId>
+	<version>1.0.9</version>
 	<packaging>pom</packaging>
 	<description>账户财务中心</description>
 
@@ -28,12 +29,12 @@
 			<dependency>
 				<groupId>com.github.rebue.afc</groupId>
 				<artifactId>afc-api</artifactId>
-				<version>1.0.8</version>
+				<version>1.0.9</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.rebue.afc</groupId>
 				<artifactId>afc-svr-feign</artifactId>
-				<version>1.0.8</version>
+				<version>1.0.9</version>
 			</dependency>
 
 			<dependency>
@@ -49,7 +50,7 @@
 			<dependency>
 				<groupId>com.github.rebue.wxx</groupId>
 				<artifactId>wxx-api</artifactId>
-				<version>1.0.8</version>
+				<version>1.0.9</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
