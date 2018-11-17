@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/11/2 17:12:24                           */
+/* Created on:     2018/11/17 18:07:55                          */
 /*==============================================================*/
 
 
@@ -85,11 +85,15 @@ create table AFC_PAY
    ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
    PAY_TYPE_ID          tinyint not null comment '支付类型ID(1.V支付;2.微信支付;3.支付宝;4.银联)',
    PAY_ACCOUNT_ID       varchar(150) not null comment '支付账户ID(例如微信ID，支付宝ID，V支付的账户ID也就是本系统的用户ID)',
-   PAY_ORDER_ID         varchar(150) not null comment '支付订单ID(V支付订单ID就是交易ID或流水ID)',
-   PAY_AMOUNT           decimal(18,4) not null comment '支付金额',
+   TRADE_ID             varchar(150) not null comment '支付的交易ID
+            V支付、微信、支付宝等支付的交易ID
+            (V支付订单ID就是交易ID或流水ID)',
    PAY_TIME             datetime not null comment '支付时间',
+   PAY_AMOUNT           decimal(18,4) not null comment '支付金额总额',
+   PAY_AMOUNT1          decimal(18,4) comment '支付金额1，在交易类型是V支付时代表返现金支付了多少',
+   PAY_AMOUNT2          decimal(18,4) comment '支付金额2，在交易类型是V支付时代表余额支付了多少',
    primary key (ID),
-   unique key AK_PAY_ORDER_ID (PAY_ORDER_ID),
+   unique key AK_TRADE_ID (TRADE_ID),
    unique key AK_PAY_TYPE_AND_ORDER_ID (ORDER_ID, PAY_TYPE_ID)
 );
 

@@ -82,16 +82,16 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public PrepayRo prepay(AfcVpayPrepayTo to) {
+    public PrepayRo prepay(final AfcVpayPrepayTo to) {
         // 生成预支付的ID(UUID加盐散列)
         String prepayId = DigestUtils.sha512AsHexStr((RandomEx.randomUUID() + RandomEx.random1(6)).getBytes());
-        String redisKey = REDIS_KEY_PREPAY_ORDER_PREFIX + prepayId;
+        final String redisKey = REDIS_KEY_PREPAY_ORDER_PREFIX + prepayId;
         try {
             redisClient.setObj(redisKey, to, 2 * 60 * 60);
-        } catch (RedisSetException e) {
+        } catch (final RedisSetException e) {
             prepayId = null;
         }
-        PrepayRo result = new PrepayRo();
+        final PrepayRo result = new PrepayRo();
         result.setPrepayId(prepayId);
         result.setRequirePayPswd(userSvc.requirePayPswd(to.getUserId(), to.getTradeAmount()));
         return result;
@@ -102,26 +102,26 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public PayRo pay(AfcVpayPayTo to) {
+    public PayRo pay(final AfcVpayPayTo to) {
         if (StringUtils.isAnyBlank(to.getPrepayId(), to.getMac(), to.getIp())) {
             _log.warn("没有填写预支付ID/MAC/IP: {}", to);
-            PayRo ro = new PayRo();
+            final PayRo ro = new PayRo();
             ro.setResult(PayResultDic.PARAM_ERROR);
             return ro;
         }
 
         // 取出预支付信息
-        String redisKey = REDIS_KEY_PREPAY_ORDER_PREFIX + to.getPrepayId();
-        AfcVpayPrepayTo prepay = redisClient.getObj(redisKey, AfcVpayPrepayTo.class);
+        final String redisKey = REDIS_KEY_PREPAY_ORDER_PREFIX + to.getPrepayId();
+        final AfcVpayPrepayTo prepay = redisClient.getObj(redisKey, AfcVpayPrepayTo.class);
         if (prepay == null) {
             _log.warn("没有找到预支付信息: {}", to);
-            PayRo ro = new PayRo();
+            final PayRo ro = new PayRo();
             ro.setResult(PayResultDic.NOT_FOUND_PREPAY);
             return ro;
         }
 
         // 校验支付密码
-        PayPswdVerifyRo payPswdVerifyRo = userSvc.verifyPayPswd(prepay.getUserId(), to.getPayPswd(), prepay.getTradeAmount());
+        final PayPswdVerifyRo payPswdVerifyRo = userSvc.verifyPayPswd(prepay.getUserId(), to.getPayPswd(), prepay.getTradeAmount());
         PayRo ro;
         switch (payPswdVerifyRo.getResult()) {
         case SUCCESS:
@@ -162,9 +162,9 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
         }
 
         // 查询账户信息
-        AfcAccountMo oldAccountMo = accountSvc.getById(prepay.getUserId());
+        final AfcAccountMo oldAccountMo = accountSvc.getById(prepay.getUserId());
         // 得到交易金额
-        BigDecimal tradeAmount = new BigDecimal(prepay.getTradeAmount().toString());
+        final BigDecimal tradeAmount = new BigDecimal(prepay.getTradeAmount().toString());
 
         // 检查是否余额或返现金不足
         if (tradeAmount.compareTo(oldAccountMo.getBalance().add(oldAccountMo.getCashback())) > 0) {
@@ -174,10 +174,10 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
         }
 
         // 计算当前时间
-        Date now = new Date();
+        final Date now = new Date();
 
         // 添加一笔交易
-        AfcTradeMo tradeMo = new AfcTradeMo();
+        final AfcTradeMo tradeMo = new AfcTradeMo();
         tradeMo.setAccountId(prepay.getUserId());
         tradeMo.setTradeType((byte) TradeTypeDic.PAY.getCode());
         tradeMo.setTradeAmount(tradeAmount);
@@ -191,14 +191,14 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
         tradeSvc.addTrade(tradeMo);
 
         // 加入支付完成通知的消息队列
-        VpayPayDoneMsg msg = new VpayPayDoneMsg();
+        final VpayPayDoneMsg msg = new VpayPayDoneMsg();
         msg.setUserId(prepay.getUserId());
         msg.setOrderId(prepay.getOrderId());
         msg.setPayAccountId(prepay.getUserId().toString());
-        msg.setPayOrderId(tradeMo.getId().toString());
+        msg.setTradeId(tradeMo.getId().toString());
         msg.setPayAmount(tradeAmount);
-        msg.setPayChangeAmount1(tradeMo.getChangeAmount1());
-        msg.setPayChangeAmount2(tradeMo.getChangeAmount2());
+        msg.setPayAmount1(tradeMo.getChangeAmount1());
+        msg.setPayAmount2(tradeMo.getChangeAmount2());
         msg.setPayTime(now);
         vpayDonePub.send(msg);
 
@@ -215,11 +215,11 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
      * V支付-查询订单
      */
     @Override
-    public PayOrderQueryRo queryOrder(String orderId) {
-        AfcPayMo payMo = paySvc.getByOrderId(PayTypeDic.VPAY, orderId);
+    public PayOrderQueryRo queryOrder(final String orderId) {
+        final AfcPayMo payMo = paySvc.getByOrderId(PayTypeDic.VPAY, orderId);
         if (payMo != null) {
-            PayOrderQueryRo ro = new PayOrderQueryRo();
-            ro.setPayOrderId(payMo.getPayOrderId());
+            final PayOrderQueryRo ro = new PayOrderQueryRo();
+            ro.setTradeId(payMo.getTradeId());
             ro.setTradeAmount(payMo.getPayAmount().doubleValue());
             ro.setPayTime(payMo.getPayTime());
             return ro;

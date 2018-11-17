@@ -1,7 +1,5 @@
 package rebue.afc.sub;
 
-import java.math.BigDecimal;
-
 import javax.annotation.Resource;
 
 import org.dozer.Mapper;
@@ -55,22 +53,23 @@ public class AfcPayDoneSub implements ApplicationListener<ContextRefreshedEvent>
     private Mapper              dozerMapper;
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(final ContextRefreshedEvent event) {
         // 防止里面的代码被运行两次
-        if (!(event.getApplicationContext() instanceof AnnotationConfigServletWebServerApplicationContext))
+        if (!(event.getApplicationContext() instanceof AnnotationConfigServletWebServerApplicationContext)) {
             return;
+        }
 
         _log.info("订阅V支付的支付完成的通知: {} - {}", VpayExchangeCo.PAY_DONE_EXCHANGE_NAME, VPAY_DONE_QUEUE_NAME);
         consumer.bind(VpayExchangeCo.PAY_DONE_EXCHANGE_NAME, VPAY_DONE_QUEUE_NAME, VpayPayDoneMsg.class, (msg) -> {
             _log.info("V支付-收到支付完成的通知: {}", msg);
-            PayDoneMsg payDoneMsg = dozerMapper.map(msg, PayDoneMsg.class);
+            final PayDoneMsg payDoneMsg = dozerMapper.map(msg, PayDoneMsg.class);
             payDoneMsg.setPayType(PayTypeDic.VPAY);
             return handlePayNotify(payDoneMsg);
         });
         _log.info("订阅微信支付的支付完成的通知: {} - {}", WxpayExchangeCo.PAY_DONE_EXCHANGE_NAME, WXPAY_DONE_QUEUE_NAME);
         consumer.bind(WxpayExchangeCo.PAY_DONE_EXCHANGE_NAME, WXPAY_DONE_QUEUE_NAME, WxpayPayDoneMsg.class, (msg) -> {
             _log.info("微信支付-收到支付完成的通知: {}", msg);
-            PayDoneMsg payDoneMsg = dozerMapper.map(msg, PayDoneMsg.class);
+            final PayDoneMsg payDoneMsg = dozerMapper.map(msg, PayDoneMsg.class);
             payDoneMsg.setPayType(PayTypeDic.WXPAY);
             return handlePayNotify(payDoneMsg);
         });
@@ -79,17 +78,18 @@ public class AfcPayDoneSub implements ApplicationListener<ContextRefreshedEvent>
     /**
      * 处理支付完成的通知
      */
-    private boolean handlePayNotify(PayDoneMsg payDoneMsg) {
+    private boolean handlePayNotify(final PayDoneMsg payDoneMsg) {
         try {
             // 记录支付信息
-            AfcPayMo payMo = new AfcPayMo();
+            final AfcPayMo payMo = new AfcPayMo();
             payMo.setAccountId(payDoneMsg.getUserId());
             payMo.setOrderId(payDoneMsg.getOrderId());
             payMo.setPayTypeId((byte) payDoneMsg.getPayType().getCode());
             payMo.setPayAccountId(payDoneMsg.getPayAccountId());
-            payMo.setPayOrderId(payDoneMsg.getPayOrderId());
-            BigDecimal payAmount = new BigDecimal(payDoneMsg.getPayAmount().toString());
-            payMo.setPayAmount(payAmount);
+            payMo.setTradeId(payDoneMsg.getTradeId());
+            payMo.setPayAmount(payDoneMsg.getPayAmount());
+            payMo.setPayAmount1(payDoneMsg.getPayAmount1());
+            payMo.setPayAmount2(payDoneMsg.getPayAmount2());
             payMo.setPayTime(payDoneMsg.getPayTime());
             paySvc.add(payMo);
 
@@ -97,10 +97,10 @@ public class AfcPayDoneSub implements ApplicationListener<ContextRefreshedEvent>
             payDonePub.send(payDoneMsg);
 
             return true;
-        } catch (DuplicateKeyException e) {
+        } catch (final DuplicateKeyException e) {
             _log.warn("收到重复的消息: " + payDoneMsg, e);
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             _log.error("处理支付完成通知出现异常", e);
             return false;
         }
