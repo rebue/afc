@@ -44,7 +44,7 @@ public class PayDoneMsg {
      */
     private String     tradeId;
     /**
-     * 订单号
+     * 订单ID(XXX 在ord-svr中实际上是payOrderId)
      */
     private String     orderId;
     /**
