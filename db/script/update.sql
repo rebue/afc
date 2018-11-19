@@ -1,3 +1,22 @@
+-- 2018-11-19
+create table AFC_REFUND
+(
+   ID                   bigint not null comment '退款ID',
+   ACCOUNT_ID           bigint not null comment '账户ID',
+   ORDER_ID             varchar(150) not null comment '订单ID(支付订单ID)',
+   REFUND_TIME          datetime not null comment '退款时间',
+   REFUND_TOTAL         decimal(18,4) not null comment '退款金额总额',
+   REFUND_AMOUNT1       decimal(18,4) comment '退款金额1，在退款去向类型是V支付时代表退了多少返现金',
+   REFUND_AMOUNT2       decimal(18,4) comment '退款金额2，在退款去向类型是V支付时代表退了多少余额',
+   REFUND_TITLE         varchar(50) not null comment '退款标题',
+   REFUND_DETAIL        varchar(150) comment '退款详情',
+   OP_ID                bigint not null comment '操作人ID',
+   IP                   varchar(150) not null comment 'IP地址',
+   primary key (ID)
+);
+alter table AFC_REFUND comment '退款日志';
+
+
 -- 2018-11-17
 alter table AFC_PAY           change           PAY_ORDER_ID          TRADE_ID             varchar(150) not null comment '支付的交易ID
             V支付、微信、支付宝等支付的交易ID

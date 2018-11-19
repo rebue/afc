@@ -12,6 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import rebue.afc.dic.AccountTypeDic;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.svc.AfcAccountSvc;
 import rebue.sbs.rabbit.RabbitConsumer;
@@ -37,28 +38,29 @@ public class AfcSucAddUserDoneSub implements ApplicationListener<ContextRefreshe
     private RabbitConsumer      consumer;
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(final ContextRefreshedEvent event) {
         // 防止里面的代码被运行两次
-        if (!(event.getApplicationContext() instanceof AnnotationConfigServletWebServerApplicationContext))
+        if (!(event.getApplicationContext() instanceof AnnotationConfigServletWebServerApplicationContext)) {
             return;
+        }
 
         _log.info("订阅添加用户完成的通知: {} - {}", SucExchangeCo.SUC_ADD_USER_DONE_EXCHANGE_NAME, SUC_ADD_USER_QUEUE_NAME);
         consumer.bind(SucExchangeCo.SUC_ADD_USER_DONE_EXCHANGE_NAME, SUC_ADD_USER_QUEUE_NAME, SucAddUserDoneMsg.class, (msg) -> {
             try {
                 _log.info("接收到添加用户的消息: {}", msg);
                 // 添加用户的账户信息
-                AfcAccountMo accountMo = new AfcAccountMo();
+                final AfcAccountMo accountMo = new AfcAccountMo();
                 accountMo.setId(msg.getId());
-                accountMo.setAccountType((byte) 1);
-                Date now = new Date();
+                accountMo.setAccountType((byte) AccountTypeDic.USER.getCode());
+                final Date now = new Date();
                 accountMo.setSettleTime(now);
                 accountMo.setModifiedTimestamp(now.getTime());
                 accountSvc.add(accountMo);
                 return true;
-            } catch (DuplicateKeyException e) {
+            } catch (final DuplicateKeyException e) {
                 _log.warn("收到重复的消息: " + msg, e);
                 return true;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 _log.error("添加账户出现异常", e);
                 return false;
             }

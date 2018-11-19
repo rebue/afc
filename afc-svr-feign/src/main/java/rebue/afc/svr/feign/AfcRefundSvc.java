@@ -4,8 +4,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import rebue.afc.ro.RefundRo;
 import rebue.afc.to.RefundTo;
+import rebue.robotech.ro.Ro;
 import rebue.sbs.feign.FeignConfig;
 
 /**
@@ -25,5 +25,5 @@ public interface AfcRefundSvc {
      * 退款
      */
     @PostMapping("/refund")
-    RefundRo refund(@RequestBody RefundTo to);
+    Ro refund(@RequestBody RefundTo to);
 }

@@ -5,14 +5,17 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Data;
+
 /**
  * 退款到买家的传输对象（参数）
  */
 @JsonInclude(Include.NON_NULL)
+@Data
 public class RefundTo {
     /**
      * 订单ID
-     * (销售订单ID)
+     * (实际是payOrderId)
      */
     private String     orderId;
     /**
@@ -41,14 +44,25 @@ public class RefundTo {
      */
     private String     tradeDetail;
     /**
-     * 退回到买家余额的金额
-     * (单位为“元”，精确到小数点后4位)
+     * 退款金额(自动计算退款)
+     * (单位为“元”，精确到小数点后2位)
      */
+    private BigDecimal refundAmount;
+    /**
+     * 退回到买家余额的金额(自定义退款)
+     * (单位为“元”，精确到小数点后2位)
+     * 
+     * @deprecated
+     */
+    @Deprecated
     private BigDecimal returnBalanceToBuyer;
     /**
-     * 退回到买家返现金的金额
-     * (单位为“元”，精确到小数点后4位)
+     * 退回到买家返现金的金额(自定义退款)
+     * (单位为“元”，精确到小数点后2位)
+     * 
+     * @deprecated
      */
+    @Deprecated
     private BigDecimal returnCashbackToBuyer;
     /**
      * 收回结算给平台的服务费的金额
@@ -82,142 +96,5 @@ public class RefundTo {
      * 操作人的IP地址
      */
     private String     ip;
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getOrderDetailId() {
-        return orderDetailId;
-    }
-
-    public void setOrderDetailId(String orderDetailId) {
-        this.orderDetailId = orderDetailId;
-    }
-
-    public Long getBuyerAccountId() {
-        return buyerAccountId;
-    }
-
-    public void setBuyerAccountId(Long buyerAccountId) {
-        this.buyerAccountId = buyerAccountId;
-    }
-
-    public Long getSellerAccountId() {
-        return sellerAccountId;
-    }
-
-    public void setSellerAccountId(Long sellerAccountId) {
-        this.sellerAccountId = sellerAccountId;
-    }
-
-    public Long getSupplierAccountId() {
-        return supplierAccountId;
-    }
-
-    public void setSupplierAccountId(Long supplierAccountId) {
-        this.supplierAccountId = supplierAccountId;
-    }
-
-    public String getTradeTitle() {
-        return tradeTitle;
-    }
-
-    public void setTradeTitle(String tradeTitle) {
-        this.tradeTitle = tradeTitle;
-    }
-
-    public String getTradeDetail() {
-        return tradeDetail;
-    }
-
-    public void setTradeDetail(String tradeDetail) {
-        this.tradeDetail = tradeDetail;
-    }
-
-    public BigDecimal getReturnBalanceToBuyer() {
-        return returnBalanceToBuyer;
-    }
-
-    public void setReturnBalanceToBuyer(BigDecimal returnBalanceToBuyer) {
-        this.returnBalanceToBuyer = returnBalanceToBuyer;
-    }
-
-    public BigDecimal getReturnCashbackToBuyer() {
-        return returnCashbackToBuyer;
-    }
-
-    public void setReturnCashbackToBuyer(BigDecimal returnCashbackToBuyer) {
-        this.returnCashbackToBuyer = returnCashbackToBuyer;
-    }
-
-    public BigDecimal getGetbackServiceFeeFromPlatform() {
-        return getbackServiceFeeFromPlatform;
-    }
-
-    public void setGetbackServiceFeeFromPlatform(BigDecimal getbackServiceFeeFromPlatform) {
-        this.getbackServiceFeeFromPlatform = getbackServiceFeeFromPlatform;
-    }
-
-    public BigDecimal getGetbackCostFromSupplier() {
-        return getbackCostFromSupplier;
-    }
-
-    public void setGetbackCostFromSupplier(BigDecimal getbackCostFromSupplier) {
-        this.getbackCostFromSupplier = getbackCostFromSupplier;
-    }
-
-    public BigDecimal getGetbackProfitFromSeller() {
-        return getbackProfitFromSeller;
-    }
-
-    public void setGetbackProfitFromSeller(BigDecimal getbackProfitFromSeller) {
-        this.getbackProfitFromSeller = getbackProfitFromSeller;
-    }
-
-    public BigDecimal getGetbackDepositUsedFromSeller() {
-        return getbackDepositUsedFromSeller;
-    }
-
-    public void setGetbackDepositUsedFromSeller(BigDecimal getbackDepositUsedFromSeller) {
-        this.getbackDepositUsedFromSeller = getbackDepositUsedFromSeller;
-    }
-
-    public Long getOpId() {
-        return opId;
-    }
-
-    public void setOpId(Long opId) {
-        this.opId = opId;
-    }
-
-    public String getMac() {
-        return mac;
-    }
-
-    public void setMac(String mac) {
-        this.mac = mac;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    @Override
-    public String toString() {
-        return "RefundTo [orderId=" + orderId + ", orderDetailId=" + orderDetailId + ", buyerAccountId=" + buyerAccountId + ", sellerAccountId=" + sellerAccountId
-                + ", supplierAccountId=" + supplierAccountId + ", tradeTitle=" + tradeTitle + ", tradeDetail=" + tradeDetail + ", returnBalanceToBuyer=" + returnBalanceToBuyer
-                + ", returnCashbackToBuyer=" + returnCashbackToBuyer + ", getbackServiceFeeFromPlatform=" + getbackServiceFeeFromPlatform + ", getbackCostFromSupplier="
-                + getbackCostFromSupplier + ", getbackProfitFromSeller=" + getbackProfitFromSeller + ", getbackDepositUsedFromSeller=" + getbackDepositUsedFromSeller + ", opId="
-                + opId + ", mac=" + mac + ", ip=" + ip + "]";
-    }
 
 }

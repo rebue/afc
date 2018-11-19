@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/11/17 18:07:55                          */
+/* Created on:     2018/11/19 20:09:14                          */
 /*==============================================================*/
 
 
@@ -13,6 +13,8 @@ drop table if exists AFC_PAY;
 drop table if exists AFC_PLATFORM;
 
 drop table if exists AFC_PLATFORM_TRADE;
+
+drop table if exists AFC_REFUND;
 
 drop table if exists AFC_SETTLE_TASK;
 
@@ -41,7 +43,7 @@ create table AFC_ACCOUNT
    DEPOSIT              decimal(18,4) not null default 0 comment '进货保证金
             提货时要检查此加盟商的已进货的金额+本次提货的货物成本不能超过此金额',
    DEPOSIT_USED         decimal(18,4) not null default 0 comment '已占用的进货保证金',
-   ACCOUNT_TYPE         tinyint not null comment '账户类型(1：普通用户  2：组织用户)',
+   ACCOUNT_TYPE         tinyint not null comment '账户类型(1：用户  2：组织)',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳(添加或更新本条记录时的时间戳)',
    primary key (ID)
 );
@@ -82,22 +84,22 @@ create table AFC_PAY
 (
    ID                   bigint not null comment '支付ID',
    ACCOUNT_ID           bigint not null comment '账户ID(账户ID也就是用户ID)',
-   ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
-   PAY_TYPE_ID          tinyint not null comment '支付类型ID(1.V支付;2.微信支付;3.支付宝;4.银联)',
+   ORDER_ID             varchar(150) not null comment '订单ID(支付订单ID)',
+   PAY_TYPE_ID          tinyint not null comment '支付去向类型(1.V支付;2.微信支付;3.支付宝;4.银联)',
    PAY_ACCOUNT_ID       varchar(150) not null comment '支付账户ID(例如微信ID，支付宝ID，V支付的账户ID也就是本系统的用户ID)',
    TRADE_ID             varchar(150) not null comment '支付的交易ID
             V支付、微信、支付宝等支付的交易ID
             (V支付订单ID就是交易ID或流水ID)',
    PAY_TIME             datetime not null comment '支付时间',
    PAY_AMOUNT           decimal(18,4) not null comment '支付金额总额',
-   PAY_AMOUNT1          decimal(18,4) comment '支付金额1，在交易类型是V支付时代表返现金支付了多少',
-   PAY_AMOUNT2          decimal(18,4) comment '支付金额2，在交易类型是V支付时代表余额支付了多少',
+   PAY_AMOUNT1          decimal(18,4) comment '支付金额1，在支付去向类型是V支付时代表支付了多少返现金',
+   PAY_AMOUNT2          decimal(18,4) comment '支付金额2，在支付去向类型是V支付时代表支付了多少余额',
    primary key (ID),
    unique key AK_TRADE_ID (TRADE_ID),
    unique key AK_PAY_TYPE_AND_ORDER_ID (ORDER_ID, PAY_TYPE_ID)
 );
 
-alter table AFC_PAY comment '支付信息';
+alter table AFC_PAY comment '支付日志';
 
 /*==============================================================*/
 /* Table: AFC_PLATFORM                                          */
@@ -133,6 +135,27 @@ create table AFC_PLATFORM_TRADE
 );
 
 alter table AFC_PLATFORM_TRADE comment '平台交易';
+
+/*==============================================================*/
+/* Table: AFC_REFUND                                            */
+/*==============================================================*/
+create table AFC_REFUND
+(
+   ID                   bigint not null comment '退款ID',
+   ACCOUNT_ID           bigint not null comment '账户ID',
+   ORDER_ID             varchar(150) not null comment '订单ID(支付订单ID)',
+   REFUND_TIME          datetime not null comment '退款时间',
+   REFUND_TOTAL         decimal(18,4) not null comment '退款金额总额',
+   REFUND_AMOUNT1       decimal(18,4) comment '退款金额1，在退款去向类型是V支付时代表退了多少返现金',
+   REFUND_AMOUNT2       decimal(18,4) comment '退款金额2，在退款去向类型是V支付时代表退了多少余额',
+   REFUND_TITLE         varchar(50) not null comment '退款标题',
+   REFUND_DETAIL        varchar(150) comment '退款详情',
+   OP_ID                bigint not null comment '操作人ID',
+   IP                   varchar(150) not null comment 'IP地址',
+   primary key (ID)
+);
+
+alter table AFC_REFUND comment '退款日志';
 
 /*==============================================================*/
 /* Table: AFC_SETTLE_TASK                                       */
@@ -174,7 +197,7 @@ create table AFC_TRADE
    TRADE_TITLE          varchar(50) not null comment '交易标题',
    TRADE_DETAIL         varchar(150) comment '交易详情',
    TRADE_TIME           datetime not null comment '交易时间',
-   ORDER_ID             varchar(150) not null comment '订单ID(销售订单ID)',
+   ORDER_ID             varchar(150) not null comment '订单ID',
    ORDER_DETAIL_ID      varchar(150) default '' comment '订单详情ID(业务订单ID，结算是销售订单详情ID，退货是退货订单ID)',
    TRADE_VOUCHER_NO     varchar(150) comment '交易凭证号',
    OP_ID                bigint not null comment '操作人ID',

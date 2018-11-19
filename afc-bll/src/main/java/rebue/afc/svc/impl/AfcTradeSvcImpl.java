@@ -46,7 +46,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public int add(AfcTradeMo mo) {
+    public int add(final AfcTradeMo mo) {
         _log.info("添加账户交易");
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
@@ -69,35 +69,35 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
     @Resource
     private Mapper              dozerMapper;
 
-    /**
-     * 计算此订单的退款总额(通过销售订单ID)
-     */
-    @Override
-    public BigDecimal getRefundTotalAmountByOrderId(String orderId) {
-        return _mapper.getTotalAmountByTradeTypeAndOrder(TradeTypeDic.REFUND_TO_BUYER.getCode(), orderId);
-    }
+//    /**
+//     * 计算此订单的退款总额(通过订单ID)
+//     */
+//    @Override
+//    public BigDecimal getRefundedTotalByOrderId(final String orderId) {
+//        return _mapper.getTotalByTradeTypeAndOrder(TradeTypeDic.REFUND_TO_BUYER.getCode(), orderId);
+//    }
 
     /**
      * 添加一笔交易记录 1. 添加交易记录 2. 修改账户相应的金额字段 3. 添加账户流水
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void addTrade(AfcTradeMo tradeMo) {
+    public void addTrade(final AfcTradeMo tradeMo) {
         _log.info("添加一笔交易记录: {}", tradeMo);
         // 账户ID
-        Long accountId = tradeMo.getAccountId();
+        final Long accountId = tradeMo.getAccountId();
         // 交易金额
-        BigDecimal tradeAmount = tradeMo.getTradeAmount();
+        final BigDecimal tradeAmount = tradeMo.getTradeAmount();
         // 当前时间=交易时间
-        Date now = tradeMo.getTradeTime();
+        final Date now = tradeMo.getTradeTime();
         // 查询旧账户信息
-        AfcAccountMo oldAccountMo = accountSvc.getById(accountId);
+        final AfcAccountMo oldAccountMo = accountSvc.getById(accountId);
         if (oldAccountMo == null) {
-            String msg = "没有此账户";
+            final String msg = "没有此账户";
             _log.error("{}-{}", msg, accountId);
             throw new RuntimeException(msg);
         }
-        AfcAccountMo newAccountMo = new AfcAccountMo();
+        final AfcAccountMo newAccountMo = new AfcAccountMo();
         newAccountMo.setId(accountId);
         newAccountMo.setModifiedTimestamp(now.getTime());
         // 判断交易类型
@@ -107,13 +107,13 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 返现金-，余额-
             // 计算返现金和余额各扣除多少，先扣返现金，再扣余额
             // 扣除前的返现金
-            BigDecimal oldCashback = oldAccountMo.getCashback();
+            final BigDecimal oldCashback = oldAccountMo.getCashback();
             // 扣除后的返现金
             BigDecimal newCashback = null;
             // 返现金将扣除多少
             BigDecimal subtractCashback = null;
             // 扣除前的余额
-            BigDecimal oldBalance = oldAccountMo.getBalance();
+            final BigDecimal oldBalance = oldAccountMo.getBalance();
             // 扣除后的余额
             BigDecimal newBalance = null;
             // 余额将扣除多少
@@ -139,9 +139,10 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 设置改变后的返现金和余额
             // 改变后的的返现金
             newAccountMo.setCashback(newCashback);
-            if (newBalance != null)
+            if (newBalance != null) {
                 // 改变后的余额
                 newAccountMo.setBalance(newBalance);
+            }
             // 设置交易的返现金和余额
             // 扣除的返现金
             tradeMo.setChangeAmount1(subtractCashback);
@@ -192,9 +193,9 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         case REFUND_TO_BUYER:
             // 余额+，返现金+
             // 要退的返现金
-            BigDecimal cashbackAmount = tradeMo.getChangeAmount1();
+            final BigDecimal cashbackAmount = tradeMo.getChangeAmount1();
             // 要退的余额
-            BigDecimal balanceAmount = tradeMo.getChangeAmount2();
+            final BigDecimal balanceAmount = tradeMo.getChangeAmount2();
             // 计算交易后的余额
             BigDecimal newBalanceAmount = oldAccountMo.getBalance().add(balanceAmount);
             // 计算交易后的返现金
@@ -260,19 +261,19 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 返佣中金额-
             newAccountMo.setCommissioning(oldAccountMo.getCommissioning().subtract(tradeAmount));
             break;
-        //XXX AFC : 交易 : (余额+) 余额充值或扣款
+        // XXX AFC : 交易 : (余额+) 余额充值或扣款
         case CHARGE_BALANCE:
-        	// 余额+
-        	newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
+            // 余额+
+            newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
-          //XXX AFC : 交易 : (返现金+) 返现金充值或扣款
+        // XXX AFC : 交易 : (返现金+) 返现金充值或扣款
         case CHARGE_CASHBACK:
-        	// 余额+
-        	newAccountMo.setCashback(oldAccountMo.getCashback().add(tradeAmount));
+            // 余额+
+            newAccountMo.setCashback(oldAccountMo.getCashback().add(tradeAmount));
             break;
-        	
+
         default:
-            String msg = "不支持此交易类型";
+            final String msg = "不支持此交易类型";
             _log.error("{}: {}", msg, tradeMo.getTradeType());
             throw new RuntimeException(msg);
         }
@@ -280,7 +281,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         // 如果重复提交，会抛出DuplicateKeyException运行时异常
         thisSvc.add(tradeMo);
         // 2. 修改账户相应的金额字段
-        HashMap<String, Object> map = new HashMap<>();
+        final HashMap<String, Object> map = new HashMap<>();
         if (newAccountMo.getBalance() != null && !newAccountMo.getBalance().equals(oldAccountMo.getBalance())) {
             map.put("balance", newAccountMo.getBalance());
             map.put("oldBalance", oldAccountMo.getBalance());
@@ -319,7 +320,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         // 修改账户的金额
         accountSvc.modifyAmount(map);
         // 3. 添加账户流水
-        AfcFlowMo flowMo = dozerMapper.map(oldAccountMo, AfcFlowMo.class);
+        final AfcFlowMo flowMo = dozerMapper.map(oldAccountMo, AfcFlowMo.class);
         dozerMapper.map(newAccountMo, flowMo);
         // 流水ID=交易ID
         flowMo.setId(tradeMo.getId());
@@ -339,7 +340,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      * @return
      */
     @Override
-    public PageInfo<AfcTradeMo> cashbackTradeList(AfcTradeMo qo, int pageNum, int pageSize, String orderBy) {
+    public PageInfo<AfcTradeMo> cashbackTradeList(final AfcTradeMo qo, final int pageNum, final int pageSize, final String orderBy) {
         _log.info("list: qo-{}; pageNum-{}; orderBy-{}; pageSize-{}", qo, pageNum, pageSize, orderBy);
         return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectCashbackTrade(qo));
     }
@@ -354,7 +355,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      * @return
      */
     @Override
-    public PageInfo<AfcTradeMo> balanceTradeList(AfcTradeMo qo, int pageNum, int pageSize, String orderBy) {
+    public PageInfo<AfcTradeMo> balanceTradeList(final AfcTradeMo qo, final int pageNum, final int pageSize, final String orderBy) {
         _log.info("list: qo-{}; pageNum-{}; orderBy-{}; pageSize-{}", qo, pageNum, pageSize, orderBy);
         return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectBalanceTrade(qo));
     }

@@ -21,6 +21,7 @@
     <result column="BANK_ACCOUNT_NO" jdbcType="VARCHAR" property="bankAccountNo" />
     <result column="BANK_ACCOUNT_NAME" jdbcType="VARCHAR" property="bankAccountName" />
     <result column="OPEN_ACCOUNT_BANK" jdbcType="VARCHAR" property="openAccountBank" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
     <result column="MODIFIED_TIMESTAMP" jdbcType="BIGINT" property="modifiedTimestamp" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -30,7 +31,7 @@
     -->
     ID, FLOW_STATE, REJECT_REASON, APPLICANT_ID, APPLY_TIME, APPLICANT_IP, REVIEWER_ID, 
     REVIEW_TIME, REVIEWER_IP, ACCOUNT_ID, WITHDRAW_TYPE, CONTACT_TEL, BANK_ACCOUNT_NO, 
-    BANK_ACCOUNT_NAME, OPEN_ACCOUNT_BANK, MODIFIED_TIMESTAMP
+    BANK_ACCOUNT_NAME, OPEN_ACCOUNT_BANK, IP, MODIFIED_TIMESTAMP
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
@@ -60,13 +61,13 @@
       REVIEWER_ID, REVIEW_TIME, REVIEWER_IP, 
       ACCOUNT_ID, WITHDRAW_TYPE, CONTACT_TEL, 
       BANK_ACCOUNT_NO, BANK_ACCOUNT_NAME, OPEN_ACCOUNT_BANK, 
-      MODIFIED_TIMESTAMP)
+      IP, MODIFIED_TIMESTAMP)
     values (#{id,jdbcType=BIGINT}, #{flowState,jdbcType=TINYINT}, #{rejectReason,jdbcType=VARCHAR}, 
       #{applicantId,jdbcType=BIGINT}, #{applyTime,jdbcType=TIMESTAMP}, #{applicantIp,jdbcType=VARCHAR}, 
       #{reviewerId,jdbcType=BIGINT}, #{reviewTime,jdbcType=TIMESTAMP}, #{reviewerIp,jdbcType=VARCHAR}, 
       #{accountId,jdbcType=BIGINT}, #{withdrawType,jdbcType=TINYINT}, #{contactTel,jdbcType=VARCHAR}, 
       #{bankAccountNo,jdbcType=VARCHAR}, #{bankAccountName,jdbcType=VARCHAR}, #{openAccountBank,jdbcType=VARCHAR}, 
-      #{modifiedTimestamp,jdbcType=BIGINT})
+      #{ip,jdbcType=VARCHAR}, #{modifiedTimestamp,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="rebue.afc.mo.AfcWithdrawAccountBindFlowMo">
     <!--
@@ -120,6 +121,9 @@
       <if test="openAccountBank != null">
         OPEN_ACCOUNT_BANK,
       </if>
+      <if test="ip != null">
+        IP,
+      </if>
       <if test="modifiedTimestamp != null">
         MODIFIED_TIMESTAMP,
       </if>
@@ -169,6 +173,9 @@
       </if>
       <if test="openAccountBank != null">
         #{openAccountBank,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
       </if>
       <if test="modifiedTimestamp != null">
         #{modifiedTimestamp,jdbcType=BIGINT},
@@ -224,6 +231,9 @@
       <if test="openAccountBank != null">
         OPEN_ACCOUNT_BANK = #{openAccountBank,jdbcType=VARCHAR},
       </if>
+      <if test="ip != null">
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
       <if test="modifiedTimestamp != null">
         MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT},
       </if>
@@ -250,6 +260,7 @@
       BANK_ACCOUNT_NO = #{bankAccountNo,jdbcType=VARCHAR},
       BANK_ACCOUNT_NAME = #{bankAccountName,jdbcType=VARCHAR},
       OPEN_ACCOUNT_BANK = #{openAccountBank,jdbcType=VARCHAR},
+      IP = #{ip,jdbcType=VARCHAR},
       MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT}
     where ID = #{id,jdbcType=BIGINT}
   </update>
@@ -260,7 +271,7 @@
     -->
     select ID, FLOW_STATE, REJECT_REASON, APPLICANT_ID, APPLY_TIME, APPLICANT_IP, REVIEWER_ID, 
     REVIEW_TIME, REVIEWER_IP, ACCOUNT_ID, WITHDRAW_TYPE, CONTACT_TEL, BANK_ACCOUNT_NO, 
-    BANK_ACCOUNT_NAME, OPEN_ACCOUNT_BANK, MODIFIED_TIMESTAMP
+    BANK_ACCOUNT_NAME, OPEN_ACCOUNT_BANK, IP, MODIFIED_TIMESTAMP
     from AFC_WITHDRAW_ACCOUNT_BIND_FLOW
   </select>
   <select id="selectSelective" parameterType="rebue.afc.mo.AfcWithdrawAccountBindFlowMo" resultMap="BaseResultMap">
@@ -313,6 +324,9 @@
       </if>
       <if test="openAccountBank != null and openAccountBank != ''">
         and OPEN_ACCOUNT_BANK = #{openAccountBank,jdbcType=VARCHAR}
+      </if>
+      <if test="ip != null and ip != ''">
+        and IP = #{ip,jdbcType=VARCHAR}
       </if>
       <if test="modifiedTimestamp != null">
         and MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT}
@@ -380,6 +394,9 @@
       </if>
       <if test="openAccountBank != null and openAccountBank != ''">
         and OPEN_ACCOUNT_BANK = #{openAccountBank,jdbcType=VARCHAR}
+      </if>
+      <if test="ip != null and ip != ''">
+        and IP = #{ip,jdbcType=VARCHAR}
       </if>
       <if test="modifiedTimestamp != null and modifiedTimestamp != ''">
         and MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT}
