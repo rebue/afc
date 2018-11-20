@@ -35,7 +35,7 @@ public class AfcChargeCtrl {
 	/**
 	 * 是否测试模式（测试模式下不用从Cookie中获取用户ID）
 	 */
-	@Value("${debug}")
+	@Value("${debug:false}")
 	private Boolean isDebug;
 	
 	 /**
