@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcTradeMo;
+import rebue.afc.ro.AfcTradeListRo;
 import rebue.afc.svc.AfcTradeSvc;
+import rebue.afc.to.AfcTradeTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 
@@ -216,6 +218,23 @@ public class AfcTradeCtrl {
             throw new IllegalArgumentException(msg);
         }
         PageInfo<AfcTradeMo> result = svc.balanceTradeList(mo, pageNum, pageSize, "TRADE_TIME desc");
+        _log.info("result: " + result);
+        return result;
+    }
+    
+    /**
+     * 查询账户交易
+     *
+     */
+    @GetMapping("/afc/tradeList")
+    PageInfo<AfcTradeListRo> tradeList(AfcTradeTo to,@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        _log.info("list AfcTradeTo:" + to + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        PageInfo<AfcTradeListRo> result = svc.tradeList(to, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }

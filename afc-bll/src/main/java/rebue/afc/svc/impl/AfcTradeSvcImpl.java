@@ -3,6 +3,7 @@ package rebue.afc.svc.impl;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -21,9 +22,11 @@ import rebue.afc.mapper.AfcTradeMapper;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcFlowMo;
 import rebue.afc.mo.AfcTradeMo;
+import rebue.afc.ro.AfcTradeListRo;
 import rebue.afc.svc.AfcAccountSvc;
 import rebue.afc.svc.AfcFlowSvc;
 import rebue.afc.svc.AfcTradeSvc;
+import rebue.afc.to.AfcTradeTo;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 
 /**
@@ -359,4 +362,20 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         _log.info("list: qo-{}; pageNum-{}; orderBy-{}; pageSize-{}", qo, pageNum, pageSize, orderBy);
         return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectBalanceTrade(qo));
     }
+    
+    /**
+     * 查询账号交易记录
+     */
+	@Override
+	public PageInfo<AfcTradeListRo> tradeList(AfcTradeTo to, int pageNum, int pageSize) {
+		 _log.info("list: to-{}; pageNum-{}; pageSize-{}", to, pageNum, pageSize);
+		 PageInfo<AfcTradeListRo> tradeListResult = new PageInfo<AfcTradeListRo>();
+		 tradeListResult =  PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectTradeList(to));
+		 _log.info("返回结果:{}",tradeListResult);
+		 List<AfcTradeListRo> tradeList = tradeListResult.getList();
+		 for(AfcTradeListRo ro :tradeList) {
+			 _log.info("ro对象为:{}",ro);
+		 }
+		 return tradeListResult;
+	}
 }

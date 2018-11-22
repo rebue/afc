@@ -3,6 +3,8 @@ package rebue.afc.svc;
 import com.github.pagehelper.PageInfo;
 
 import rebue.afc.mo.AfcTradeMo;
+import rebue.afc.ro.AfcTradeListRo;
+import rebue.afc.to.AfcTradeTo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 /**
@@ -43,4 +45,9 @@ public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> 
      * @return
      */
     PageInfo<AfcTradeMo> balanceTradeList(AfcTradeMo qo, int pageNum, int pageSize, String orderBy);
+    
+    /**
+     * 查找交易流水
+     */
+    PageInfo<AfcTradeListRo> tradeList(AfcTradeTo to, int pageNum, int pageSize);
 }

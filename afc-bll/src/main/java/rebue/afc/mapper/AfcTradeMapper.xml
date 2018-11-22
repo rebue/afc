@@ -387,4 +387,24 @@
 			and TRADE_TYPE in (10, 20, 30, 31, 32, 50, 53, 60)
 		</where>
 	</select>
+	
+	<!-- 后台管理交易流水查询方法 -->
+	<select id="selectTradeList" parameterType="rebue.afc.to.AfcTradeTo" resultType="rebue.afc.ro.AfcTradeListRo">
+		select ACCOUNT_ID accountId, TRADE_AMOUNT tradeAmount, TRADE_TIME tradeTime,TRADE_TYPE tradeType,OP_ID opId
+		from AFC_TRADE 
+		<where>
+	      <if test="accountId != null and accountId != ''">
+	        and ID = #{accountId,jdbcType=BIGINT}
+	      </if>
+	      <if test="tradeTypeString != null and tradeTypeString != ''">
+	        and TRADE_TYPE IN #{tradeTypeString,jdbcType=VARCHAR}
+	      </if>
+	      <if test="tradeTimeStart != null  ">
+			and TRADE_TIME &gt;= #{tradeTimeStart,jdbcType=TIMESTAMP}
+		  </if>
+		  <if test="tradeTimeEnd != null ">
+			and TRADE_TIME &lt;= #{tradeTimeEnd,jdbcType=TIMESTAMP}
+		  </if>
+       </where>
+	</select>
 </mapper>

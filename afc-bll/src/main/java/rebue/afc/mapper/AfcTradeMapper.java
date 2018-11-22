@@ -3,6 +3,8 @@ package rebue.afc.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import rebue.afc.mo.AfcTradeMo;
+import rebue.afc.ro.AfcTradeListRo;
+import rebue.afc.to.AfcTradeTo;
 import rebue.robotech.mapper.MybatisBaseMapper;
 
 @Mapper
@@ -73,4 +75,9 @@ public interface AfcTradeMapper extends MybatisBaseMapper<AfcTradeMo, Long> {
      * @return
      */
     List<AfcTradeMo> selectBalanceTrade(AfcTradeMo record);
+    
+    /**
+     * 查询用户交易流水
+     */
+    List<AfcTradeListRo> selectTradeList(AfcTradeTo to);
 }
