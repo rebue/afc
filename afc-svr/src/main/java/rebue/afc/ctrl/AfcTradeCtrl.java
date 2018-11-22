@@ -238,4 +238,13 @@ public class AfcTradeCtrl {
         _log.info("result: " + result);
         return result;
     }
+    
+    /**
+     * 添加一笔交易
+     * @param mo
+     */
+    @PostMapping("/afc/trade/exadd")
+    public void addTrade(@RequestBody AfcTradeMo mo) {
+    	svc.addTrade(mo);
+    }
 }
