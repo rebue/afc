@@ -496,7 +496,7 @@ Shadow=0</a:DisplayPreferences>
 <c:Symbols>
 <o:DependencyLinkSymbol Id="o4">
 <a:ModificationDate>1542445216</a:ModificationDate>
-<a:Rect>((-3500,-68), (2848,1588))</a:Rect>
+<a:Rect>((-3500,-68), (2848,1589))</a:Rect>
 <a:ListOfPoints>((2448,557),(-3100,557))</a:ListOfPoints>
 <a:CornerStyle>1</a:CornerStyle>
 <a:ArrowStyle>1</a:ArrowStyle>
@@ -527,7 +527,7 @@ LABL 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:CustomPictureType>4</a:CustomPictureType>
 <a:CustomTextMode>1</a:CustomTextMode>
-<a:CustomPictureID>BC3D86B2-E6EB-4AEE-86C7-7E6370407249</a:CustomPictureID>
+<a:CustomPictureID>4CC65808-7240-4E69-8CE4-EC68E7E4A4AC</a:CustomPictureID>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <a:KeepAspect>1</a:KeepAspect>
 <c:Object>
@@ -548,7 +548,7 @@ LABL 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:CustomPictureType>4</a:CustomPictureType>
 <a:CustomTextMode>1</a:CustomTextMode>
-<a:CustomPictureID>D630C820-F29C-4B0D-8E23-DEB480689452</a:CustomPictureID>
+<a:CustomPictureID>2443CF54-0695-423C-B3F8-CD93677CAA3D</a:CustomPictureID>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <a:KeepAspect>1</a:KeepAspect>
 <c:Object>
@@ -597,7 +597,7 @@ LABL 0 Arial,8,N</a:FontList>
 <a:Code>afc</a:Code>
 <a:CreationDate>1542349358</a:CreationDate>
 <a:Creator>zbz</a:Creator>
-<a:ModificationDate>1542628024</a:ModificationDate>
+<a:ModificationDate>1542946666</a:ModificationDate>
 <a:Modifier>zbz</a:Modifier>
 <a:Location>file:///%[PRJ_ROOT_DIR]%/afc.ldm</a:Location>
 <a:Extension>ldm</a:Extension>
