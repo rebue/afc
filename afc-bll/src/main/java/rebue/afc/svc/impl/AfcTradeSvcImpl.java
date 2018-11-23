@@ -105,10 +105,9 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         newAccountMo.setModifiedTimestamp(now.getTime());
         // 判断交易类型
         switch (TradeTypeDic.getItem(tradeMo.getTradeType())) {
-        // XXX AFC : 交易 : （ 返现金-，余额- ）V支付-支付
-        case PAY:
+        case PAY:                   // XXX AFC : 交易 : （ 返现金-，余额-，优先扣减返现金 ）V支付-支付
             // 返现金-，余额-
-            // 计算返现金和余额各扣除多少，先扣返现金，再扣余额
+            // 计算返现金和余额各扣除多少，优先扣返现金，再扣余额
             // 扣除前的返现金
             final BigDecimal oldCashback = oldAccountMo.getCashback();
             // 扣除后的返现金
@@ -152,39 +151,28 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 扣除的余额
             tradeMo.setChangeAmount2(subtractBalance);
             break;
-        // XXX AFC : 交易 : （ 余额+ ）
-        // 1. 结算-结算成本(将成本打到供应商的余额);
-        // 2. 结算-结算卖家利润(将利润打到卖家的余额);
-        // 3. 退款补偿金-退款补偿金给卖家（补偿到卖家的余额）
-        // 4. 余额充值或扣款
-        case SETTLE_SUPPLIER:
-        case SETTLE_SELLER:
-        case REFUND_COMPENSATION_TO_SELLER:
-        case CHARGE_BALANCE:
+        case SETTLE_SUPPLIER:                   // XXX AFC : 交易 : （ 余额+ ）结算-结算成本(将成本打到供应商的余额);
+        case SETTLE_SELLER:                     // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额);
+        case REFUND_COMPENSATION_TO_SELLER:     // XXX AFC : 交易 : （ 余额+ ）退款补偿金-退款补偿金给卖家（补偿到卖家的余额）
+        case CHARGE_BALANCE:                    // XXX AFC : 交易 : （ 余额+ ）余额充值或扣款
             newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
-        // XXX AFC : 交易 : （ 返现中金额+ ）结算-结算返现中金额(打到买家的返现中金额)
-        case SETTLE_CASHBACKING:
-            // 返现中金额+
-            newAccountMo.setCashbacking(oldAccountMo.getCashbacking().add(tradeAmount));
-            break;
-        // XXX AFC : 交易 : （ 返现中金额-，返现金+
-        // ）结算-结算返现金(将返现中的金额移到返现金，注意是买家在本次交易中应获得的返现金金额，而不是买家的全部返现中的返现金)
-        case SETTLE_CASHBACK:
-            // 返现中金额-，返现金+
-            newAccountMo.setCashbacking(oldAccountMo.getCashbacking().subtract(tradeAmount));
+//        case SETTLE_CASHBACKING:                // XXX AFC : 交易 : （ 返现中金额+ ）结算-结算返现中金额(打到买家的返现中金额)
+//            newAccountMo.setCashbacking(oldAccountMo.getCashbacking().add(tradeAmount));
+//            break;
+        case SETTLE_CASHBACK:                   // XXX AFC : 交易 : （ 返现中金额-，返现金+ ）结算-结算返现金(将返现中的金额移到返现金，注意是买家在本次交易中应获得的返现金金额，而不是买家的全部返现中的返现金)
+//            newAccountMo.setCashbacking(oldAccountMo.getCashbacking().subtract(tradeAmount));
             newAccountMo.setCashback(oldAccountMo.getCashback().add(tradeAmount));
             break;
-        // XXX AFC : 交易 : （ 返佣中金额+ ）结算-结算返佣中金额(打到上家的返佣中金额)
-        case SETTLE_COMMISSIONING:
-            // 返佣中金额+
-            newAccountMo.setCommissioning(oldAccountMo.getCommissioning().add(tradeAmount));
-            break;
+//        // XXX AFC : 交易 : （ 返佣中金额+ ）结算-结算返佣中金额(打到上家的返佣中金额)
+//        case SETTLE_COMMISSIONING:
+//            // 返佣中金额+
+//            newAccountMo.setCommissioning(oldAccountMo.getCommissioning().add(tradeAmount));
+//            break;
         // XXX AFC : 交易 : （ 返佣中金额-，已返佣金总额+，余额+ ）
         // 结算-结算返佣金(将返现中的金额移到返现金，注意是买家在本次交易中应获得的返现金金额，而不是买家的全部返现中的返现金)
         case SETTLE_COMMISSION:
-            // 返佣中金额-，已返佣金总额+，余额+
-            newAccountMo.setCommissioning(oldAccountMo.getCommissioning().subtract(tradeAmount));
+//            newAccountMo.setCommissioning(oldAccountMo.getCommissioning().subtract(tradeAmount));
             newAccountMo.setCommissionTotal(oldAccountMo.getCommissionTotal().add(tradeAmount));
             newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
@@ -260,22 +248,21 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 余额-
             newAccountMo.setBalance(oldAccountMo.getBalance().subtract(tradeAmount));
             break;
-        // XXX AFC : 交易 : （ 返佣中金额- ）补偿取消的任务-补偿扣除返佣中金额
-        case COMPENDSATE_SUBTRACT_COMMISSIONING:
-            // 返佣中金额-
-            newAccountMo.setCommissioning(oldAccountMo.getCommissioning().subtract(tradeAmount));
-            break;
+//        // XXX AFC : 交易 : （ 返佣中金额- ）补偿取消的任务-补偿扣除返佣中金额
+//        case COMPENDSATE_SUBTRACT_COMMISSIONING:
+//            // 返佣中金额-
+//            newAccountMo.setCommissioning(oldAccountMo.getCommissioning().subtract(tradeAmount));
+//            break;
         // XXX AFC : 交易 : (返现金+) 返现金充值或扣款
         case CHARGE_CASHBACK:
-            // 返现金+
             newAccountMo.setCashback(oldAccountMo.getCashback().add(tradeAmount));
             break;
-
         default:
             final String msg = "不支持此交易类型";
             _log.error("{}: {}", msg, tradeMo.getTradeType());
             throw new RuntimeException(msg);
         }
+
         // 1. 添加交易记录
         // 如果重复提交，会抛出DuplicateKeyException运行时异常
         thisSvc.add(tradeMo);
@@ -285,18 +272,18 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             map.put("balance", newAccountMo.getBalance());
             map.put("oldBalance", oldAccountMo.getBalance());
         }
-        if (newAccountMo.getCashbacking() != null && !newAccountMo.getCashbacking().equals(oldAccountMo.getCashbacking())) {
-            map.put("cashbacking", newAccountMo.getCashbacking());
-            map.put("oldCashbacking", oldAccountMo.getCashbacking());
-        }
+//        if (newAccountMo.getCashbacking() != null && !newAccountMo.getCashbacking().equals(oldAccountMo.getCashbacking())) {
+//            map.put("cashbacking", newAccountMo.getCashbacking());
+//            map.put("oldCashbacking", oldAccountMo.getCashbacking());
+//        }
         if (newAccountMo.getCashback() != null && !newAccountMo.getCashback().equals(oldAccountMo.getCashback())) {
             map.put("cashback", newAccountMo.getCashback());
             map.put("oldCashback", oldAccountMo.getCashback());
         }
-        if (newAccountMo.getCommissioning() != null && !newAccountMo.getCommissioning().equals(oldAccountMo.getCommissioning())) {
-            map.put("commissioning", newAccountMo.getCommissioning());
-            map.put("oldCommissioning", oldAccountMo.getCommissioning());
-        }
+//        if (newAccountMo.getCommissioning() != null && !newAccountMo.getCommissioning().equals(oldAccountMo.getCommissioning())) {
+//            map.put("commissioning", newAccountMo.getCommissioning());
+//            map.put("oldCommissioning", oldAccountMo.getCommissioning());
+//        }
         if (newAccountMo.getCommissionTotal() != null && !newAccountMo.getCommissionTotal().equals(oldAccountMo.getCommissionTotal())) {
             map.put("commissionTotal", newAccountMo.getCommissionTotal());
             map.put("oldCommissionTotal", oldAccountMo.getCommissionTotal());
@@ -339,7 +326,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      * @return
      */
     @Override
-    public PageInfo<AfcTradeMo> cashbackTradeList(final AfcTradeMo qo, final int pageNum, final int pageSize, final String orderBy) {
+    public PageInfo<AfcTradeMo> listCashbackTrade(final AfcTradeMo qo, final int pageNum, final int pageSize, final String orderBy) {
         _log.info("list: qo-{}; pageNum-{}; orderBy-{}; pageSize-{}", qo, pageNum, pageSize, orderBy);
         return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectCashbackTrade(qo));
     }
@@ -354,7 +341,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      * @return
      */
     @Override
-    public PageInfo<AfcTradeMo> balanceTradeList(final AfcTradeMo qo, final int pageNum, final int pageSize, final String orderBy) {
+    public PageInfo<AfcTradeMo> listBalanceTrade(final AfcTradeMo qo, final int pageNum, final int pageSize, final String orderBy) {
         _log.info("list: qo-{}; pageNum-{}; orderBy-{}; pageSize-{}", qo, pageNum, pageSize, orderBy);
         return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectBalanceTrade(qo));
     }
@@ -363,7 +350,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      * 查询账号交易记录
      */
     @Override
-    public PageInfo<AfcTradeListRo> tradeList(final AfcTradeTo to, final int pageNum, final int pageSize) {
+    public PageInfo<AfcTradeListRo> listTrade(final AfcTradeTo to, final int pageNum, final int pageSize) {
         _log.info("list: to-{}; pageNum-{}; pageSize-{}", to, pageNum, pageSize);
         PageInfo<AfcTradeListRo> tradeListResult = new PageInfo<>();
         tradeListResult = PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectTradeList(to));

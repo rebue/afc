@@ -15,8 +15,12 @@ create table AFC_REFUND
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID)
 );
-
 alter table AFC_REFUND comment '退款日志';
+
+alter table AFC_ACCOUNT			modify COMMISSIONING        decimal(18,4) not null default 0 comment '作废-待返佣金
+            @deprecated';
+alter table AFC_ACCOUNT			modify CASHBACKING          decimal(18,4) not null default 0 comment '作废-返现中的金额
+            @deprecated';
 
 
 -- 2018-11-17

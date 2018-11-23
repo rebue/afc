@@ -196,7 +196,7 @@ public class AfcTradeCtrl {
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcTradeMo> result = svc.cashbackTradeList(mo, pageNum, pageSize, "TRADE_TIME desc");
+        PageInfo<AfcTradeMo> result = svc.listCashbackTrade(mo, pageNum, pageSize, "TRADE_TIME desc");
         _log.info("result: " + result);
         return result;
     }
@@ -217,7 +217,7 @@ public class AfcTradeCtrl {
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcTradeMo> result = svc.balanceTradeList(mo, pageNum, pageSize, "TRADE_TIME desc");
+        PageInfo<AfcTradeMo> result = svc.listBalanceTrade(mo, pageNum, pageSize, "TRADE_TIME desc");
         _log.info("result: " + result);
         return result;
     }
@@ -234,7 +234,7 @@ public class AfcTradeCtrl {
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcTradeListRo> result = svc.tradeList(to, pageNum, pageSize);
+        PageInfo<AfcTradeListRo> result = svc.listTrade(to, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }

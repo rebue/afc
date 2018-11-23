@@ -3211,13 +3211,14 @@ LABL 0 Arial,8,N</a:FontList>
 </o:EntityAttribute>
 <o:EntityAttribute Id="o42">
 <a:ObjectID>8A09B5B1-09B1-43BD-8170-A11E6C43C266</a:ObjectID>
-<a:Name>待返佣金</a:Name>
+<a:Name>作废-待返佣金</a:Name>
 <a:Code>COMMISSIONING</a:Code>
 <a:CreationDate>1536387571</a:CreationDate>
 <a:Creator>zbz</a:Creator>
-<a:ModificationDate>1536388778</a:ModificationDate>
+<a:ModificationDate>1542954775</a:ModificationDate>
 <a:Modifier>zbz</a:Modifier>
-<a:Comment>待返佣金</a:Comment>
+<a:Comment>作废-待返佣金
+@deprecated</a:Comment>
 <a:DefaultValue>0</a:DefaultValue>
 <a:DataType>DC18,4</a:DataType>
 <a:Length>18</a:Length>
@@ -3256,13 +3257,14 @@ LABL 0 Arial,8,N</a:FontList>
 </o:EntityAttribute>
 <o:EntityAttribute Id="o45">
 <a:ObjectID>3AE8CBA5-B9CD-439F-A7BC-CC3D1473D812</a:ObjectID>
-<a:Name>返现中的金额</a:Name>
+<a:Name>作废-返现中的金额</a:Name>
 <a:Code>CASHBACKING</a:Code>
 <a:CreationDate>1513826411</a:CreationDate>
 <a:Creator>zbz</a:Creator>
-<a:ModificationDate>1515727789</a:ModificationDate>
+<a:ModificationDate>1542954775</a:ModificationDate>
 <a:Modifier>zbz</a:Modifier>
-<a:Comment>返现中的金额</a:Comment>
+<a:Comment>作废-返现中的金额
+@deprecated</a:Comment>
 <a:DefaultValue>0</a:DefaultValue>
 <a:DataType>DC18,4</a:DataType>
 <a:Length>18</a:Length>
@@ -5524,12 +5526,12 @@ V支付、微信、支付宝等支付的交易ID
 <a:Code>afc-mysql</a:Code>
 <a:CreationDate>1541121529</a:CreationDate>
 <a:Creator>admin</a:Creator>
-<a:ModificationDate>1542946778</a:ModificationDate>
+<a:ModificationDate>1542955048</a:ModificationDate>
 <a:Modifier>zbz</a:Modifier>
 <a:TargetModelURL>file:///%[PRJ_ROOT_DIR]%/afc-mysql.pdm</a:TargetModelURL>
 <a:TargetModelID>8934120D-0505-4F2B-9AD2-9BEE8FF7759E</a:TargetModelID>
 <a:TargetModelClassID>CDE44E21-9669-11D1-9914-006097355D9B</a:TargetModelClassID>
-<a:TargetModelLastModificationDate>1542946778</a:TargetModelLastModificationDate>
+<a:TargetModelLastModificationDate>1542955048</a:TargetModelLastModificationDate>
 <c:SessionShortcuts>
 <o:Shortcut Ref="o8"/>
 </c:SessionShortcuts>

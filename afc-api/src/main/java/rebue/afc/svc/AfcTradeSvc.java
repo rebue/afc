@@ -33,7 +33,7 @@ public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> 
      * @param orderBy
      * @return
      */
-    PageInfo<AfcTradeMo> cashbackTradeList(AfcTradeMo qo, int pageNum, int pageSize, String orderBy);
+    PageInfo<AfcTradeMo> listCashbackTrade(AfcTradeMo qo, int pageNum, int pageSize, String orderBy);
 
     /**
      * 查询用户余额交易信息
@@ -44,10 +44,10 @@ public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> 
      * @param orderBy
      * @return
      */
-    PageInfo<AfcTradeMo> balanceTradeList(AfcTradeMo qo, int pageNum, int pageSize, String orderBy);
+    PageInfo<AfcTradeMo> listBalanceTrade(AfcTradeMo qo, int pageNum, int pageSize, String orderBy);
     
     /**
      * 查找交易流水
      */
-    PageInfo<AfcTradeListRo> tradeList(AfcTradeTo to, int pageNum, int pageSize);
+    PageInfo<AfcTradeListRo> listTrade(AfcTradeTo to, int pageNum, int pageSize);
 }

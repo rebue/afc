@@ -245,7 +245,7 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
             tradeMo.setTradeTime(now);
             // 交易金额: 退款金额
             tradeMo.setTradeAmount(to.getRefundAmount());
-            // 如果是自动计算退款，优先退款到余额>返现金
+            // 如果是自动计算退款，优先退款到余额，再到返现金
             if (isAutoCalcRefund) {
                 // 可退余额=支付总余额-已退总余额
                 final BigDecimal refundableBalance = payBalanceTotal.subtract(refundedBalanceTotal);

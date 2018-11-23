@@ -66,7 +66,8 @@ public class AfcAccountMo implements Serializable {
     private BigDecimal commissionTotal;
 
     /**
-     *    待返佣金
+     *    作废-待返佣金
+     *                @deprecated
      *
      *    数据库字段: AFC_ACCOUNT.COMMISSIONING
      *
@@ -93,7 +94,8 @@ public class AfcAccountMo implements Serializable {
     private BigDecimal cashback;
 
     /**
-     *    返现中的金额
+     *    作废-返现中的金额
+     *                @deprecated
      *
      *    数据库字段: AFC_ACCOUNT.CASHBACKING
      *
@@ -254,7 +256,8 @@ public class AfcAccountMo implements Serializable {
     }
 
     /**
-     *    待返佣金
+     *    作废-待返佣金
+     *                @deprecated
      *
      *    数据库字段: AFC_ACCOUNT.COMMISSIONING
      *
@@ -265,7 +268,8 @@ public class AfcAccountMo implements Serializable {
     }
 
     /**
-     *    待返佣金
+     *    作废-待返佣金
+     *                @deprecated
      *
      *    数据库字段: AFC_ACCOUNT.COMMISSIONING
      *
@@ -320,7 +324,8 @@ public class AfcAccountMo implements Serializable {
     }
 
     /**
-     *    返现中的金额
+     *    作废-返现中的金额
+     *                @deprecated
      *
      *    数据库字段: AFC_ACCOUNT.CASHBACKING
      *
@@ -331,7 +336,8 @@ public class AfcAccountMo implements Serializable {
     }
 
     /**
-     *    返现中的金额
+     *    作废-返现中的金额
+     *                @deprecated
      *
      *    数据库字段: AFC_ACCOUNT.CASHBACKING
      *

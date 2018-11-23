@@ -93,6 +93,8 @@ public enum TradeTypeDic implements EnumBase {
     SETTLE_SELLER(53),
     /**
      * 54: 结算-结算返现中金额(打到买家的返现中金额)
+     * 
+     * @deprecated
      */
     SETTLE_CASHBACKING(54),
     /**
@@ -105,6 +107,8 @@ public enum TradeTypeDic implements EnumBase {
     SETTLE_COMMISSION(56),
     /**
      * 57: 结算-结算返佣中金额(打到上家的返佣中金额)
+     * 
+     * @deprecated
      */
     SETTLE_COMMISSIONING(57),
     /**
@@ -141,6 +145,8 @@ public enum TradeTypeDic implements EnumBase {
     REFUND_COMPENSATION_TO_SELLER(65),
     /**
      * 70: 补偿取消的任务-补偿扣除返佣中金额
+     * 
+     * @deprecated
      */
     COMPENDSATE_SUBTRACT_COMMISSIONING(70);
 

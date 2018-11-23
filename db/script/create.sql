@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/11/23 12:19:51                          */
+/* Created on:     2018/11/23 14:37:35                          */
 /*==============================================================*/
 
 
@@ -36,10 +36,12 @@ create table AFC_ACCOUNT
    SETTLE_BALANCE       decimal(18,4) not null default 0 comment '最后结算余额',
    SETTLE_TIME          datetime not null comment '最后结算时间',
    COMMISSION_TOTAL     decimal(18,4) not null default 0 comment '已返佣金总额',
-   COMMISSIONING        decimal(18,4) not null default 0 comment '待返佣金',
+   COMMISSIONING        decimal(18,4) not null default 0 comment '作废-待返佣金
+            @deprecated',
    WITHDRAWING          decimal(18,4) not null default 0 comment '提现中总额',
    CASHBACK             decimal(18,4) not null default 0 comment '返现金余额',
-   CASHBACKING          decimal(18,4) not null default 0 comment '返现中的金额',
+   CASHBACKING          decimal(18,4) not null default 0 comment '作废-返现中的金额
+            @deprecated',
    DEPOSIT              decimal(18,4) not null default 0 comment '进货保证金
             提货时要检查此加盟商的已进货的金额+本次提货的货物成本不能超过此金额',
    DEPOSIT_USED         decimal(18,4) not null default 0 comment '已占用的进货保证金',
