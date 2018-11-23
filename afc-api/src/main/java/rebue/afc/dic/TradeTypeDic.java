@@ -31,6 +31,7 @@ import rebue.wheel.baseintf.EnumBase;
  * 61: 退货-买家退货（扣减买家的返现金）
  * 63: 退款-收回卖家款项(结算给卖家利润的金额)
  * 64: 收回已占用保证金(结算给卖家释放已占用保证金的金额)
+ * 65: 退款补偿金-退款补偿金给卖家（补偿到卖家的余额）
  * 70: 补偿取消的任务-补偿扣除返佣中金额
  */
 public enum TradeTypeDic implements EnumBase {
@@ -112,20 +113,32 @@ public enum TradeTypeDic implements EnumBase {
     REFUND_TO_BUYER(60),
     /**
      * 61: 退款-收回平台服务费(结算给平台的服务费的金额)
+     * 
+     * @deprecated
      */
     GETBACK_PLATFORM_SERVICE_FEE(61),
     /**
      * 62: 退款-收回供应商款项(结算给供应商的金额)
+     * 
+     * @deprecated
      */
     GETBACK_SUPPLIER(62),
     /**
      * 63: 退款-收回卖家款项(结算给卖家利润的金额)
+     * 
+     * @deprecated
      */
     GETBACK_SELLER(63),
     /**
      * 64: 收回已占用保证金(结算给卖家释放已占用保证金的金额)
+     * 
+     * @deprecated
      */
     GETBACK_DEPOSIT_USED(64),
+    /**
+     * 65: 退款补偿金-退款补偿金给卖家（补偿到卖家的余额）
+     */
+    REFUND_COMPENSATION_TO_SELLER(65),
     /**
      * 70: 补偿取消的任务-补偿扣除返佣中金额
      */
@@ -138,7 +151,7 @@ public enum TradeTypeDic implements EnumBase {
     // 初始化map，保存枚举的所有项到map中以方便通过code查找
     static {
         valueMap = new HashMap<>();
-        for (EnumBase item : values()) {
+        for (final EnumBase item : values()) {
             valueMap.put(item.getCode(), item);
         }
     }
@@ -147,8 +160,8 @@ public enum TradeTypeDic implements EnumBase {
      * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static TradeTypeDic getItem(int code) {
-        EnumBase result = valueMap.get(code);
+    public static TradeTypeDic getItem(final int code) {
+        final EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
@@ -160,7 +173,7 @@ public enum TradeTypeDic implements EnumBase {
     /**
      * 构造器，传入code
      */
-    TradeTypeDic(int code) {
+    TradeTypeDic(final int code) {
         this.code = code;
     }
 

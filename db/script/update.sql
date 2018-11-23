@@ -1,11 +1,12 @@
--- 2018-11-19
+-- 2018-11-23
 create table AFC_REFUND
 (
    ID                   bigint not null comment '退款ID',
    ACCOUNT_ID           bigint not null comment '账户ID',
    ORDER_ID             varchar(150) not null comment '订单ID(支付订单ID)',
    REFUND_TIME          datetime not null comment '退款时间',
-   REFUND_TOTAL         decimal(18,4) not null comment '退款金额总额',
+   REFUND_TOTAL         decimal(18,4) not null comment '退款总额（退款总额=退款余额+退款返现金+退款补偿金）',
+   REFUND_COMPENSATION  decimal(18,4) not null default 0 comment '退款补偿金额(退货退款产生的需补偿给卖家的金额，例如补偿运费)',
    REFUND_AMOUNT1       decimal(18,4) comment '退款金额1，在退款去向类型是V支付时代表退了多少返现金',
    REFUND_AMOUNT2       decimal(18,4) comment '退款金额2，在退款去向类型是V支付时代表退了多少余额',
    REFUND_TITLE         varchar(50) not null comment '退款标题',
@@ -14,6 +15,7 @@ create table AFC_REFUND
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID)
 );
+
 alter table AFC_REFUND comment '退款日志';
 
 

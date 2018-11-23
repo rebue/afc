@@ -18,10 +18,8 @@ import rebue.afc.dic.PayTypeDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcRefundMapper;
 import rebue.afc.mo.AfcPayMo;
-import rebue.afc.mo.AfcPlatformTradeMo;
 import rebue.afc.mo.AfcRefundMo;
 import rebue.afc.mo.AfcTradeMo;
-import rebue.afc.platform.dic.PlatformTradeTypeDic;
 import rebue.afc.platform.svc.AfcPlatformTradeSvc;
 import rebue.afc.svc.AfcPaySvc;
 import rebue.afc.svc.AfcRefundSvc;
@@ -92,6 +90,11 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
     public Ro refund(final RefundTo to) {
         _log.info("退款: {}", to);
         final Ro ro = new Ro();
+
+        // 退款补偿金参数为空设置默认值
+        if (to.getReturnCompensationToSeller() != null) {
+            to.setReturnCompensationToSeller(BigDecimal.ZERO);
+        }
 
         if (to.getBuyerAccountId() == null //
                 || (to.getRefundAmount() == null && to.getReturnBalanceToBuyer() == null && to.getReturnCashbackToBuyer() == null) //
@@ -172,6 +175,8 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
             isAutoCalcRefund = false;
             to.setRefundAmount(to.getReturnBalanceToBuyer().add(to.getReturnCashbackToBuyer()));
         }
+        // 本次退款总额 = 退款金额 + 补偿金
+        final BigDecimal refundTotal = to.getRefundAmount().add(to.getReturnCompensationToSeller());
 
         _log.debug("计算支付总额，支付V支付的返现金总额，支付V支付的余额总额：orderId-{}, buyAccountId-{}", to.getOrderId(), to.getBuyerAccountId());
         BigDecimal paidTotal = BigDecimal.ZERO;
@@ -198,8 +203,8 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
         }
         _log.debug("计算已退款总额: 已退款总额-{}，已退款V支付的返现金总额-{}，已退款V支付的余额总额-{}", paidTotal, refundedCashbackTotal, refundedBalanceTotal);
 
-        _log.debug("判断是否支付总额<退款总额+本次退款金额：支付总额-{}, 已退款总额-{}, 本次退款金额-{}", paidTotal, refundedTotal, to.getRefundAmount());
-        if (paidTotal.compareTo(refundedTotal.add(to.getRefundAmount())) < 0) {
+        _log.debug("判断是否支付总额<退款总额+本次退款总额：支付总额-{}, 已退款总额-{}, 本次退款金额-{}", paidTotal, refundedTotal, refundTotal);
+        if (paidTotal.compareTo(refundedTotal.add(refundTotal)) < 0) {
             final String msg = "退款总额不能超过支付的总额";
             _log.error("{}: {}", msg, to);
             ro.setMsg(msg);
@@ -229,8 +234,8 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
 
         final Date now = new Date();
 
-        _log.info("退款到买家账户（ 余额+，返现金+ ）");
         {
+            _log.info("退款到买家账户（ 余额+，返现金+ ）");
             final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
             // 交易类型: 退款到买家
             tradeMo.setTradeType((byte) TradeTypeDic.REFUND_TO_BUYER.getCode());
@@ -263,73 +268,90 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
             tradeMo.setChangeAmount2(to.getReturnBalanceToBuyer());
             _log.debug("添加退款到用户的交易记录: {}", tradeMo);
             tradeSvc.addTrade(tradeMo);
-
-            final AfcRefundMo refundMo = new AfcRefundMo();
-            refundMo.setAccountId(to.getBuyerAccountId());
-            refundMo.setOrderId(to.getOrderId());
-            refundMo.setRefundTime(now);
-            refundMo.setRefundTotal(to.getRefundAmount());
-            refundMo.setRefundAmount1(to.getReturnCashbackToBuyer());
-            refundMo.setRefundAmount2(to.getReturnBalanceToBuyer());
-            refundMo.setRefundTitle(to.getTradeTitle());
-            refundMo.setRefundDetail(to.getTradeDetail());
-            refundMo.setOpId(to.getOpId());
-            refundMo.setIp(to.getIp());
-            _log.debug("添加退款日志: {}", refundMo);
-            refundSvc.add(refundMo);
         }
 
-        // 如果要收回平台服务费(结算给平台的服务费的金额)
-        if (to.getGetbackServiceFeeFromPlatform() != null && to.getGetbackServiceFeeFromPlatform().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("收回平台服务费(结算给平台的服务费的金额)");
-            // 添加一笔平台交易
-            final AfcPlatformTradeMo platformTradeMo = dozerMapper.map(to, AfcPlatformTradeMo.class);
-            // 交易类型（1：收取服务费(购买交易成功) 2：退回服务费(用户退款)）
-            platformTradeMo.setPlatformTradeType((byte) PlatformTradeTypeDic.GETBACK_SEVICE_FEE.getCode());
-            // 收取的服务费
-            platformTradeMo.setTradeAmount(to.getGetbackServiceFeeFromPlatform());
-            // 修改时间戳
-            platformTradeMo.setModifiedTimestamp(now.getTime());
-            // 如果重复提交，会抛出DuplicateKeyException运行时异常
-            platformTradeSvc.addTrade(platformTradeMo);
-        }
-
-        // 如果要结算供应商
-        if (to.getGetbackCostFromSupplier() != null && to.getGetbackCostFromSupplier().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("收回供应商款项(结算给供应商的金额)");
+        if (to.getReturnCompensationToSeller().equals(BigDecimal.ZERO)) {
+            _log.info("退款补偿金到卖家账户（ 余额+ ）");
             final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
-            tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_SUPPLIER.getCode());
-            tradeMo.setAccountId(to.getSupplierAccountId());
-            tradeMo.setTradeAmount(to.getGetbackCostFromSupplier());
-            tradeMo.setTradeTitle("收回供应商款项(结算给供应商的金额)");
-            tradeMo.setTradeTime(now);
-            tradeSvc.addTrade(tradeMo);
-        }
-
-        // 如果要收回卖家款项(结算给卖家利润和释放已占用保证金的金额)
-        if (to.getGetbackProfitFromSeller() != null && to.getGetbackProfitFromSeller().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("收回卖家款项(结算给卖家利润和释放已占用保证金的金额)");
-            final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
-            tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_SELLER.getCode());
+            // 交易类型: 退款到家
+            tradeMo.setTradeType((byte) TradeTypeDic.REFUND_COMPENSATION_TO_SELLER.getCode());
+            // 交易账号: 退款到卖家的账号
             tradeMo.setAccountId(to.getSellerAccountId());
-            tradeMo.setTradeAmount(to.getGetbackProfitFromSeller());
-            tradeMo.setTradeTitle("收回卖家款项(结算给卖家利润和释放已占用保证金的金额)");
+            tradeMo.setTradeTitle("退款补偿金");
+            // 交易时间
             tradeMo.setTradeTime(now);
+            // 交易金额: 退款补偿金额
+            tradeMo.setTradeAmount(to.getReturnCompensationToSeller());
+            _log.debug("添加退款到用户的交易记录: {}", tradeMo);
             tradeSvc.addTrade(tradeMo);
         }
 
-        // 收回已占用保证金(结算给卖家释放已占用保证金的金额)
-        if (to.getGetbackDepositUsedFromSeller() != null && to.getGetbackDepositUsedFromSeller().compareTo(BigDecimal.ZERO) > 0) {
-            _log.info("收回已占用保证金(结算给卖家释放已占用保证金的金额)");
-            final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
-            tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_DEPOSIT_USED.getCode());
-            tradeMo.setAccountId(to.getSellerAccountId());
-            tradeMo.setTradeAmount(to.getGetbackDepositUsedFromSeller());
-            tradeMo.setTradeTitle("收回已占用保证金(结算给卖家释放已占用保证金的金额)");
-            // 两个卖家款项，独立使用当前时间
-            tradeMo.setTradeTime(new Date());
-            tradeSvc.addTrade(tradeMo);
-        }
+        final AfcRefundMo refundMo = new AfcRefundMo();
+        refundMo.setAccountId(to.getBuyerAccountId());
+        refundMo.setOrderId(to.getOrderId());
+        refundMo.setRefundTime(now);
+        refundMo.setRefundTotal(to.getRefundAmount());
+        refundMo.setRefundCompensation(to.getReturnCompensationToSeller());
+        refundMo.setRefundAmount1(to.getReturnCashbackToBuyer());
+        refundMo.setRefundAmount2(to.getReturnBalanceToBuyer());
+        refundMo.setRefundTitle(to.getTradeTitle());
+        refundMo.setRefundDetail(to.getTradeDetail());
+        refundMo.setOpId(to.getOpId());
+        refundMo.setIp(to.getIp());
+        _log.debug("添加退款日志: {}", refundMo);
+        refundSvc.add(refundMo);
+
+//        // 如果要收回平台服务费(结算给平台的服务费的金额)
+//        if (to.getGetbackServiceFeeFromPlatform() != null && to.getGetbackServiceFeeFromPlatform().compareTo(BigDecimal.ZERO) > 0) {
+//            _log.info("收回平台服务费(结算给平台的服务费的金额)");
+//            // 添加一笔平台交易
+//            final AfcPlatformTradeMo platformTradeMo = dozerMapper.map(to, AfcPlatformTradeMo.class);
+//            // 交易类型（1：收取服务费(购买交易成功) 2：退回服务费(用户退款)）
+//            platformTradeMo.setPlatformTradeType((byte) PlatformTradeTypeDic.GETBACK_SEVICE_FEE.getCode());
+//            // 收取的服务费
+//            platformTradeMo.setTradeAmount(to.getGetbackServiceFeeFromPlatform());
+//            // 修改时间戳
+//            platformTradeMo.setModifiedTimestamp(now.getTime());
+//            // 如果重复提交，会抛出DuplicateKeyException运行时异常
+//            platformTradeSvc.addTrade(platformTradeMo);
+//        }
+//
+//        // 如果要结算供应商
+//        if (to.getGetbackCostFromSupplier() != null && to.getGetbackCostFromSupplier().compareTo(BigDecimal.ZERO) > 0) {
+//            _log.info("收回供应商款项(结算给供应商的金额)");
+//            final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
+//            tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_SUPPLIER.getCode());
+//            tradeMo.setAccountId(to.getSupplierAccountId());
+//            tradeMo.setTradeAmount(to.getGetbackCostFromSupplier());
+//            tradeMo.setTradeTitle("收回供应商款项(结算给供应商的金额)");
+//            tradeMo.setTradeTime(now);
+//            tradeSvc.addTrade(tradeMo);
+//        }
+//
+//        // 如果要收回卖家款项(结算给卖家利润和释放已占用保证金的金额)
+//        if (to.getGetbackProfitFromSeller() != null && to.getGetbackProfitFromSeller().compareTo(BigDecimal.ZERO) > 0) {
+//            _log.info("收回卖家款项(结算给卖家利润和释放已占用保证金的金额)");
+//            final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
+//            tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_SELLER.getCode());
+//            tradeMo.setAccountId(to.getSellerAccountId());
+//            tradeMo.setTradeAmount(to.getGetbackProfitFromSeller());
+//            tradeMo.setTradeTitle("收回卖家款项(结算给卖家利润和释放已占用保证金的金额)");
+//            tradeMo.setTradeTime(now);
+//            tradeSvc.addTrade(tradeMo);
+//        }
+//
+//        // 收回已占用保证金(结算给卖家释放已占用保证金的金额)
+//        if (to.getGetbackDepositUsedFromSeller() != null && to.getGetbackDepositUsedFromSeller().compareTo(BigDecimal.ZERO) > 0) {
+//            _log.info("收回已占用保证金(结算给卖家释放已占用保证金的金额)");
+//            final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
+//            tradeMo.setTradeType((byte) TradeTypeDic.GETBACK_DEPOSIT_USED.getCode());
+//            tradeMo.setAccountId(to.getSellerAccountId());
+//            tradeMo.setTradeAmount(to.getGetbackDepositUsedFromSeller());
+//            tradeMo.setTradeTitle("收回已占用保证金(结算给卖家释放已占用保证金的金额)");
+//            // 两个卖家款项，独立使用当前时间
+//            tradeMo.setTradeTime(new Date());
+//            tradeSvc.addTrade(tradeMo);
+//        }
 
         // 返回成功
         final String msg = "退款成功";

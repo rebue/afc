@@ -152,9 +152,15 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 扣除的余额
             tradeMo.setChangeAmount2(subtractBalance);
             break;
-        // XXX AFC : 交易 : （ 余额+ ）结算-结算成本(将成本打到供应商的余额)
+        // XXX AFC : 交易 : （ 余额+ ）
+        // 1. 结算-结算成本(将成本打到供应商的余额);
+        // 2. 结算-结算卖家利润(将利润打到卖家的余额);
+        // 3. 退款补偿金-退款补偿金给卖家（补偿到卖家的余额）
+        // 4. 余额充值或扣款
         case SETTLE_SUPPLIER:
-            // 余额+
+        case SETTLE_SELLER:
+        case REFUND_COMPENSATION_TO_SELLER:
+        case CHARGE_BALANCE:
             newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
         // XXX AFC : 交易 : （ 返现中金额+ ）结算-结算返现中金额(打到买家的返现中金额)
@@ -174,17 +180,12 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 返佣中金额+
             newAccountMo.setCommissioning(oldAccountMo.getCommissioning().add(tradeAmount));
             break;
-        // XXX AFC : 交易 : （ 返佣中金额-，已返佣金总额+，余额+
-        // ）结算-结算返佣金(将返现中的金额移到返现金，注意是买家在本次交易中应获得的返现金金额，而不是买家的全部返现中的返现金)
+        // XXX AFC : 交易 : （ 返佣中金额-，已返佣金总额+，余额+ ）
+        // 结算-结算返佣金(将返现中的金额移到返现金，注意是买家在本次交易中应获得的返现金金额，而不是买家的全部返现中的返现金)
         case SETTLE_COMMISSION:
             // 返佣中金额-，已返佣金总额+，余额+
             newAccountMo.setCommissioning(oldAccountMo.getCommissioning().subtract(tradeAmount));
             newAccountMo.setCommissionTotal(oldAccountMo.getCommissionTotal().add(tradeAmount));
-            newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
-            break;
-        // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额)
-        case SETTLE_SELLER:
-            // 余额+
             newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
         // XXX AFC : 交易 : （ 已占用保证金- ）结算-结算已占用保证金(释放卖家的已占用保证金相应金额)
@@ -213,15 +214,15 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             newAccountMo.setBalance(newBalanceAmount);
             newAccountMo.setCashback(newCashbackAmount);
             break;
-        // XXX AFC : 交易 : （ 返现金- ）退款-收回买家返现金
-        case GETBACK_SELLER:
-            break;
-        // XXX AFC : 交易 : （ 返现金- ）退款-收回卖家款项
-        case GETBACK_SUPPLIER:
-            break;
-        // XXX AFC : 交易 : （ 返现金- ）退款-收回释放的卖家已占用保证金
-        case GETBACK_DEPOSIT_USED:
-            break;
+//        // XXX AFC : 交易 : （ 返现金- ）退款-收回买家返现金
+//        case GETBACK_SELLER:
+//            break;
+//        // XXX AFC : 交易 : （ 返现金- ）退款-收回卖家款项
+//        case GETBACK_SUPPLIER:
+//            break;
+//        // XXX AFC : 交易 : （ 返现金- ）退款-收回释放的卖家已占用保证金
+//        case GETBACK_DEPOSIT_USED:
+//            break;
         // XXX AFC : 交易 : （ 进货保证金+ ）进货保证金-充值
         case DEPOSIT_CHARGE:
             // 进货保证金+
@@ -264,14 +265,9 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 返佣中金额-
             newAccountMo.setCommissioning(oldAccountMo.getCommissioning().subtract(tradeAmount));
             break;
-        // XXX AFC : 交易 : (余额+) 余额充值或扣款
-        case CHARGE_BALANCE:
-            // 余额+
-            newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
-            break;
         // XXX AFC : 交易 : (返现金+) 返现金充值或扣款
         case CHARGE_CASHBACK:
-            // 余额+
+            // 返现金+
             newAccountMo.setCashback(oldAccountMo.getCashback().add(tradeAmount));
             break;
 
@@ -362,20 +358,20 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         _log.info("list: qo-{}; pageNum-{}; orderBy-{}; pageSize-{}", qo, pageNum, pageSize, orderBy);
         return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectBalanceTrade(qo));
     }
-    
+
     /**
      * 查询账号交易记录
      */
-	@Override
-	public PageInfo<AfcTradeListRo> tradeList(AfcTradeTo to, int pageNum, int pageSize) {
-		 _log.info("list: to-{}; pageNum-{}; pageSize-{}", to, pageNum, pageSize);
-		 PageInfo<AfcTradeListRo> tradeListResult = new PageInfo<AfcTradeListRo>();
-		 tradeListResult =  PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectTradeList(to));
-		 _log.info("返回结果:{}",tradeListResult);
-		 List<AfcTradeListRo> tradeList = tradeListResult.getList();
-		 for(AfcTradeListRo ro :tradeList) {
-			 _log.info("ro对象为:{}",ro);
-		 }
-		 return tradeListResult;
-	}
+    @Override
+    public PageInfo<AfcTradeListRo> tradeList(final AfcTradeTo to, final int pageNum, final int pageSize) {
+        _log.info("list: to-{}; pageNum-{}; pageSize-{}", to, pageNum, pageSize);
+        PageInfo<AfcTradeListRo> tradeListResult = new PageInfo<>();
+        tradeListResult = PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectTradeList(to));
+        _log.info("返回结果:{}", tradeListResult);
+        final List<AfcTradeListRo> tradeList = tradeListResult.getList();
+        for (final AfcTradeListRo ro : tradeList) {
+            _log.info("ro对象为:{}", ro);
+        }
+        return tradeListResult;
+    }
 }

@@ -57,13 +57,22 @@ public class AfcRefundMo implements Serializable {
     private Date refundTime;
 
     /**
-     *    退款金额总额
+     *    退款总额（退款总额=退款余额+退款返现金+退款补偿金）
      *
      *    数据库字段: AFC_REFUND.REFUND_TOTAL
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private BigDecimal refundTotal;
+
+    /**
+     *    退款补偿金额(退货退款产生的需补偿给卖家的金额，例如补偿运费)
+     *
+     *    数据库字段: AFC_REFUND.REFUND_COMPENSATION
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private BigDecimal refundCompensation;
 
     /**
      *    退款金额1，在退款去向类型是V支付时代表退了多少返现金
@@ -213,7 +222,7 @@ public class AfcRefundMo implements Serializable {
     }
 
     /**
-     *    退款金额总额
+     *    退款总额（退款总额=退款余额+退款返现金+退款补偿金）
      *
      *    数据库字段: AFC_REFUND.REFUND_TOTAL
      *
@@ -224,7 +233,7 @@ public class AfcRefundMo implements Serializable {
     }
 
     /**
-     *    退款金额总额
+     *    退款总额（退款总额=退款余额+退款返现金+退款补偿金）
      *
      *    数据库字段: AFC_REFUND.REFUND_TOTAL
      *
@@ -232,6 +241,28 @@ public class AfcRefundMo implements Serializable {
      */
     public void setRefundTotal(BigDecimal refundTotal) {
         this.refundTotal = refundTotal;
+    }
+
+    /**
+     *    退款补偿金额(退货退款产生的需补偿给卖家的金额，例如补偿运费)
+     *
+     *    数据库字段: AFC_REFUND.REFUND_COMPENSATION
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public BigDecimal getRefundCompensation() {
+        return refundCompensation;
+    }
+
+    /**
+     *    退款补偿金额(退货退款产生的需补偿给卖家的金额，例如补偿运费)
+     *
+     *    数据库字段: AFC_REFUND.REFUND_COMPENSATION
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setRefundCompensation(BigDecimal refundCompensation) {
+        this.refundCompensation = refundCompensation;
     }
 
     /**
@@ -380,6 +411,7 @@ public class AfcRefundMo implements Serializable {
         sb.append(", orderId=").append(orderId);
         sb.append(", refundTime=").append(refundTime);
         sb.append(", refundTotal=").append(refundTotal);
+        sb.append(", refundCompensation=").append(refundCompensation);
         sb.append(", refundAmount1=").append(refundAmount1);
         sb.append(", refundAmount2=").append(refundAmount2);
         sb.append(", refundTitle=").append(refundTitle);
