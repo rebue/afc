@@ -49,5 +49,5 @@ public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> 
     /**
      * 查找交易流水
      */
-    PageInfo<AfcTradeListRo> listTrade(AfcTradeTo to, int pageNum, int pageSize);
+    PageInfo<AfcTradeListRo> tradeList(AfcTradeTo to, int pageNum, int pageSize);
 }

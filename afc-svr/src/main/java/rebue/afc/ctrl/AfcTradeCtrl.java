@@ -234,7 +234,7 @@ public class AfcTradeCtrl {
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcTradeListRo> result = svc.listTrade(to, pageNum, pageSize);
+        PageInfo<AfcTradeListRo> result = svc.tradeList(to, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }

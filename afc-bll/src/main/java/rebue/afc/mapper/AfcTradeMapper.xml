@@ -393,11 +393,11 @@
 		select ACCOUNT_ID accountId, TRADE_AMOUNT tradeAmount, TRADE_TIME tradeTime,TRADE_TYPE tradeType,OP_ID opId
 		from AFC_TRADE 
 		<where>
-	      <if test="accountId != null and accountId != ''">
-	        and ID = #{accountId,jdbcType=BIGINT}
+	      <if test="accountIdStr != null and accountIdStr != ''">
+	        and ACCOUNT_ID IN ${accountIdStr}
 	      </if>
 	      <if test="tradeTypeString != null and tradeTypeString != ''">
-	        and TRADE_TYPE IN #{tradeTypeString,jdbcType=VARCHAR}
+	        and TRADE_TYPE IN ${tradeTypeString}
 	      </if>
 	      <if test="tradeTimeStart != null  ">
 			and TRADE_TIME &gt;= #{tradeTimeStart,jdbcType=TIMESTAMP}
