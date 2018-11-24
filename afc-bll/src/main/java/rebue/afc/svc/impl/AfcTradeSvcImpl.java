@@ -415,7 +415,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
 			}
 			SucUserMo opMo = sucUserSvc.getById(ro.getOpId());
 			if (opMo != null) {
-				tradeList.get(i).setOpName(opMo.getLoginName());
+				tradeList.get(i).setOpName(opMo.getWxNickname());
 			} else {
 				_log.info("没有查到操作人用户信息:{}", ro.getAccountId());
 			}
