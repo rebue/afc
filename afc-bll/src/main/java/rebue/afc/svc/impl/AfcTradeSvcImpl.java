@@ -384,15 +384,16 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
 		if (to.getWxNickName() != null) {
 			String accountIdStr = "(";
 			List<SucUserMo> userMoResultList = sucUserSvc.getByWxNick(to.getWxNickName());
+			_log.info("根据微信昵称查找用户信息为：{}", userMoResultList);
 			if (userMoResultList.size() == 0) {
 				//如果用户查询为空则设置账号的ID为0，这样使查询结果为空
 				accountIdStr = accountIdStr + "0)";
 			} else {
 				for (int i = 0; i < userMoResultList.size(); i++) {
 					if (i == userMoResultList.size() - 1) {
-						accountIdStr = accountIdStr + userMoResultList.get(i).getId().toString() + ")";
+						accountIdStr += userMoResultList.get(i).getId().toString() + ")";
 					} else {
-						accountIdStr = accountIdStr + ",";
+						accountIdStr += userMoResultList.get(i).getId().toString() + ",";
 					}
 				}
 			}

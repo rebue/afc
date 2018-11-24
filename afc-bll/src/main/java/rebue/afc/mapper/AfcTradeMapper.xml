@@ -406,5 +406,6 @@
 			and TRADE_TIME &lt;= #{tradeTimeEnd,jdbcType=TIMESTAMP}
 		  </if>
        </where>
+       ORDER BY TRADE_TIME DESC
 	</select>
 </mapper>
