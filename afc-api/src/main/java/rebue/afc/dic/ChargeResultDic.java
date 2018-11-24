@@ -42,8 +42,10 @@ public enum ChargeResultDic implements EnumBase {
      * -3: 没有此用户
      */
     @ApiModelProperty(value = "没有此用户")
-    NOT_FOUND_USER(-3);
-
+    NOT_FOUND_USER(-3),
+    
+    @ApiModelProperty(value = "充值失败")
+    FAIL(-4);
     /**
      * 枚举的所有项，注意这个变量是静态单例的
      */
