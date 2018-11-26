@@ -1,12 +1,15 @@
 package rebue.afc.ctrl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,8 @@ import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.AfcTradeTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
+import rebue.wheel.AgentUtils;
+import rebue.wheel.turing.JwtUtils;
 
 /**
  * 账户交易(账户交易流水)
@@ -50,6 +55,18 @@ public class AfcTradeCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     private final String        _uniqueFilesName = "某字段内容";
+
+    /**
+     * 是否测试模式（测试模式下不用从Cookie中获取用户ID）
+     */
+    @Value("${debug:false}")
+    private Boolean             isDebug;
+
+    /**
+     * 前面经过的代理
+     */
+    @Value("${afc.passProxy:noproxy}")
+    private String              passProxy;
 
     /**
      * 添加账户交易
@@ -245,11 +262,16 @@ public class AfcTradeCtrl {
 
     /**
      * 添加一笔交易
-     * 
-     * @param mo
      */
     @PostMapping("/afc/trade/addex")
-    public void addTrade(@RequestBody final AfcTradeMo mo) {
+    public void addTrade(@RequestBody final AfcTradeMo mo, final HttpServletRequest req) throws NumberFormatException, ParseException {
+        _log.info("addTrade: {}", mo);
+        if (!isDebug || mo.getOpId() == null) {
+            mo.setOpId(JwtUtils.getJwtUserIdInCookie(req));
+            mo.setIp(AgentUtils.getIpAddr(req, passProxy));
+        }
+        _log.debug("获取当前用户ID: {}", mo.getOpId());
+        mo.setMac("不再获取MAC地址");
         svc.addTrade(mo);
     }
 }
