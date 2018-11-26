@@ -57,18 +57,6 @@ public class AfcTradeCtrl {
     private final String        _uniqueFilesName = "某字段内容";
 
     /**
-     * 是否测试模式（测试模式下不用从Cookie中获取用户ID）
-     */
-    @Value("${debug:false}")
-    private Boolean             isDebug;
-
-    /**
-     * 前面经过的代理
-     */
-    @Value("${afc.passProxy:noproxy}")
-    private String              passProxy;
-
-    /**
      * 添加账户交易
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
@@ -202,6 +190,18 @@ public class AfcTradeCtrl {
     }
 
     /**
+     * 是否测试模式（测试模式下不用从Cookie中获取用户ID）
+     */
+    @Value("${debug:false}")
+    private Boolean isDebug;
+
+    /**
+     * 前面经过的代理
+     */
+    @Value("${afc.passProxy:noproxy}")
+    private String  passProxy;
+
+    /**
      * 查询用户返现金交易信息
      *
      * @param mo
@@ -272,6 +272,11 @@ public class AfcTradeCtrl {
         }
         _log.debug("获取当前用户ID: {}", mo.getOpId());
         mo.setMac("不再获取MAC地址");
-        svc.addTrade(mo);
+        try {
+            svc.addTrade(mo);
+        } catch (final DuplicateKeyException e) {
+            final String msg = "重复添加交易";
+            _log.error(msg, e);
+        }
     }
 }
