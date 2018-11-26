@@ -98,7 +98,7 @@ public class AfcChargeSvcImpl extends MybatisBaseSvcImpl<AfcAccountMo, java.lang
 			_log.error("重复值错误");
 			ChargeRo ro = new ChargeRo();
 			ro.setResult(ChargeResultDic.FAIL);
-			ro.setMsg("凭证号不能重复");
+			ro.setMsg("重复值错误");
 			return ro;
 		}
 
