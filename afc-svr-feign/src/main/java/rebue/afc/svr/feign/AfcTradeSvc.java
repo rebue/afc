@@ -10,11 +10,11 @@ import rebue.sbs.feign.FeignConfig;
 @FeignClient(name = "afc-svr", configuration = FeignConfig.class)
 public interface AfcTradeSvc {
 
-	/**
-	 * 添加一笔交易
-	 * 
-	 * @param mo
-	 */
-	@PostMapping("/afc/trade/exadd")
-	void addTrade(@RequestBody AfcTradeMo mo);
+    /**
+     * 添加一笔交易
+     * 
+     * @param mo
+     */
+    @PostMapping("/afc/trade/addex")
+    void addTrade(@RequestBody AfcTradeMo mo);
 }

@@ -2,10 +2,12 @@ package rebue.afc.mapper;
 
 import java.util.Date;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
 import rebue.afc.mo.AfcSettleTaskMo;
 import rebue.robotech.mapper.MybatisBaseMapper;
 
@@ -13,53 +15,63 @@ import rebue.robotech.mapper.MybatisBaseMapper;
 public interface AfcSettleTaskMapper extends MybatisBaseMapper<AfcSettleTaskMo, Long> {
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     int deleteByPrimaryKey(Long id);
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     int insert(AfcSettleTaskMo record);
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     int insertSelective(AfcSettleTaskMo record);
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     AfcSettleTaskMo selectByPrimaryKey(Long id);
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     int updateByPrimaryKeySelective(AfcSettleTaskMo record);
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     int updateByPrimaryKey(AfcSettleTaskMo record);
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     List<AfcSettleTaskMo> selectAll();
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     List<AfcSettleTaskMo> selectSelective(AfcSettleTaskMo record);
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     boolean existByPrimaryKey(Long id);
 
     /**
-     *    @mbg.generated 自动生成，如需修改，请删除本行
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
+    @Override
     boolean existSelective(AfcSettleTaskMo record);
 
     /**
@@ -79,7 +91,6 @@ public interface AfcSettleTaskMapper extends MybatisBaseMapper<AfcSettleTaskMo, 
      *            已执行状态
      * @param noneState
      *            未执行状态
-     * @return
      */
     @Update("update AFC_SETTLE_TASK set EXECUTE_STATE=#{doneState}, EXECUTE_FACT_TIME=#{now} where ID=#{id} and EXECUTE_STATE=#{noneState}")
     int done(@Param("now") Date now, @Param("id") Long id, @Param("doneState") Byte doneState, @Param("noneState") Byte noneState);
@@ -95,10 +106,10 @@ public interface AfcSettleTaskMapper extends MybatisBaseMapper<AfcSettleTaskMo, 
      *            执行之前的状态
      * @param afterState
      *            执行之后的状态
-     * @return
      */
     @Update("update AFC_SETTLE_TASK set EXECUTE_STATE=#{afterState} where TRADE_TYPE=#{tradeType} and ORDER_DETAIL_ID=#{orderDetailId} and EXECUTE_STATE=#{beforeState}")
-    int updateExecuteState(@Param("tradeType") Integer tradeType, @Param("orderDetailId") String orderDetailId, @Param("beforeState") Integer beforeState, @Param("afterState") Integer afterState);
+    int updateExecuteState(@Param("tradeType") Integer tradeType, @Param("orderDetailId") String orderDetailId, @Param("beforeState") Integer beforeState,
+            @Param("afterState") Integer afterState);
 
     /**
      * 取消任务
@@ -111,7 +122,6 @@ public interface AfcSettleTaskMapper extends MybatisBaseMapper<AfcSettleTaskMo, 
      *            执行之前的状态
      * @param cancelState
      *            取消状态
-     * @return
      */
     @Update("update AFC_SETTLE_TASK set EXECUTE_STATE=#{cancelState} where ID=#{id} and EXECUTE_STATE=#{beforeState}")
     int cancelTask(@Param("id") Long id, @Param("beforeState") Byte beforeState, @Param("cancelState") Integer cancelState);
