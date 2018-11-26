@@ -192,8 +192,8 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
 					payAmount1 = BigDecimal.ZERO;
 				if (payAmount2 == null)
 					payAmount2 = BigDecimal.ZERO;
-				payCashbackTotal = payCashbackTotal.add(pay.getPayAmount1());
-				payBalanceTotal = payBalanceTotal.add(pay.getPayAmount2());
+				payCashbackTotal = payCashbackTotal.add(payAmount1);
+				payBalanceTotal = payBalanceTotal.add(payAmount2);
 			}
 		}
 		_log.debug("计算支付总额: 支付总额-{}，支付V支付的返现金总额-{}，支付V支付的余额总额-{}", paidTotal, payCashbackTotal, payBalanceTotal);
