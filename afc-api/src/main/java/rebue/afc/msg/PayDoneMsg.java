@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
-import rebue.afc.dic.PayTypeDic;
+import rebue.afc.dic.PayAndRefundTypeDic;
 
 /**
  * 支付完成的消息
@@ -18,7 +18,7 @@ public class PayDoneMsg {
     /**
      * 支付类型
      */
-    private PayTypeDic payType;
+    private PayAndRefundTypeDic payType;
     /**
      * 用户ID
      */

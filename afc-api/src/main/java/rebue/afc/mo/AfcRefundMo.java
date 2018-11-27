@@ -28,6 +28,16 @@ public class AfcRefundMo implements Serializable {
     private Long id;
 
     /**
+     *    退款去向类型(1.V支付;2.微信支付;3.支付宝;4.银联)
+     *                与支付去向类型一致
+     *
+     *    数据库字段: AFC_REFUND.REFUND_TYPE_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Byte refundTypeId;
+
+    /**
      *    账户ID
      *
      *    数据库字段: AFC_REFUND.ACCOUNT_ID
@@ -44,6 +54,15 @@ public class AfcRefundMo implements Serializable {
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String orderId;
+
+    /**
+     *    退款订单ID（退货单ID，错误支付时，没有退货单，则是的支付完成的交易ID）
+     *
+     *    数据库字段: AFC_REFUND.REFUND_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String refundId;
 
     /**
      *    退款时间
@@ -129,15 +148,6 @@ public class AfcRefundMo implements Serializable {
     private String ip;
 
     /**
-     *    退款订单ID（退货单ID）
-     *
-     *    数据库字段: AFC_REFUND.REFUND_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    private Long refundId;
-
-    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
@@ -162,6 +172,30 @@ public class AfcRefundMo implements Serializable {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     *    退款去向类型(1.V支付;2.微信支付;3.支付宝;4.银联)
+     *                与支付去向类型一致
+     *
+     *    数据库字段: AFC_REFUND.REFUND_TYPE_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Byte getRefundTypeId() {
+        return refundTypeId;
+    }
+
+    /**
+     *    退款去向类型(1.V支付;2.微信支付;3.支付宝;4.银联)
+     *                与支付去向类型一致
+     *
+     *    数据库字段: AFC_REFUND.REFUND_TYPE_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setRefundTypeId(Byte refundTypeId) {
+        this.refundTypeId = refundTypeId;
     }
 
     /**
@@ -206,6 +240,28 @@ public class AfcRefundMo implements Serializable {
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    /**
+     *    退款订单ID（退货单ID，错误支付时，没有退货单，则是的支付完成的交易ID）
+     *
+     *    数据库字段: AFC_REFUND.REFUND_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public String getRefundId() {
+        return refundId;
+    }
+
+    /**
+     *    退款订单ID（退货单ID，错误支付时，没有退货单，则是的支付完成的交易ID）
+     *
+     *    数据库字段: AFC_REFUND.REFUND_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setRefundId(String refundId) {
+        this.refundId = refundId;
     }
 
     /**
@@ -407,28 +463,6 @@ public class AfcRefundMo implements Serializable {
     }
 
     /**
-     *    退款订单ID（退货单ID）
-     *
-     *    数据库字段: AFC_REFUND.REFUND_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public Long getRefundId() {
-        return refundId;
-    }
-
-    /**
-     *    退款订单ID（退货单ID）
-     *
-     *    数据库字段: AFC_REFUND.REFUND_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setRefundId(Long refundId) {
-        this.refundId = refundId;
-    }
-
-    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
@@ -438,8 +472,10 @@ public class AfcRefundMo implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", refundTypeId=").append(refundTypeId);
         sb.append(", accountId=").append(accountId);
         sb.append(", orderId=").append(orderId);
+        sb.append(", refundId=").append(refundId);
         sb.append(", refundTime=").append(refundTime);
         sb.append(", refundTotal=").append(refundTotal);
         sb.append(", refundCompensation=").append(refundCompensation);
@@ -449,7 +485,6 @@ public class AfcRefundMo implements Serializable {
         sb.append(", refundDetail=").append(refundDetail);
         sb.append(", opId=").append(opId);
         sb.append(", ip=").append(ip);
-        sb.append(", refundId=").append(refundId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

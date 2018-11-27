@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/11/27 8:40:19                           */
+/* Created on:     2018/11/27 14:20:42                          */
 /*==============================================================*/
 
 
@@ -144,9 +144,11 @@ alter table AFC_PLATFORM_TRADE comment '平台交易';
 create table AFC_REFUND
 (
    ID                   bigint not null comment '退款ID',
+   REFUND_TYPE_ID       tinyint not null comment '退款去向类型(1.V支付;2.微信支付;3.支付宝;4.银联)
+            与支付去向类型一致',
    ACCOUNT_ID           bigint not null comment '账户ID',
    ORDER_ID             varchar(150) not null comment '订单ID(支付订单ID)',
-   REFUND_ID            bigint not null comment '退款订单ID（退货单ID）',
+   REFUND_ID            varchar(150) not null comment '退款订单ID（退货单ID，错误支付时，没有退货单，则是的支付完成的交易ID）',
    REFUND_TIME          datetime not null comment '退款时间',
    REFUND_TOTAL         decimal(18,4) not null comment '退款总额（退款总额=退款余额+退款返现金+退款补偿金）',
    REFUND_COMPENSATION  decimal(18,4) not null default 0 comment '退款补偿金额(退货退款产生的需补偿给卖家的金额，例如补偿运费)',
@@ -157,7 +159,7 @@ create table AFC_REFUND
    OP_ID                bigint not null comment '操作人ID',
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID),
-   unique key AK_REFUND_ID (REFUND_ID)
+   unique key AK_REFUND_TYPE_AND_REFUND_ID (REFUND_TYPE_ID, REFUND_ID)
 );
 
 alter table AFC_REFUND comment '退款日志';

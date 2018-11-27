@@ -43,12 +43,12 @@ public enum ChargeTypeDic implements EnumBase {
      * 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static PayTypeDic getItem(int code) {
+    public static PayAndRefundTypeDic getItem(int code) {
         EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
-        return (PayTypeDic) result;
+        return (PayAndRefundTypeDic) result;
     }
 
     private int code;

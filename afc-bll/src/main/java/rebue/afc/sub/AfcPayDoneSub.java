@@ -11,7 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import rebue.afc.dic.PayTypeDic;
+import rebue.afc.dic.PayAndRefundTypeDic;
 import rebue.afc.mo.AfcPayMo;
 import rebue.afc.msg.PayDoneMsg;
 import rebue.afc.pub.PayDonePub;
@@ -63,14 +63,14 @@ public class AfcPayDoneSub implements ApplicationListener<ContextRefreshedEvent>
         consumer.bind(VpayExchangeCo.PAY_DONE_EXCHANGE_NAME, VPAY_DONE_QUEUE_NAME, VpayPayDoneMsg.class, (msg) -> {
             _log.info("V支付-收到支付完成的通知: {}", msg);
             final PayDoneMsg payDoneMsg = dozerMapper.map(msg, PayDoneMsg.class);
-            payDoneMsg.setPayType(PayTypeDic.VPAY);
+            payDoneMsg.setPayType(PayAndRefundTypeDic.VPAY);
             return handlePayNotify(payDoneMsg);
         });
         _log.info("订阅微信支付的支付完成的通知: {} - {}", WxpayExchangeCo.PAY_DONE_EXCHANGE_NAME, WXPAY_DONE_QUEUE_NAME);
         consumer.bind(WxpayExchangeCo.PAY_DONE_EXCHANGE_NAME, WXPAY_DONE_QUEUE_NAME, WxpayPayDoneMsg.class, (msg) -> {
             _log.info("微信支付-收到支付完成的通知: {}", msg);
             final PayDoneMsg payDoneMsg = dozerMapper.map(msg, PayDoneMsg.class);
-            payDoneMsg.setPayType(PayTypeDic.WXPAY);
+            payDoneMsg.setPayType(PayAndRefundTypeDic.WXPAY);
             return handlePayNotify(payDoneMsg);
         });
     }

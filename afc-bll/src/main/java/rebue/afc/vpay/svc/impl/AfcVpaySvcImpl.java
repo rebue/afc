@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import rebue.afc.dic.PayResultDic;
-import rebue.afc.dic.PayTypeDic;
+import rebue.afc.dic.PayAndRefundTypeDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcPayMo;
@@ -216,7 +216,7 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
      */
     @Override
     public PayOrderQueryRo queryOrder(final String orderId) {
-        final AfcPayMo payMo = paySvc.getByOrderId(PayTypeDic.VPAY, orderId);
+        final AfcPayMo payMo = paySvc.getByOrderId(PayAndRefundTypeDic.VPAY, orderId);
         if (payMo != null) {
             final PayOrderQueryRo ro = new PayOrderQueryRo();
             ro.setTradeId(payMo.getTradeId());

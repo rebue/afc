@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import rebue.afc.dic.PayTypeDic;
+import rebue.afc.dic.PayAndRefundTypeDic;
 import rebue.afc.mapper.AfcPayMapper;
 import rebue.afc.mo.AfcPayMo;
 import rebue.afc.svc.AfcPaySvc;
@@ -52,7 +52,7 @@ public class AfcPaySvcImpl extends MybatisBaseSvcImpl<AfcPayMo, java.lang.Long, 
      * 通过支付类型和订单号查询支付情况
      */
     @Override
-    public AfcPayMo getByOrderId(PayTypeDic payType, String orderId) {
+    public AfcPayMo getByOrderId(PayAndRefundTypeDic payType, String orderId) {
         return _mapper.selectByPayTypeAndOrderId(payType.getCode(), orderId);
     }
 }

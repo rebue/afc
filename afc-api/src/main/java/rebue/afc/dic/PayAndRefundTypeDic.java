@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import rebue.wheel.baseintf.EnumBase;
 
 /**
- * 支付去向类型
+ * 支付与退款去向类型字典
  * 1. V支付
  * 2. 微信支付
  * 3. 支付宝
  * 4. 银联
  */
-public enum PayTypeDic implements EnumBase {
+public enum PayAndRefundTypeDic implements EnumBase {
     /**
      * 1: V支付
      */
@@ -50,12 +50,12 @@ public enum PayTypeDic implements EnumBase {
      * 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static PayTypeDic getItem(final int code) {
+    public static PayAndRefundTypeDic getItem(final int code) {
         final EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
-        return (PayTypeDic) result;
+        return (PayAndRefundTypeDic) result;
     }
 
     private int code;
@@ -63,7 +63,7 @@ public enum PayTypeDic implements EnumBase {
     /**
      * 构造器，传入code
      */
-    PayTypeDic(final int code) {
+    PayAndRefundTypeDic(final int code) {
         this.code = code;
     }
 

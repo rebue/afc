@@ -14,6 +14,10 @@ import rebue.afc.to.TaskTo;
 import rebue.robotech.ro.Ro;
 import rebue.sbs.feign.FeignConfig;
 
+/**
+ * @deprecated
+ */
+@Deprecated
 @FeignClient(name = "afc-svr", configuration = FeignConfig.class)
 public interface AfcSettleTaskSvc {
     /**

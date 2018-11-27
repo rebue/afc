@@ -32,6 +32,9 @@ public class AfcRefundTests {
 
     private final ObjectMapper _objectMapper     = new ObjectMapper();
 
+    /**
+     * FIXME 未做测试
+     */
     @Test
     public void test01() throws IOException {
         final IdWorker3 idWorker = new IdWorker3();
@@ -40,7 +43,7 @@ public class AfcRefundTests {
         final String url = _hostUrl + "/refund";
         final RefundTo to = new RefundTo();
         to.setOrderId(orderId);
-        to.setOrderDetailId(idWorker.getIdStr());
+        to.setRefundId(idWorker.getId());
         to.setBuyerAccountId(buyerAccountId);
         to.setSellerAccountId(sellerAccountId);
         to.setSupplierAccountId(supplierAccountId);

@@ -1,6 +1,6 @@
 package rebue.afc.svc;
 
-import rebue.afc.dic.PayTypeDic;
+import rebue.afc.dic.PayAndRefundTypeDic;
 import rebue.afc.mo.AfcPayMo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
@@ -14,5 +14,5 @@ public interface AfcPaySvc extends MybatisBaseSvc<AfcPayMo, java.lang.Long> {
     /**
      *  通过支付类型和订单号查询支付情况
      */
-    AfcPayMo getByOrderId(PayTypeDic payType, String orderId);
+    AfcPayMo getByOrderId(PayAndRefundTypeDic payType, String orderId);
 }

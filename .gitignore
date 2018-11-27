@@ -5,6 +5,7 @@ target
 logs
 *.log
 app.properties
+*.pjb
 *.pdb
 *.ldb
 .DS_Store
