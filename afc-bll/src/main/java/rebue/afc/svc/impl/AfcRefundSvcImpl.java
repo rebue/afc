@@ -105,6 +105,18 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
 			ro.setResult(ResultDic.FAIL);
 			return ro;
 		}
+		
+		final AfcRefundMo refundConditions = new AfcRefundMo();
+		refundConditions.setRefundId(to.getRefundId());
+		_log.info("退款查询退款日志是否存在的参数为：{}", refundConditions);
+		boolean refundFlag = refundSvc.existSelective(refundConditions);
+		_log.info("退款查询退款日志是否存在的返回值为：{}", refundFlag);
+		if (refundFlag) {
+			_log.info("退款查询退款日志时发现该退货单已退款，退货单id为：{}", to.getRefundId());
+			ro.setResult(ResultDic.SUCCESS);
+			ro.setMsg("退款成功");
+			return ro;
+		}
 
 		_log.info("退款查询操作人信息：opId-{}", to.getOpId());
 		if (to.getOpId() != 0) {
@@ -161,10 +173,10 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
 		}
 
 		_log.debug("获取订单退款列表：orderId-{}, buyAccountId-{}", to.getOrderId(), to.getBuyerAccountId());
-		final AfcRefundMo refundConditions = new AfcRefundMo();
-		refundConditions.setOrderId(to.getOrderId());
-		refundConditions.setAccountId(to.getBuyerAccountId());
-		final List<AfcRefundMo> refunds = refundSvc.list(refundConditions);
+		AfcRefundMo afcRefundMo = new AfcRefundMo();
+		afcRefundMo.setOrderId(to.getOrderId());
+		afcRefundMo.setAccountId(to.getBuyerAccountId());
+		final List<AfcRefundMo> refunds = refundSvc.list(afcRefundMo);
 		_log.debug("获取订单退款列表的返回值为：{}", refunds);
 
 		// 默认为自动计算退款
@@ -296,6 +308,7 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
 		final AfcRefundMo refundMo = new AfcRefundMo();
 		refundMo.setAccountId(to.getBuyerAccountId());
 		refundMo.setOrderId(to.getOrderId());
+		refundMo.setRefundId(to.getRefundId());
 		refundMo.setRefundTime(now);
 		refundMo.setRefundTotal(to.getRefundAmount());
 		refundMo.setRefundCompensation(to.getReturnCompensationToSeller());
