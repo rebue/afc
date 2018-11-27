@@ -1,4 +1,6 @@
 -- 2018-11-27
+alter table AFC_REFUND           add REFUND_ID            bigint not null comment '退款订单ID（退货单ID）';
+-- 2018-11-27
 create table AFC_REFUND
 (
    ID                   bigint not null comment '退款ID',
