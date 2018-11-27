@@ -1,6 +1,7 @@
 package rebue.afc.svc;
 
 import rebue.afc.mo.AfcRefundMo;
+import rebue.afc.to.RefundGoBackTo;
 import rebue.afc.to.RefundTo;
 import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.MybatisBaseSvc;
@@ -16,4 +17,9 @@ public interface AfcRefundSvc extends MybatisBaseSvc<AfcRefundMo, java.lang.Long
      * 退款
      */
     Ro refund(RefundTo to);
+
+    /**
+     * 错误支付，直接退款原路返回
+     */
+    Ro refundGoBack(RefundGoBackTo to);
 }
