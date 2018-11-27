@@ -327,11 +327,12 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
     /**
      * 错误支付，直接退款原路返回
      */
+    @Override
     public Ro refundGoBack(final RefundGoBackTo to) {
         _log.info("退款原路返回: {}", to);
         final Ro ro = new Ro();
 
-        if (StringUtils.isBlank(to.getOrderId())) {
+        if (StringUtils.isAnyBlank(to.getOrderId(), to.getTradeTitle())) {
             final String msg = "参数不正确";
             _log.error("{}: {}", msg, to);
             ro.setMsg(msg);

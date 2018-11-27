@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import rebue.afc.dic.PayResultDic;
 import rebue.afc.dic.PayAndRefundTypeDic;
+import rebue.afc.dic.PayResultDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcPayMo;
@@ -197,8 +197,8 @@ public class AfcVpaySvcImpl implements AfcVpaySvc {
         msg.setPayAccountId(prepay.getUserId().toString());
         msg.setTradeId(tradeMo.getId().toString());
         msg.setPayAmount(tradeAmount);
-        msg.setPayAmount1(tradeMo.getChangeAmount1());
-        msg.setPayAmount2(tradeMo.getChangeAmount2());
+        msg.setPayAmount1(tradeMo.getChangeAmount1() == null ? BigDecimal.ZERO : tradeMo.getChangeAmount1());
+        msg.setPayAmount2(tradeMo.getChangeAmount2() == null ? BigDecimal.ZERO : tradeMo.getChangeAmount2());
         msg.setPayTime(now);
         vpayDonePub.send(msg);
 
