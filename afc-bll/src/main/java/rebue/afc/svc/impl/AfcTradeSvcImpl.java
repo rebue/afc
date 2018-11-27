@@ -154,10 +154,10 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
 				newAccountMo.setBalance(newBalance);
 			}
 			// 设置交易的返现金和余额
-			// 扣除的返现金
-			tradeMo.setChangeAmount1(subtractCashback);
 			// 扣除的余额
-			tradeMo.setChangeAmount2(subtractBalance);
+			tradeMo.setChangeAmount1(subtractBalance);
+			// 扣除的返现金
+			tradeMo.setChangeAmount2(subtractCashback);
 			break;
 		case SETTLE_SUPPLIER: // XXX AFC : 交易 : （ 余额+ ）结算-结算成本(将成本打到供应商的余额);
 		case SETTLE_SELLER: // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额);
