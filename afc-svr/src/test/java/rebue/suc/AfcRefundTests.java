@@ -48,10 +48,10 @@ public class AfcRefundTests {
         to.setTradeDetail("退款的详情");
         to.setReturnBalanceToBuyer(BigDecimal.valueOf(0.71));
         to.setReturnCashbackToBuyer(BigDecimal.valueOf(0.02));
-        to.setGetbackServiceFeeFromPlatform(BigDecimal.valueOf(0.06));
-        to.setGetbackCostFromSupplier(BigDecimal.valueOf(1.01));
-        to.setGetbackProfitFromSeller(BigDecimal.valueOf(0.53));
-        to.setGetbackDepositUsedFromSeller(BigDecimal.valueOf(4.07));
+//        to.setGetbackServiceFeeFromPlatform(BigDecimal.valueOf(0.06));
+//        to.setGetbackCostFromSupplier(BigDecimal.valueOf(1.01));
+//        to.setGetbackProfitFromSeller(BigDecimal.valueOf(0.53));
+//        to.setGetbackDepositUsedFromSeller(BigDecimal.valueOf(4.07));
         to.setOpId(opId);
         to.setMac("测试MAC地址1");
         to.setIp("测试IP地址1");

@@ -1,3 +1,6 @@
+-- 2018年11月27日08:42:00
+	-- 退款日志（AFC_REFUND）新增REFUND_ID（退款订单ID（退货单ID））
+	alter table AFC_REFUND           add REFUND_ID            bigint not null comment '退款订单ID（退货单ID）';
 -- 2018-11-23
 create table AFC_REFUND
 (

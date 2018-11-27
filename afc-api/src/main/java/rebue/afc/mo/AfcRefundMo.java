@@ -129,6 +129,15 @@ public class AfcRefundMo implements Serializable {
     private String ip;
 
     /**
+     *    退款订单ID（退货单ID）
+     *
+     *    数据库字段: AFC_REFUND.REFUND_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Long refundId;
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
@@ -398,6 +407,28 @@ public class AfcRefundMo implements Serializable {
     }
 
     /**
+     *    退款订单ID（退货单ID）
+     *
+     *    数据库字段: AFC_REFUND.REFUND_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Long getRefundId() {
+        return refundId;
+    }
+
+    /**
+     *    退款订单ID（退货单ID）
+     *
+     *    数据库字段: AFC_REFUND.REFUND_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setRefundId(Long refundId) {
+        this.refundId = refundId;
+    }
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
@@ -418,6 +449,7 @@ public class AfcRefundMo implements Serializable {
         sb.append(", refundDetail=").append(refundDetail);
         sb.append(", opId=").append(opId);
         sb.append(", ip=").append(ip);
+        sb.append(", refundId=").append(refundId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
