@@ -30,6 +30,7 @@ import rebue.afc.to.AfcTradeTo;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.mo.SucOrgMo;
 import rebue.suc.mo.SucUserMo;
+import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svr.feign.SucOrgSvc;
 import rebue.suc.svr.feign.SucUserSvc;
 
@@ -473,12 +474,13 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
 		List<AfcTradeListRo> tradeList = tradeListResult.getList();
 		for (int i = 0; i < tradeList.size(); i++) {
 			AfcTradeListRo ro = tradeList.get(i);
-			SucOrgMo sucOrgMo = sucOrgSvc.getById(ro.getAccountId());
 			_log.info("根据组织账号ID获取组织信息:{}", ro.getAccountId());
-			if (sucOrgMo != null) {
-				tradeList.get(i).setAccountName(sucOrgMo.getName());
+			SucOrgRo sucOrgRo = sucOrgSvc.getById(ro.getAccountId());
+			_log.info("根据组织账号ID获取到的组织信息:{}", sucOrgRo.getRecord());
+			if (sucOrgRo.getRecord() != null) {
+				tradeList.get(i).setAccountName(sucOrgRo.getRecord().getName());
 			} else {
-				_log.info("没有查到此操作人信息:{}", ro.getAccountId());
+				_log.info("没有查到此组织信息:{}", ro.getAccountId());
 			}
 			SucUserMo opMo = sucUserSvc.getById(ro.getOpId());
 			if (opMo != null) {
