@@ -391,7 +391,7 @@
 	<!-- 后台管理交易流水查询方法 -->
 	<select id="selectTradeList" parameterType="rebue.afc.to.AfcTradeTo" resultType="rebue.afc.ro.AfcTradeListRo">
 		select ACCOUNT_ID accountId, TRADE_AMOUNT tradeAmount, TRADE_TIME tradeTime,TRADE_TYPE tradeType,OP_ID opId
-		from AFC_TRADE 
+		from AFC_TRADE at , AFC_ACCOUNT aa
 		<where>
 	      <if test="accountIdStr != null and accountIdStr != ''">
 	        and ACCOUNT_ID IN ${accountIdStr}
@@ -405,6 +405,7 @@
 		  <if test="tradeTimeEnd != null ">
 			and TRADE_TIME &lt;= #{tradeTimeEnd,jdbcType=TIMESTAMP}
 		  </if>
+		   and at.ACCOUNT_ID = aa.ID and aa.ACCOUNT_TYPE = #{accountType,jdbcType=TINYINT}
        </where>
        ORDER BY TRADE_TIME DESC
 	</select>

@@ -17,7 +17,7 @@ public class AfcTradeTo {
 	/**
 	 * 用户微信名
 	 */
-	String wxNickName;
+	String accountName;
 	
 	/**
 	 * 用户手机号
@@ -28,6 +28,11 @@ public class AfcTradeTo {
 	 * 账号ID
 	 */
 	Long accountId ;
+	
+	/**
+	 * 账号类型，1：普通用户; 2:组织账号
+	 */
+	Byte accountType;
 	
 	/**
 	 * 账号ID转为String

@@ -244,18 +244,35 @@ public class AfcTradeCtrl {
     }
 
     /**
-     * 查询账户交易
+     * 查询个人账户交易
      *
      */
-    @GetMapping("/afc/tradeList")
-    PageInfo<AfcTradeListRo> tradeList(final AfcTradeTo to, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+    @GetMapping("/afc/personTradeList")
+    PageInfo<AfcTradeListRo> personTradeList(final AfcTradeTo to, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
         _log.info("list AfcTradeTo:" + to + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        final PageInfo<AfcTradeListRo> result = svc.tradeList(to, pageNum, pageSize);
+        final PageInfo<AfcTradeListRo> result = svc.personTradeList(to, pageNum, pageSize);
+        _log.info("result: " + result);
+        return result;
+    }
+    
+    /**
+     * 查询组织账户交易
+     *
+     */
+    @GetMapping("/afc/orgTradeList")
+    PageInfo<AfcTradeListRo> orgTradeList(final AfcTradeTo to, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+        _log.info("list AfcTradeTo:" + to + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            final String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        final PageInfo<AfcTradeListRo> result = svc.orgTradeList(to, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }

@@ -26,7 +26,7 @@ public class AfcTradeListRo {
 	/**
 	 * 账户微信名
 	 */
-	private String wxNickName;
+	private String accountName;
 	
 	/**
 	 * 交易类型
