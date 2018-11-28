@@ -527,7 +527,7 @@ LABL 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:CustomPictureType>4</a:CustomPictureType>
 <a:CustomTextMode>1</a:CustomTextMode>
-<a:CustomPictureID>0D9C0C50-1FFA-4755-98FC-609DF0D98AA7</a:CustomPictureID>
+<a:CustomPictureID>7D33BEBB-A657-4D0F-8A93-49C9BBD16754</a:CustomPictureID>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <a:KeepAspect>1</a:KeepAspect>
 <c:Object>
@@ -548,7 +548,7 @@ LABL 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:CustomPictureType>4</a:CustomPictureType>
 <a:CustomTextMode>1</a:CustomTextMode>
-<a:CustomPictureID>994A59F4-251A-4266-ACA0-E1369CEC6574</a:CustomPictureID>
+<a:CustomPictureID>0AA20CD9-0745-4EAB-A133-AC5574C99413</a:CustomPictureID>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <a:KeepAspect>1</a:KeepAspect>
 <c:Object>
@@ -597,7 +597,7 @@ LABL 0 Arial,8,N</a:FontList>
 <a:Code>afc</a:Code>
 <a:CreationDate>1542349358</a:CreationDate>
 <a:Creator>zbz</a:Creator>
-<a:ModificationDate>1543236169</a:ModificationDate>
+<a:ModificationDate>1543298794</a:ModificationDate>
 <a:Modifier>zbz</a:Modifier>
 <a:Location>file:///%[PRJ_ROOT_DIR]%/afc.ldm</a:Location>
 <a:Extension>ldm</a:Extension>

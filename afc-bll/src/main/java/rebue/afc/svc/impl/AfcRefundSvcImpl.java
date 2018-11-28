@@ -282,7 +282,7 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
             tradeSvc.addTrade(tradeMo);
         }
 
-        if (to.getReturnCompensationToSeller().equals(BigDecimal.ZERO)) {
+        if (to.getReturnCompensationToSeller().compareTo(BigDecimal.ZERO) == 0) {
             _log.info("退款补偿金到卖家账户（ 余额+ ）");
             final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
             // 交易类型: 退款到家
