@@ -223,9 +223,7 @@ public class AfcRefundCtrl {
     Ro refundGoBack(@RequestBody final RefundGoBackTo to, final HttpServletRequest req) {
         _log.info("refundGoBack： {}", to);
         try {
-            if (!isDebug) {
-                to.setIp(AgentUtils.getIpAddr(req, passProxy));
-            }
+            to.setIp(AgentUtils.getIpAddr(req, passProxy));
             return svc.refundGoBack(to);
         } catch (final DuplicateKeyException e) {
             final String msg = "重复退款";

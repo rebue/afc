@@ -328,6 +328,7 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
      * 错误支付，直接退款原路返回
      */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Ro refundGoBack(final RefundGoBackTo to) {
         _log.info("退款原路返回: {}", to);
         final Ro ro = new Ro();
@@ -394,6 +395,12 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
             if (refundMo.getRefundTypeId() == PayAndRefundTypeDic.VPAY.getCode()) {
                 _log.info("退款到买家账户（ 余额+，返现金+ ）");
                 final AfcTradeMo tradeMo = new AfcTradeMo();
+                tradeMo.setOrderId(to.getOrderId());
+                tradeMo.setIp(to.getIp());
+                tradeMo.setOpId(0L);
+                tradeMo.setMac("不再获取MAC地址");
+                tradeMo.setTradeTitle(to.getTradeTitle());
+                tradeMo.setTradeDetail(to.getTradeDetail());
                 // 交易类型: 退款到买家
                 tradeMo.setTradeType((byte) TradeTypeDic.REFUND_TO_BUYER.getCode());
                 // 交易账号: 退款到买家的账号
