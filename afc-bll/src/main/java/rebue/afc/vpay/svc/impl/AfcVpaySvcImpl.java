@@ -6,12 +6,13 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.dozermapper.core.Mapper;
 
 import rebue.afc.dic.PayAndRefundTypeDic;
 import rebue.afc.dic.PayResultDic;

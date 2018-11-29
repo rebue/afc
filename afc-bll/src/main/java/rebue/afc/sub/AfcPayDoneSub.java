@@ -2,7 +2,6 @@ package rebue.afc.sub;
 
 import javax.annotation.Resource;
 
-import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
@@ -10,6 +9,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
+import com.github.dozermapper.core.Mapper;
 
 import rebue.afc.dic.PayAndRefundTypeDic;
 import rebue.afc.mo.AfcPayMo;

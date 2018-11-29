@@ -7,12 +7,13 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.dozermapper.core.Mapper;
 
 import rebue.afc.dic.PayAndRefundTypeDic;
 import rebue.afc.dic.TradeTypeDic;
@@ -181,7 +182,7 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
         _log.debug("获取订单退款列表的返回值为：{}", refunds);
 
         // 默认为自动计算退款
-        boolean isAutoCalcRefund = to.getIsAutoCalcRefund();
+        final boolean isAutoCalcRefund = to.getIsAutoCalcRefund();
         // 根据退款金额是否为空判断是否自动计算退款，如不为空就是自动计算退款，否则是自定义退款，退款金额=退款到余额+退款到返现金
         if (!isAutoCalcRefund) {
             to.setRefundAmount(to.getReturnBalanceToBuyer().add(to.getReturnCashbackToBuyer()));

@@ -5,12 +5,13 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.dozermapper.core.Mapper;
 
 import rebue.afc.dic.ChargeResultDic;
 import rebue.afc.dic.DepositGoodsTransferResultDic;
@@ -62,39 +63,39 @@ public class AfcDepositSvcImpl implements AfcDepositSvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public ChargeRo charge(ChargeTo to) {
+    public ChargeRo charge(final ChargeTo to) {
         if (to.getUserId() == null || to.getTradeAmount() == null || to.getOpId() == null || StringUtils.isAnyBlank(to.getOrderId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
             _log.warn("没有填写充值的用户ID/充值单号/充值交易的标题/充值交易的金额/操作人账号/MAC/IP: {}", to);
-            ChargeRo ro = new ChargeRo();
+            final ChargeRo ro = new ChargeRo();
             ro.setResult(ChargeResultDic.PARAM_ERROR);
             return ro;
         }
 
-        SucUserMo opUserMo = userSvc.getById(to.getOpId());
+        final SucUserMo opUserMo = userSvc.getById(to.getOpId());
         if (opUserMo == null) {
             _log.error("充值进货保证金发现没有此操作人: " + to.getOpId());
-            ChargeRo ro = new ChargeRo();
+            final ChargeRo ro = new ChargeRo();
             ro.setResult(ChargeResultDic.NOT_FOUND_OP);
             return ro;
         }
 
         if (opUserMo.getIsLock()) {
             _log.error("充值进货保证金发现操作人已被锁定: " + opUserMo);
-            ChargeRo ro = new ChargeRo();
+            final ChargeRo ro = new ChargeRo();
             ro.setResult(ChargeResultDic.OP_LOCKED);
             return ro;
         }
 
-        SucUserMo chargeUserMo = userSvc.getById(to.getUserId());
+        final SucUserMo chargeUserMo = userSvc.getById(to.getUserId());
         if (chargeUserMo == null) {
             _log.error("充值进货保证金发现没有此用户: " + to.getUserId());
-            ChargeRo ro = new ChargeRo();
+            final ChargeRo ro = new ChargeRo();
             ro.setResult(ChargeResultDic.NOT_FOUND_USER);
             return ro;
         }
 
         // 添加一笔交易
-        AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
+        final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
         tradeMo.setAccountId(to.getUserId());
         tradeMo.setTradeType((byte) TradeTypeDic.DEPOSIT_CHARGE.getCode());
         tradeMo.setTradeTime(new Date());
@@ -102,7 +103,7 @@ public class AfcDepositSvcImpl implements AfcDepositSvc {
 
         // 返回成功
         _log.info("进货保证金充值成功: {}", to);
-        ChargeRo ro = new ChargeRo();
+        final ChargeRo ro = new ChargeRo();
         ro.setResult(ChargeResultDic.SUCCESS);
         return ro;
     }
@@ -112,46 +113,46 @@ public class AfcDepositSvcImpl implements AfcDepositSvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public DepositGoodsTransferRo inGoods(DepositGoodsInTo to) {
+    public DepositGoodsTransferRo inGoods(final DepositGoodsInTo to) {
         if (to.getUserId() == null || to.getOrderId() == null || to.getTradeAmount() == null || to.getOpId() == null
                 || StringUtils.isAnyBlank(to.getTradeTitle(), to.getMac(), to.getIp())) {
             _log.warn("没有填写进货加盟商的用户ID/进货单号/进货交易的标题/进货交易的金额/操作人账号/MAC/IP: {}", to);
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.PARAM_ERROR);
             return ro;
         }
 
-        SucUserMo opUserMo = userSvc.getById(to.getOpId());
+        final SucUserMo opUserMo = userSvc.getById(to.getOpId());
         if (opUserMo == null) {
             _log.error("进货保证金-进货发现没有此操作人: " + to.getOpId());
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.NOT_FOUND_OP);
             return ro;
         }
 
         if (opUserMo.getIsLock()) {
             _log.error("进货保证金-进货发现操作人已被锁定: " + opUserMo);
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.OP_LOCKED);
             return ro;
         }
 
-        SucUserMo userMo = userSvc.getById(to.getUserId());
+        final SucUserMo userMo = userSvc.getById(to.getUserId());
         if (userMo == null) {
             _log.error("进货保证金-进货发现没有此加盟商: " + to.getUserId());
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.NOT_FOUND_ACCOUNT);
             return ro;
         }
         if (userMo.getIsLock()) {
             _log.error("进货保证金-进货发现加盟商被锁定: " + userMo);
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.ACCOUNT_LOCKED);
             return ro;
         }
 
         // 添加一笔交易
-        AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
+        final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
         tradeMo.setAccountId(to.getUserId());
         tradeMo.setTradeType((byte) TradeTypeDic.DEPOSIT_GOODS_IN.getCode());
         tradeMo.setTradeTime(new Date());
@@ -159,7 +160,7 @@ public class AfcDepositSvcImpl implements AfcDepositSvc {
 
         // 返回成功
         _log.info("进货保证金-进货成功: {}", to);
-        DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+        final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
         ro.setResult(DepositGoodsTransferResultDic.SUCCESS);
         return ro;
     }
@@ -169,46 +170,46 @@ public class AfcDepositSvcImpl implements AfcDepositSvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public DepositGoodsTransferRo outGoods(DepositGoodsReturnTo to) {
+    public DepositGoodsTransferRo outGoods(final DepositGoodsReturnTo to) {
         if (to.getUserId() == null || to.getOrderId() == null || to.getTradeAmount() == null || to.getOpId() == null
                 || StringUtils.isAnyBlank(to.getTradeTitle(), to.getMac(), to.getIp())) {
             _log.warn("没有填写出货加盟商的用户ID/出货单号/出货交易的标题/出货交易的金额/操作人账号/MAC/IP: {}", to);
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.PARAM_ERROR);
             return ro;
         }
 
-        SucUserMo opUserMo = userSvc.getById(to.getOpId());
+        final SucUserMo opUserMo = userSvc.getById(to.getOpId());
         if (opUserMo == null) {
             _log.error("进货保证金-出货发现没有此操作人: " + to.getOpId());
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.NOT_FOUND_OP);
             return ro;
         }
 
         if (opUserMo.getIsLock()) {
             _log.error("进货保证金-出货发现操作人已被锁定: " + opUserMo);
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.OP_LOCKED);
             return ro;
         }
 
-        SucUserMo userMo = userSvc.getById(to.getUserId());
+        final SucUserMo userMo = userSvc.getById(to.getUserId());
         if (userMo == null) {
             _log.error("进货保证金-出货发现没有此加盟商: " + to.getUserId());
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.NOT_FOUND_ACCOUNT);
             return ro;
         }
         if (userMo.getIsLock()) {
             _log.error("进货保证金-出货发现加盟商被锁定: " + userMo);
-            DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+            final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
             ro.setResult(DepositGoodsTransferResultDic.ACCOUNT_LOCKED);
             return ro;
         }
 
         // 添加一笔交易
-        AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
+        final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
         tradeMo.setAccountId(to.getUserId());
         tradeMo.setTradeType((byte) TradeTypeDic.DEPOSIT_CHARGE.getCode());
         tradeMo.setTradeTime(new Date());
@@ -216,7 +217,7 @@ public class AfcDepositSvcImpl implements AfcDepositSvc {
 
         // 返回成功
         _log.info("进货保证金-出货成功: {}", to);
-        DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
+        final DepositGoodsTransferRo ro = new DepositGoodsTransferRo();
         ro.setResult(DepositGoodsTransferResultDic.SUCCESS);
         return ro;
     }
@@ -226,13 +227,14 @@ public class AfcDepositSvcImpl implements AfcDepositSvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public DepositGoodsTransferRo transferGoods(DepositGoodsTransferTo to) {
-        DepositGoodsInTo inTo = dozerMapper.map(to, DepositGoodsInTo.class);
+    public DepositGoodsTransferRo transferGoods(final DepositGoodsTransferTo to) {
+        final DepositGoodsInTo inTo = dozerMapper.map(to, DepositGoodsInTo.class);
         inTo.setUserId(to.getInUserId());
-        DepositGoodsTransferRo ro = inGoods(inTo);
-        if (ro.getResult() != DepositGoodsTransferResultDic.SUCCESS)
+        final DepositGoodsTransferRo ro = inGoods(inTo);
+        if (ro.getResult() != DepositGoodsTransferResultDic.SUCCESS) {
             return ro;
-        DepositGoodsReturnTo outTo = dozerMapper.map(to, DepositGoodsReturnTo.class);
+        }
+        final DepositGoodsReturnTo outTo = dozerMapper.map(to, DepositGoodsReturnTo.class);
         outTo.setUserId(to.getOutUserId());
         return outGoods(outTo);
     }

@@ -4,12 +4,13 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.dozermapper.core.Mapper;
 
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mo.AfcPlatformTradeMo;
@@ -67,11 +68,11 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void settleAccountFee(AfcSettleTaskMo taskMo, Date now) {
+    public void settleAccountFee(final AfcSettleTaskMo taskMo, final Date now) {
         _log.info("结算此账户的费用: {}", taskMo);
 
         // 添加一笔交易
-        AfcTradeMo tradeMo = dozerMapper.map(taskMo, AfcTradeMo.class);
+        final AfcTradeMo tradeMo = dozerMapper.map(taskMo, AfcTradeMo.class);
         // tradeMo.setId(taskMo.getId());已克隆过来，交易ID=任务ID，防止一个任务多次结算
         tradeMo.setTradeTime(now);
         tradeMo.setOpId(0L);                    // 操作人设为0表示系统自动产生的交易
@@ -91,11 +92,11 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void settlePlatformServiceFee(AfcSettleTaskMo taskMo, Date now) {
+    public void settlePlatformServiceFee(final AfcSettleTaskMo taskMo, final Date now) {
         _log.info("结算平台服务费: ", taskMo);
 
         // 添加一笔平台交易
-        AfcPlatformTradeMo tradeMo = dozerMapper.map(taskMo, AfcPlatformTradeMo.class);
+        final AfcPlatformTradeMo tradeMo = dozerMapper.map(taskMo, AfcPlatformTradeMo.class);
         tradeMo.setPlatformTradeType((byte) PlatformTradeTypeDic.CHARGE_SEVICE_FEE.getCode());  // 交易类型（1：收取服务费(购买交易成功) 2：退回服务费(用户退款)）
         tradeMo.setModifiedTimestamp(now.getTime());                                            // 修改时间戳
         platformTradeSvc.addTrade(tradeMo);      // 如果重复提交，会抛出DuplicateKeyException运行时异常
@@ -109,13 +110,13 @@ public class AfcSettleSvcImpl implements AfcSettleSvc {
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void compensateCanceledSettle(AfcSettleTaskMo canceledTask) {
+    public void compensateCanceledSettle(final AfcSettleTaskMo canceledTask) {
         // 判断交易类型
         switch (TradeTypeDic.getItem(canceledTask.getTradeType())) {
         // 取消返佣任务
         case SETTLE_COMMISSION:
             _log.info("添加一笔扣除返佣中金额的交易: {}", canceledTask);
-            AfcTradeMo tradeMo = dozerMapper.map(canceledTask, AfcTradeMo.class);
+            final AfcTradeMo tradeMo = dozerMapper.map(canceledTask, AfcTradeMo.class);
             tradeMo.setId(null);                    // 不能克隆取消任务的ID过来
             tradeMo.setTradeTitle("退款补偿扣减返佣中金额");
             tradeMo.setTradeDetail(canceledTask.getTradeDetail());

@@ -6,23 +6,21 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.dozermapper.core.Mapper;
+
 import rebue.afc.dic.ChargeResultDic;
-import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcPlatformMapper;
 import rebue.afc.mo.AfcPlatformMo;
 import rebue.afc.mo.AfcPlatformTradeMo;
-import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.platform.dic.PlatformTradeTypeDic;
 import rebue.afc.platform.svc.AfcPlatformSvc;
 import rebue.afc.ro.ChargeRo;
-import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.ChargeTo;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.mo.SucUserMo;
@@ -41,104 +39,101 @@ import rebue.suc.svr.feign.SucUserSvc;
  * </pre>
  */
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-public class AfcPlatformSvcImpl extends MybatisBaseSvcImpl<AfcPlatformMo, java.lang.Long, AfcPlatformMapper>
-		implements AfcPlatformSvc {
-	private final static Logger _log = LoggerFactory.getLogger(AfcPlatformSvcImpl.class);
+public class AfcPlatformSvcImpl extends MybatisBaseSvcImpl<AfcPlatformMo, java.lang.Long, AfcPlatformMapper> implements AfcPlatformSvc {
+    private final static Logger     _log = LoggerFactory.getLogger(AfcPlatformSvcImpl.class);
 
-	@Resource
-	private SucUserSvc userSvc;
-	
-	@Resource
-	private AfcPlatformSvc platformSvc;
+    @Resource
+    private SucUserSvc              userSvc;
 
-	@Resource
-	private Mapper dozerMapper;
+    @Resource
+    private AfcPlatformSvc          platformSvc;
 
-	@Resource
-	private AfcPlatformTradeSvcImpl platFormTradeSvc;
+    @Resource
+    private Mapper                  dozerMapper;
 
-	/**
-	 * @mbg.generated
-	 */
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public int add(AfcPlatformMo mo) {
-		// 如果id为空那么自动生成分布式id
-		if (mo.getId() == null || mo.getId() == 0) {
-			mo.setId(_idWorker.getId());
-		}
-		return super.add(mo);
-	}
+    @Resource
+    private AfcPlatformTradeSvcImpl platFormTradeSvc;
 
-	/**
-	 * 修改平台余额
-	 * 
-	 * @param newBalance
-	 *            修改后的余额
-	 * @param newModifiedTimestamp
-	 *            修改的时间戳
-	 * @param newBalance
-	 *            修改前的余额(用来防止并发修改)
-	 * @param oldModifiedTimestamp
-	 *            旧的修改时间(用来防止并发修改)
-	 * @param id
-	 *            要修改的平台的ID
-	 */
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public void modifyBalance(BigDecimal newBalance, Long newModifiedTimestamp, BigDecimal oldBalance,
-			Long oldModifiedTimestamp, Long id) {
-		int rowCount = _mapper.modifyBalance(newBalance, newModifiedTimestamp, oldBalance, oldModifiedTimestamp, id);
-		if (rowCount != 1) {
-			String msg = "修改平台余额不成功: 出现并发问题";
-			_log.error("{}-{}", msg, id);
-			throw new RuntimeException(msg);
-		}
-	}
+    /**
+     * @mbg.generated
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public int add(final AfcPlatformMo mo) {
+        // 如果id为空那么自动生成分布式id
+        if (mo.getId() == null || mo.getId() == 0) {
+            mo.setId(_idWorker.getId());
+        }
+        return super.add(mo);
+    }
 
-	@Override
-	public ChargeRo chargeBalance(ChargeTo to) {
-		if (to.getUserId() == null || to.getTradeAmount() == null || to.getOpId() == null
-				|| StringUtils.isAnyBlank(to.getOrderId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
-			_log.warn("没有填写充值的用户ID/充值单号/充值交易的标题/充值交易的金额/操作人账号/MAC/IP: {}", to);
-			ChargeRo ro = new ChargeRo();
-			ro.setResult(ChargeResultDic.PARAM_ERROR);
-			return ro;
-		}
-		SucUserMo opUserMo = userSvc.getById(to.getOpId());
-		if (opUserMo == null) {
-			_log.error("充值发现没有此操作人: " + to.getOpId());
-			ChargeRo ro = new ChargeRo();
-			ro.setResult(ChargeResultDic.NOT_FOUND_OP);
-			return ro;
-		}
+    /**
+     * 修改平台余额
+     * 
+     * @param newBalance
+     *            修改后的余额
+     * @param newModifiedTimestamp
+     *            修改的时间戳
+     * @param newBalance
+     *            修改前的余额(用来防止并发修改)
+     * @param oldModifiedTimestamp
+     *            旧的修改时间(用来防止并发修改)
+     * @param id
+     *            要修改的平台的ID
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void modifyBalance(final BigDecimal newBalance, final Long newModifiedTimestamp, final BigDecimal oldBalance, final Long oldModifiedTimestamp, final Long id) {
+        final int rowCount = _mapper.modifyBalance(newBalance, newModifiedTimestamp, oldBalance, oldModifiedTimestamp, id);
+        if (rowCount != 1) {
+            final String msg = "修改平台余额不成功: 出现并发问题";
+            _log.error("{}-{}", msg, id);
+            throw new RuntimeException(msg);
+        }
+    }
 
-		if (opUserMo.getIsLock()) {
-			_log.error("充值发现操作人已被锁定: " + opUserMo);
-			ChargeRo ro = new ChargeRo();
-			ro.setResult(ChargeResultDic.OP_LOCKED);
-			return ro;
-		}
+    @Override
+    public ChargeRo chargeBalance(final ChargeTo to) {
+        if (to.getUserId() == null || to.getTradeAmount() == null || to.getOpId() == null || StringUtils.isAnyBlank(to.getOrderId(), to.getTradeTitle(), to.getMac(), to.getIp())) {
+            _log.warn("没有填写充值的用户ID/充值单号/充值交易的标题/充值交易的金额/操作人账号/MAC/IP: {}", to);
+            final ChargeRo ro = new ChargeRo();
+            ro.setResult(ChargeResultDic.PARAM_ERROR);
+            return ro;
+        }
+        final SucUserMo opUserMo = userSvc.getById(to.getOpId());
+        if (opUserMo == null) {
+            _log.error("充值发现没有此操作人: " + to.getOpId());
+            final ChargeRo ro = new ChargeRo();
+            ro.setResult(ChargeResultDic.NOT_FOUND_OP);
+            return ro;
+        }
 
-		AfcPlatformMo afcPlatFormMo = platformSvc.getById(to.getUserId());
-		if (afcPlatFormMo == null) {
-			_log.error("充值发现没有此用户: " + to.getUserId());
-			ChargeRo ro = new ChargeRo();
-			ro.setResult(ChargeResultDic.NOT_FOUND_USER);
-			return ro;
-		}
+        if (opUserMo.getIsLock()) {
+            _log.error("充值发现操作人已被锁定: " + opUserMo);
+            final ChargeRo ro = new ChargeRo();
+            ro.setResult(ChargeResultDic.OP_LOCKED);
+            return ro;
+        }
 
-		// 添加一笔交易
-		AfcPlatformTradeMo afcPlatFormTradMo = dozerMapper.map(to, AfcPlatformTradeMo.class);
-		afcPlatFormTradMo.setId(to.getUserId());
-		afcPlatFormTradMo.setPlatformTradeType((byte) PlatformTradeTypeDic.CHARGE_BALANCE.getCode());
-		afcPlatFormTradMo.setModifiedTimestamp(new Date().getTime());
-		platFormTradeSvc.addTrade(afcPlatFormTradMo);
+        final AfcPlatformMo afcPlatFormMo = platformSvc.getById(to.getUserId());
+        if (afcPlatFormMo == null) {
+            _log.error("充值发现没有此用户: " + to.getUserId());
+            final ChargeRo ro = new ChargeRo();
+            ro.setResult(ChargeResultDic.NOT_FOUND_USER);
+            return ro;
+        }
 
-		// 返回成功
-		_log.info("平台充值成功: {}", to);
-		ChargeRo ro = new ChargeRo();
-		ro.setResult(ChargeResultDic.SUCCESS);
-		return ro;
-	}
+        // 添加一笔交易
+        final AfcPlatformTradeMo afcPlatFormTradMo = dozerMapper.map(to, AfcPlatformTradeMo.class);
+        afcPlatFormTradMo.setId(to.getUserId());
+        afcPlatFormTradMo.setPlatformTradeType((byte) PlatformTradeTypeDic.CHARGE_BALANCE.getCode());
+        afcPlatFormTradMo.setModifiedTimestamp(new Date().getTime());
+        platFormTradeSvc.addTrade(afcPlatFormTradMo);
+
+        // 返回成功
+        _log.info("平台充值成功: {}", to);
+        final ChargeRo ro = new ChargeRo();
+        ro.setResult(ChargeResultDic.SUCCESS);
+        return ro;
+    }
 }

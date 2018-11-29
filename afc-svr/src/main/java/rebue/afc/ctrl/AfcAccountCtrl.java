@@ -1,11 +1,10 @@
 package rebue.afc.ctrl;
 
-import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.ApiOperation;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.annotation.Resource;
-import org.dozer.Mapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -16,6 +15,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.dozermapper.core.Mapper;
+import com.github.pagehelper.PageInfo;
+
+import io.swagger.annotations.ApiOperation;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.ro.AccountFundsRo;
 import rebue.afc.svc.AfcAccountSvc;
@@ -35,7 +39,7 @@ public class AfcAccountCtrl {
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private String _uniqueFilesName = "某字段内容";
+    private final String _uniqueFilesName = "某字段内容";
 
     /**
      * 添加账户信息
@@ -43,33 +47,33 @@ public class AfcAccountCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @PostMapping("/afc/account")
-    Ro add(@RequestBody AfcAccountMo mo) throws Exception {
+    Ro add(@RequestBody final AfcAccountMo mo) throws Exception {
         _log.info("add AfcAccountMo:" + mo);
-        Ro ro = new Ro();
+        final Ro ro = new Ro();
         try {
-            int result = svc.add(mo);
+            final int result = svc.add(mo);
             if (result == 1) {
-                String msg = "添加成功";
+                final String msg = "添加成功";
                 _log.info("{}: mo-{}", msg, mo);
                 ro.setMsg(msg);
                 ro.setResult(ResultDic.SUCCESS);
                 return ro;
             } else {
-                String msg = "添加失败";
+                final String msg = "添加失败";
                 _log.error("{}: mo-{}", msg, mo);
                 ro.setMsg(msg);
                 ro.setResult(ResultDic.FAIL);
                 return ro;
             }
-        } catch (DuplicateKeyException e) {
-            String msg = "添加失败，" + _uniqueFilesName + "已存在，不允许出现重复";
+        } catch (final DuplicateKeyException e) {
+            final String msg = "添加失败，" + _uniqueFilesName + "已存在，不允许出现重复";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
             return ro;
-        } catch (RuntimeException e) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
+        } catch (final RuntimeException e) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            final String msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
@@ -83,32 +87,32 @@ public class AfcAccountCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @PutMapping("/afc/account")
-    Ro modify(@RequestBody AfcAccountMo mo) throws Exception {
+    Ro modify(@RequestBody final AfcAccountMo mo) throws Exception {
         _log.info("modify AfcAccountMo:" + mo);
-        Ro ro = new Ro();
+        final Ro ro = new Ro();
         try {
             if (svc.modify(mo) == 1) {
-                String msg = "修改成功";
+                final String msg = "修改成功";
                 _log.info("{}: mo-{}", msg, mo);
                 ro.setMsg(msg);
                 ro.setResult(ResultDic.SUCCESS);
                 return ro;
             } else {
-                String msg = "修改失败";
+                final String msg = "修改失败";
                 _log.error("{}: mo-{}", msg, mo);
                 ro.setMsg(msg);
                 ro.setResult(ResultDic.FAIL);
                 return ro;
             }
-        } catch (DuplicateKeyException e) {
-            String msg = "修改失败，" + _uniqueFilesName + "已存在，不允许出现重复";
+        } catch (final DuplicateKeyException e) {
+            final String msg = "修改失败，" + _uniqueFilesName + "已存在，不允许出现重复";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
             return ro;
-        } catch (RuntimeException e) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
+        } catch (final RuntimeException e) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            final String msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
@@ -122,18 +126,18 @@ public class AfcAccountCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @DeleteMapping("/afc/account")
-    Ro del(@RequestParam("id") java.lang.Long id) {
+    Ro del(@RequestParam("id") final java.lang.Long id) {
         _log.info("save AfcAccountMo:" + id);
-        int result = svc.del(id);
-        Ro ro = new Ro();
+        final int result = svc.del(id);
+        final Ro ro = new Ro();
         if (result == 1) {
-            String msg = "删除成功";
+            final String msg = "删除成功";
             _log.info("{}: id-{}", msg, id);
             ro.setMsg(msg);
             ro.setResult(ResultDic.SUCCESS);
             return ro;
         } else {
-            String msg = "删除失败，找不到该记录";
+            final String msg = "删除失败，找不到该记录";
             _log.error("{}: id-{}", msg, id);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
@@ -147,14 +151,14 @@ public class AfcAccountCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @GetMapping("/afc/account")
-    PageInfo<AfcAccountMo> list(AfcAccountMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+    PageInfo<AfcAccountMo> list(final AfcAccountMo mo, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
         _log.info("list AfcAccountMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
-            String msg = "pageSize不能大于50";
+            final String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<AfcAccountMo> result = svc.list(mo, pageNum, pageSize);
+        final PageInfo<AfcAccountMo> result = svc.list(mo, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }
@@ -165,7 +169,7 @@ public class AfcAccountCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @GetMapping("/afc/account/getbyid")
-    AfcAccountMo getById(@RequestParam("id") java.lang.Long id) {
+    AfcAccountMo getById(@RequestParam("id") final java.lang.Long id) {
         _log.info("get AfcAccountMo by id: " + id);
         return svc.getById(id);
     }
@@ -173,19 +177,20 @@ public class AfcAccountCtrl {
     private static final Logger _log = LoggerFactory.getLogger(AfcAccountCtrl.class);
 
     @Resource
-    private AfcAccountSvc svc;
+    private AfcAccountSvc       svc;
 
     @Resource
-    private Mapper dozerMapper;
+    private Mapper              dozerMapper;
 
     @ApiOperation("查询账户款项(余额/返现金/提现中)")
     @GetMapping("/account/funds")
-    AccountFundsRo getFunds(@RequestParam("userId") Long accountId) {
+    AccountFundsRo getFunds(@RequestParam("userId") final Long accountId) {
         _log.info("查询账户款项(余额/返现金/提现中): {}", accountId);
-        AfcAccountMo accountMo = svc.getById(accountId);
-        if (accountMo == null)
+        final AfcAccountMo accountMo = svc.getById(accountId);
+        if (accountMo == null) {
             return null;
-        AccountFundsRo ro = dozerMapper.map(accountMo, AccountFundsRo.class);
+        }
+        final AccountFundsRo ro = dozerMapper.map(accountMo, AccountFundsRo.class);
         _log.info("账户款项信息: {}", ro);
         return ro;
     }
