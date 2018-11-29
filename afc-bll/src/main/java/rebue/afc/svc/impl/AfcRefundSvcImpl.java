@@ -181,10 +181,9 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
         _log.debug("获取订单退款列表的返回值为：{}", refunds);
 
         // 默认为自动计算退款
-        boolean isAutoCalcRefund = true;
+        boolean isAutoCalcRefund = to.getIsAutoCalcRefund();
         // 根据退款金额是否为空判断是否自动计算退款，如不为空就是自动计算退款，否则是自定义退款，退款金额=退款到余额+退款到返现金
-        if (to.getRefundAmount() == null) {
-            isAutoCalcRefund = false;
+        if (!isAutoCalcRefund) {
             to.setRefundAmount(to.getReturnBalanceToBuyer().add(to.getReturnCashbackToBuyer()));
         }
         // 本次退款总额 = 退款金额 + 补偿金
