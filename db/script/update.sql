@@ -1,5 +1,20 @@
--- 2018-11-27
-alter table AFC_REFUND           add REFUND_ID            bigint not null comment '退款订单ID（退货单ID）';
+-- 2018-11-17
+alter table AFC_PAY           change           PAY_ORDER_ID          TRADE_ID             varchar(150) not null comment '支付的交易ID
+            V支付、微信、支付宝等支付的交易ID
+            (V支付订单ID就是交易ID或流水ID)';
+
+
+
+
+
+
+
+
+
+
+-- ===============================================以下语句已更新到线上==================================================================
+
+
 -- 2018-11-27
 create table AFC_REFUND
 (
@@ -32,21 +47,8 @@ alter table AFC_ACCOUNT			modify CASHBACKING          decimal(18,4) not null def
 
 
 -- 2018-11-17
-alter table AFC_PAY           change           PAY_ORDER_ID          TRADE_ID             varchar(150) not null comment '支付的交易ID
-            V支付、微信、支付宝等支付的交易ID
-            (V支付订单ID就是交易ID或流水ID)';
 alter table AFC_PAY           add                 PAY_AMOUNT1          decimal(18,4) comment '支付金额1，在交易类型是V支付时代表返现金支付了多少';
 alter table AFC_PAY           add                 PAY_AMOUNT2          decimal(18,4) comment '支付金额2，在交易类型是V支付时代表余额支付了多少';
-
-
-
-
-
-
-
-
-
--- ===============================================以下语句已更新==================================================================
 
 
 -- 2018年11月2日14:38:50 AFC_ACCOUNT中添加账户类型（ACCOUNT_TYPE）
