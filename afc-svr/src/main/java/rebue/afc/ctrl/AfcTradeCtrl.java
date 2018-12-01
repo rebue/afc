@@ -27,6 +27,7 @@ import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.AfcTradeTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
+import rebue.wheel.AgentUtils;
 
 /**
  * 账户交易(账户交易流水)
@@ -286,6 +287,7 @@ public class AfcTradeCtrl {
 //            mo.setOpId(JwtUtils.getJwtUserIdInCookie(req));
 //            mo.setIp(AgentUtils.getIpAddr(req, passProxy));
 //        }
+        mo.setIp(AgentUtils.getIpAddr(req, passProxy));
         _log.debug("获取当前用户ID: {}", mo.getOpId());
         mo.setMac("不再获取MAC地址");
         try {
