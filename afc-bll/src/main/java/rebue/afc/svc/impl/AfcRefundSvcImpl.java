@@ -253,6 +253,8 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
             tradeMo.setTradeType((byte) TradeTypeDic.REFUND_TO_BUYER.getCode());
             // 交易账号: 退款到买家的账号
             tradeMo.setAccountId(to.getBuyerAccountId());
+            // 退款单ID填入交易的订单详情
+            tradeMo.setOrderDetailId(to.getRefundId().toString());
             // 交易时间
             tradeMo.setTradeTime(now);
             // 交易金额: 退款金额
@@ -289,7 +291,9 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
             tradeMo.setTradeType((byte) TradeTypeDic.REFUND_COMPENSATION_TO_SELLER.getCode());
             // 交易账号: 退款到卖家的账号
             tradeMo.setAccountId(to.getSellerAccountId());
-            tradeMo.setTradeTitle("退款补偿金");
+            // 退款单ID填入交易的订单详情
+            tradeMo.setOrderDetailId(to.getRefundId().toString());
+            tradeMo.setTradeTitle("大卖网络-退款补偿金");
             // 交易时间
             tradeMo.setTradeTime(now);
             // 交易金额: 退款补偿金额
