@@ -1,7 +1,3 @@
--- 2018-11-17
-alter table AFC_PAY           change           PAY_ORDER_ID          TRADE_ID             varchar(150) not null comment '支付的交易ID
-            V支付、微信、支付宝等支付的交易ID
-            (V支付订单ID就是交易ID或流水ID)';
 
 
 
@@ -13,6 +9,12 @@ alter table AFC_PAY           change           PAY_ORDER_ID          TRADE_ID   
 
 
 -- ===============================================以下语句已更新到线上==================================================================
+
+
+-- 2018-11-17
+alter table AFC_PAY           change           PAY_ORDER_ID          TRADE_ID             varchar(150) not null comment '支付的交易ID
+            V支付、微信、支付宝等支付的交易ID
+            (V支付订单ID就是交易ID或流水ID)';
 
 
 -- 2018-11-27
