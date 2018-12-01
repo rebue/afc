@@ -27,8 +27,6 @@ import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.AfcTradeTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
-import rebue.wheel.AgentUtils;
-import rebue.wheel.turing.JwtUtils;
 
 /**
  * 账户交易(账户交易流水)
@@ -259,7 +257,7 @@ public class AfcTradeCtrl {
         _log.info("result: " + result);
         return result;
     }
-    
+
     /**
      * 查询组织账户交易
      *
@@ -283,10 +281,11 @@ public class AfcTradeCtrl {
     @PostMapping("/afc/trade/addex")
     public void addTrade(@RequestBody final AfcTradeMo mo, final HttpServletRequest req) throws NumberFormatException, ParseException {
         _log.info("addTrade: {}", mo);
-        if (!isDebug || mo.getOpId() == null) {
-            mo.setOpId(JwtUtils.getJwtUserIdInCookie(req));
-            mo.setIp(AgentUtils.getIpAddr(req, passProxy));
-        }
+        // 暂时不获取当前用户ID和IP地址，由参数传过来
+//        if (!isDebug || mo.getOpId() == null) {
+//            mo.setOpId(JwtUtils.getJwtUserIdInCookie(req));
+//            mo.setIp(AgentUtils.getIpAddr(req, passProxy));
+//        }
         _log.debug("获取当前用户ID: {}", mo.getOpId());
         mo.setMac("不再获取MAC地址");
         try {
