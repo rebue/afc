@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import rebue.afc.dic.RefundResultDic;
-import rebue.afc.to.RefundTo;
+import rebue.afc.to.RefundApprovedTo;
 import rebue.robotech.ro.Ro;
 import rebue.wheel.OkhttpUtils;
 import rebue.wheel.idworker.IdWorker3;
@@ -41,7 +41,7 @@ public class AfcRefundTests {
 
         // 买家退款
         final String url = _hostUrl + "/refund";
-        final RefundTo to = new RefundTo();
+        final RefundApprovedTo to = new RefundApprovedTo();
         to.setOrderId(orderId);
         to.setRefundId(idWorker.getId());
         to.setBuyerAccountId(buyerAccountId);

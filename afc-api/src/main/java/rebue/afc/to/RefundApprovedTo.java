@@ -8,11 +8,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 
 /**
- * 退款到买家的传输对象（参数）
+ * 经过审核的退款(买家申请，卖家同意后进行的退款)的传输对象（参数）
  */
 @JsonInclude(Include.NON_NULL)
 @Data
-public class RefundTo {
+public class RefundApprovedTo {
     /**
      * 订单ID (实际是payOrderId)
      */

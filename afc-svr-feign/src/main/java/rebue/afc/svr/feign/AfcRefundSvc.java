@@ -4,8 +4,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import rebue.afc.to.RefundGoBackTo;
-import rebue.afc.to.RefundTo;
+import rebue.afc.to.RefundApprovedTo;
+import rebue.afc.to.RefundImmediateTo;
 import rebue.robotech.ro.Ro;
 import rebue.sbs.feign.FeignConfig;
 
@@ -23,15 +23,15 @@ import rebue.sbs.feign.FeignConfig;
 public interface AfcRefundSvc {
 
     /**
-     * 退款
+     * 经过审核的退款(买家申请，卖家同意后进行的退款)
      */
-    @PostMapping("/refund")
-    Ro refund(@RequestBody RefundTo to);
+    @PostMapping("/refund/approved")
+    Ro refundApproved(@RequestBody RefundApprovedTo to);
 
     /**
-     * 错误支付，直接退款原路返回
+     * 直接退款(因错误支付、卖家取消发货等原因，直接退款原路返回)
      */
-    @PostMapping("/refundgoback")
-    Ro refundGoBack(@RequestBody RefundGoBackTo to);
+    @PostMapping("/refund/immediate")
+    Ro refundImmediate(@RequestBody RefundImmediateTo to);
 
 }

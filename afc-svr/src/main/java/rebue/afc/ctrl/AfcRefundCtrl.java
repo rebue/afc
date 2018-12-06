@@ -22,8 +22,8 @@ import com.github.pagehelper.PageInfo;
 
 import rebue.afc.mo.AfcRefundMo;
 import rebue.afc.svc.AfcRefundSvc;
-import rebue.afc.to.RefundGoBackTo;
-import rebue.afc.to.RefundTo;
+import rebue.afc.to.RefundApprovedTo;
+import rebue.afc.to.RefundImmediateTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.wheel.AgentUtils;
@@ -192,13 +192,13 @@ public class AfcRefundCtrl {
     private AfcRefundSvc        svc;
 
     /**
-     * 退款
+     * 经过审核的退款(买家申请，卖家同意后进行的退款)
      */
-    @PostMapping("/refund")
-    Ro refund(@RequestBody final RefundTo to) {
+    @PostMapping("/refund/approved")
+    Ro refundApproved(@RequestBody final RefundApprovedTo to) {
         _log.info("退款： {}", to);
         try {
-            return svc.refund(to);
+            return svc.refundApproved(to);
         } catch (final DuplicateKeyException e) {
             final String msg = "重复退款";
             _log.error("{}: {}", msg, to);
@@ -217,14 +217,14 @@ public class AfcRefundCtrl {
     }
 
     /**
-     * 错误支付，直接退款原路返回
+     * 直接退款(因错误支付、卖家取消发货等原因，直接退款原路返回)
      */
-    @PostMapping("/refundgoback")
-    Ro refundGoBack(@RequestBody final RefundGoBackTo to, final HttpServletRequest req) {
+    @PostMapping("/refund/immediate")
+    Ro refundImmediate(@RequestBody final RefundImmediateTo to, final HttpServletRequest req) {
         _log.info("refundGoBack： {}", to);
         try {
             to.setIp(AgentUtils.getIpAddr(req, passProxy));
-            return svc.refundGoBack(to);
+            return svc.refundImmediate(to);
         } catch (final DuplicateKeyException e) {
             final String msg = "重复退款";
             _log.error("{}: {}", msg, to);

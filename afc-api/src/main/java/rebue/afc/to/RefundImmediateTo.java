@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 
 /**
- * 错误支付，直接退款原路返回的传输对象（参数）
+ * 直接退款(因错误支付、卖家取消发货等原因，直接退款原路返回)的传输对象（参数）
  */
 @JsonInclude(Include.NON_NULL)
 @Data
-public class RefundGoBackTo {
+public class RefundImmediateTo {
     /**
      * 订单ID (实际是payOrderId)
      */

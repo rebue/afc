@@ -25,8 +25,8 @@ import rebue.afc.platform.svc.AfcPlatformTradeSvc;
 import rebue.afc.svc.AfcPaySvc;
 import rebue.afc.svc.AfcRefundSvc;
 import rebue.afc.svc.AfcTradeSvc;
-import rebue.afc.to.RefundGoBackTo;
-import rebue.afc.to.RefundTo;
+import rebue.afc.to.RefundImmediateTo;
+import rebue.afc.to.RefundApprovedTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
@@ -84,11 +84,11 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
     private Mapper              dozerMapper;
 
     /**
-     * 退款
+     * 经过审核的退款(买家申请，卖家同意后进行的退款)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Ro refund(final RefundTo to) {
+    public Ro refundApproved(final RefundApprovedTo to) {
         _log.info("退款: {}", to);
         final Ro ro = new Ro();
 
@@ -329,11 +329,11 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
     }
 
     /**
-     * 错误支付，直接退款原路返回
+     * 直接退款(因错误支付、卖家取消发货等原因，直接退款原路返回)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Ro refundGoBack(final RefundGoBackTo to) {
+    public Ro refundImmediate(final RefundImmediateTo to) {
         _log.info("退款原路返回: {}", to);
         final Ro ro = new Ro();
 

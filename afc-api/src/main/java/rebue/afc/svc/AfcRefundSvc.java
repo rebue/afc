@@ -1,8 +1,8 @@
 package rebue.afc.svc;
 
 import rebue.afc.mo.AfcRefundMo;
-import rebue.afc.to.RefundGoBackTo;
-import rebue.afc.to.RefundTo;
+import rebue.afc.to.RefundImmediateTo;
+import rebue.afc.to.RefundApprovedTo;
 import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.MybatisBaseSvc;
 
@@ -14,12 +14,12 @@ import rebue.robotech.svc.MybatisBaseSvc;
 public interface AfcRefundSvc extends MybatisBaseSvc<AfcRefundMo, java.lang.Long> {
 
     /**
-     * 退款
+     * 经过审核的退款(买家申请，卖家同意后进行的退款)
      */
-    Ro refund(RefundTo to);
+    Ro refundApproved(RefundApprovedTo to);
 
     /**
-     * 错误支付，直接退款原路返回
+     * 直接退款(因错误支付、卖家取消发货等原因，直接退款原路返回)
      */
-    Ro refundGoBack(RefundGoBackTo to);
+    Ro refundImmediate(RefundImmediateTo to);
 }
