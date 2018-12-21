@@ -25,6 +25,7 @@ import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.AfcTradeListRo;
 import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.AfcTradeTo;
+import rebue.afc.to.GetAfcTradeTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.wheel.AgentUtils;
@@ -173,6 +174,24 @@ public class AfcTradeCtrl {
             throw new IllegalArgumentException(msg);
         }
         final PageInfo<AfcTradeMo> result = svc.list(mo, pageNum, pageSize);
+        _log.info("result: " + result);
+        return result;
+    }
+    
+    /**
+     * 查询组织交易
+     *
+     * @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    @GetMapping("/afc/orgTrade")
+    PageInfo<AfcTradeMo> orgTrade(final GetAfcTradeTo to, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+        _log.info("list AfcTradeMo:" + to + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            final String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        final PageInfo<AfcTradeMo> result = svc.getOrgTradeList(to, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }

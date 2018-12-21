@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.AfcTradeListRo;
 import rebue.afc.to.AfcTradeTo;
+import rebue.afc.to.GetAfcTradeTo;
 import rebue.robotech.mapper.MybatisBaseMapper;
 
 @Mapper
@@ -80,4 +81,9 @@ public interface AfcTradeMapper extends MybatisBaseMapper<AfcTradeMo, Long> {
      * 查询用户交易流水
      */
     List<AfcTradeListRo> selectTradeList(AfcTradeTo to);
+    
+    /**
+     * 获取组织流水信息
+     */
+    List<AfcTradeMo> getTrade(GetAfcTradeTo to);
 }

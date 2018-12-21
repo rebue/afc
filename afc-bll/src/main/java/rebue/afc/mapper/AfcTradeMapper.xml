@@ -409,4 +409,21 @@
        </where>
        ORDER BY TRADE_TIME DESC
 	</select>
+	
+		<!-- 获取组织交易流水方法-->
+	<select id="getTrade" parameterType="rebue.afc.to.GetAfcTradeTo" resultType="rebue.afc.mo.AfcTradeMo">
+	    select 
+	  	  <include refid="Base_Column_List" />
+	    from AFC_TRADE 
+		     where 	 ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
+		<where>
+	      <if test="tradeTimeStart != null  ">
+			and TRADE_TIME &gt;= #{tradeTimeStart,jdbcType=TIMESTAMP}
+		  </if>
+		  <if test="tradeTimeEnd != null ">
+			and TRADE_TIME &lt;= #{tradeTimeEnd,jdbcType=TIMESTAMP}
+		  </if>
+       </where>
+       ORDER BY TRADE_TIME DESC
+	</select>
 </mapper>

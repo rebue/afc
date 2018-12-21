@@ -27,6 +27,7 @@ import rebue.afc.svc.AfcAccountSvc;
 import rebue.afc.svc.AfcFlowSvc;
 import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.AfcTradeTo;
+import rebue.afc.to.GetAfcTradeTo;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.mo.SucOrgMo;
 import rebue.suc.mo.SucUserMo;
@@ -475,4 +476,12 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         }
         return tradeListResult;
     }
+    
+    /**
+     * 获取组织信息
+     */
+	@Override
+	public PageInfo<AfcTradeMo> getOrgTradeList(GetAfcTradeTo to, int pageNum, int pageSize) {
+		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.getTrade(to));
+	}
 }

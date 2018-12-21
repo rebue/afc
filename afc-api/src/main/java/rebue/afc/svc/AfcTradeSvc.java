@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.AfcTradeListRo;
 import rebue.afc.to.AfcTradeTo;
+import rebue.afc.to.GetAfcTradeTo;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 /**
@@ -55,4 +56,11 @@ public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> 
      * 查找组织账号交易流水
      */
     PageInfo<AfcTradeListRo> orgTradeList(AfcTradeTo to, int pageNum, int pageSize);
+    
+    /**
+     * 获取组织账户交易流水
+     */
+    PageInfo<AfcTradeMo> getOrgTradeList(GetAfcTradeTo to, int pageNum, int pageSize);
+    
+   
 }
