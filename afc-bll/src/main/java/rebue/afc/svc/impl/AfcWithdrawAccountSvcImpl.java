@@ -141,7 +141,7 @@ public class AfcWithdrawAccountSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawAcc
         withdrawAccountInfoRo = dozerMapper.map(afcWithdrawAccountMo, AfcWithdrawAccountInfoRo.class);
         withdrawAccountInfoRo.setBalance(afcAccountMo.getBalance().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         withdrawAccountInfoRo.setWithdrawNumber(withdrawNumberForMonth.getWithdrawNumber());
-        withdrawAccountInfoRo.setSeviceCharge(withdrawNumberForMonth.getSeviceCharge());
+        withdrawAccountInfoRo.setSeviceCharge(BigDecimal.valueOf(withdrawNumberForMonth.getSeviceCharge()));
         _log.info("根据用户id查询用户提现账户信息的返回值为：{}", withdrawAccountInfoRo);
         return withdrawAccountInfoRo;
     }

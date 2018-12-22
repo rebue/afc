@@ -1,6 +1,7 @@
 package rebue.suc;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.github.pagehelper.PageInfo;
 
 import rebue.afc.mo.AfcWithdrawAccountMo;
 import rebue.afc.mo.AfcWithdrawMo;
+import rebue.afc.to.ApplyWithdrawTo;
 import rebue.afc.withdraw.dic.WithdrawApplyResultDic;
 import rebue.afc.withdraw.dic.WithdrawCancelResultDic;
 import rebue.afc.withdraw.dic.WithdrawDealResultDic;
@@ -21,6 +23,11 @@ import rebue.afc.withdraw.ro.WithdrawApplyRo;
 import rebue.afc.withdraw.ro.WithdrawCancelRo;
 import rebue.afc.withdraw.ro.WithdrawDealRo;
 import rebue.afc.withdraw.ro.WithdrawOkRo;
+import rebue.afc.withdraw.to.WithdrawCancelTo;
+import rebue.afc.withdraw.to.WithdrawOkTo;
+import rebue.robotech.dic.ResultDic;
+import rebue.robotech.ro.IdRo;
+import rebue.robotech.ro.Ro;
 import rebue.wheel.OkhttpUtils;
 import rebue.wheel.RandomEx;
 
@@ -34,7 +41,7 @@ public class AfcWithdrawTests {
 
     private ObjectMapper _objectMapper     = new ObjectMapper();
 
-    @Test
+//    @Test
     public void test01() throws IOException {
         // 用户是否已有提现账户
         String url = _hostUrl + "/withdraw/account/exist/byuserid?userId=" + userId;
@@ -95,81 +102,73 @@ public class AfcWithdrawTests {
     public void test02() throws IOException {
         // 申请提现
         String url = _hostUrl + "/withdraw/apply";
-        Map<String, Object> paramsMap = new LinkedHashMap<>();
-        paramsMap.put("userId", userId);
-        paramsMap.put("withdrawAccountId", withdrawAccountId);
-        paramsMap.put("orderId", RandomEx.randomUUID());
-        paramsMap.put("tradeTitle", "申请提现的标题");
-        paramsMap.put("tradeDetail", "申请提现的详情");
-        paramsMap.put("tradeAmount", 0.01);
-        paramsMap.put("opId", opId);
-        paramsMap.put("mac", "MAC地址1");
-        paramsMap.put("ip", "192.168.1.1");
-        WithdrawApplyRo applyRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), WithdrawApplyRo.class);
+        ApplyWithdrawTo applyWithdrawTo = new ApplyWithdrawTo();
+        applyWithdrawTo.setOrderId(RandomEx.randomUUID());
+        applyWithdrawTo.setBankAccountName("测试");
+        applyWithdrawTo.setBankAccountNo("6212262102017196223");
+        applyWithdrawTo.setContactTel("15878752768");
+        applyWithdrawTo.setIp("192.168.1.222");
+        applyWithdrawTo.setApplicantId(525616558689484801L);
+        applyWithdrawTo.setTradeTitle("大卖网络-用户提现");
+        applyWithdrawTo.setWithdrawAmount(BigDecimal.valueOf(100));
+        applyWithdrawTo.setWithdrawType((byte) 2);
+        IdRo applyRo = _objectMapper.readValue(OkhttpUtils.postByJsonParams(url, applyWithdrawTo), IdRo.class);
         Assert.assertNotNull(applyRo);
-        Assert.assertEquals(WithdrawApplyResultDic.SUCCESS, applyRo.getResult());
-        Long withdrawId = applyRo.getId();
+        Assert.assertEquals(ResultDic.SUCCESS, applyRo.getResult());
+        Long withdrawId = Long.parseLong(applyRo.getId());
 
         // 处理提现
-        url = _hostUrl + "/withdraw/deal";
-        paramsMap = new LinkedHashMap<>();
-        paramsMap.put("id", withdrawId);
-        paramsMap.put("opId", opId);
-        paramsMap.put("mac", "MAC地址1");
-        paramsMap.put("ip", "192.168.1.1");
-        WithdrawDealRo dealRo = _objectMapper.readValue(OkhttpUtils.putByFormParams(url, paramsMap), WithdrawDealRo.class);
+        url = _hostUrl + "/withdraw/deal?id=" + withdrawId;
+        Ro dealRo = _objectMapper.readValue(OkhttpUtils.put(url), Ro.class);
         Assert.assertNotNull(dealRo);
-        Assert.assertEquals(WithdrawDealResultDic.SUCCESS, dealRo.getResult());
+        Assert.assertEquals(ResultDic.SUCCESS, dealRo.getResult());
 
         // 确认提现成功（手动）
         url = _hostUrl + "/withdraw/ok";
-        paramsMap = new LinkedHashMap<>();
-        paramsMap.put("id", withdrawId);
-        paramsMap.put("voucherNo", RandomEx.randomUUID());
-        paramsMap.put("opId", opId);
-        paramsMap.put("mac", "MAC地址1");
-        paramsMap.put("ip", "192.168.1.1");
-        WithdrawOkRo okRo = _objectMapper.readValue(OkhttpUtils.putByFormParams(url, paramsMap), WithdrawOkRo.class);
+        WithdrawOkTo withdrawOkTo = new WithdrawOkTo();
+        withdrawOkTo.setId(withdrawId);
+        withdrawOkTo.setAccountId(525616558689484801L);
+        withdrawOkTo.setVoucherNo("1234546745421");
+        withdrawOkTo.setOpId(520874560590053376L);
+        withdrawOkTo.setMac("不再获取MAC地址");
+        withdrawOkTo.setIp("192.168.1.222");
+        WithdrawOkRo okRo = _objectMapper.readValue(OkhttpUtils.putByJsonParams(url, withdrawOkTo), WithdrawOkRo.class);
         Assert.assertNotNull(okRo);
         Assert.assertEquals(WithdrawOkResultDic.SUCCESS, okRo.getResult());
 
         // 申请提现
         url = _hostUrl + "/withdraw/apply";
-        paramsMap = new LinkedHashMap<>();
-        paramsMap.put("userId", userId);
-        paramsMap.put("withdrawAccountId", withdrawAccountId);
-        paramsMap.put("orderId", RandomEx.randomUUID());
-        paramsMap.put("tradeTitle", "申请提现的标题");
-        paramsMap.put("tradeDetail", "申请提现的详情");
-        paramsMap.put("tradeAmount", 0.01);
-        paramsMap.put("opId", opId);
-        paramsMap.put("mac", "MAC地址1");
-        paramsMap.put("ip", "192.168.1.1");
-        applyRo = _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), WithdrawApplyRo.class);
+        applyWithdrawTo = new ApplyWithdrawTo();
+        applyWithdrawTo.setOrderId(RandomEx.randomUUID());
+        applyWithdrawTo.setBankAccountName("测试");
+        applyWithdrawTo.setBankAccountNo("6212262102017196223");
+        applyWithdrawTo.setContactTel("15878752768");
+        applyWithdrawTo.setIp("192.168.1.222");
+        applyWithdrawTo.setApplicantId(525616558689484801L);
+        applyWithdrawTo.setTradeTitle("大卖网络-用户提现");
+        applyWithdrawTo.setWithdrawAmount(BigDecimal.valueOf(100));
+        applyWithdrawTo.setWithdrawType((byte) 1);
+        applyWithdrawTo.setOpenAccountBank("工商银行");
+        applyRo = _objectMapper.readValue(OkhttpUtils.postByJsonParams(url, applyWithdrawTo), IdRo.class);
         Assert.assertNotNull(applyRo);
-        Assert.assertEquals(WithdrawApplyResultDic.SUCCESS, applyRo.getResult());
-        withdrawId = applyRo.getId();
+        Assert.assertEquals(ResultDic.SUCCESS, applyRo.getResult());
+        withdrawId = Long.parseLong(applyRo.getId());
 
         // 处理提现
-        url = _hostUrl + "/withdraw/deal";
-        paramsMap = new LinkedHashMap<>();
-        paramsMap.put("id", withdrawId);
-        paramsMap.put("opId", opId);
-        paramsMap.put("mac", "MAC地址1");
-        paramsMap.put("ip", "192.168.1.1");
-        dealRo = _objectMapper.readValue(OkhttpUtils.putByFormParams(url, paramsMap), WithdrawDealRo.class);
+        url = _hostUrl + "/withdraw/deal?id=" + withdrawId;
+        dealRo = _objectMapper.readValue(OkhttpUtils.put(url), Ro.class);
         Assert.assertNotNull(dealRo);
-        Assert.assertEquals(WithdrawDealResultDic.SUCCESS, dealRo.getResult());
+        Assert.assertEquals(ResultDic.SUCCESS, dealRo.getResult());
 
         // 作废提现
         url = _hostUrl + "/withdraw/cancel";
-        paramsMap = new LinkedHashMap<>();
-        paramsMap.put("id", withdrawId);
-        paramsMap.put("reason", "作废原因");
-        paramsMap.put("opId", opId);
-        paramsMap.put("mac", "MAC地址1");
-        paramsMap.put("ip", "192.168.1.1");
-        WithdrawCancelRo cancelRo = _objectMapper.readValue(OkhttpUtils.putByFormParams(url, paramsMap), WithdrawCancelRo.class);
+        WithdrawCancelTo withdrawCancelTo = new WithdrawCancelTo();
+        withdrawCancelTo.setId(withdrawId);
+        withdrawCancelTo.setReason("测试");
+        withdrawCancelTo.setOpId(520874560590053376L);
+        withdrawCancelTo.setMac("不再获取MAC地址");
+        withdrawCancelTo.setIp("192.168.1.222");
+        WithdrawCancelRo cancelRo = _objectMapper.readValue(OkhttpUtils.putByJsonParams(url, withdrawCancelTo), WithdrawCancelRo.class);
         Assert.assertNotNull(cancelRo);
         Assert.assertEquals(WithdrawCancelResultDic.SUCCESS, cancelRo.getResult());
 
@@ -181,7 +180,7 @@ public class AfcWithdrawTests {
         System.out.println(list);
     }
     
-    @Test
+//    @Test
     public void withdrawNumber() throws IOException {
     	String url = _hostUrl + "/afc/withdraw/withdrawnumber?accountId=525616558689484801";
     	String string = OkhttpUtils.get(url);

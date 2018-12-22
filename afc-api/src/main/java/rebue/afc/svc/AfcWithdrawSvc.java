@@ -6,13 +6,13 @@ import rebue.afc.mo.AfcWithdrawMo;
 import rebue.afc.ro.AfcWithdrawRo;
 import rebue.afc.ro.WithdrawNumberForMonthRo;
 import rebue.afc.to.ApplyWithdrawTo;
-import rebue.afc.withdraw.ro.WithdrawApplyRo;
 import rebue.afc.withdraw.ro.WithdrawCancelRo;
 import rebue.afc.withdraw.ro.WithdrawDealRo;
-import rebue.afc.withdraw.ro.WithdrawOkRo;
 import rebue.afc.withdraw.to.WithdrawCancelTo;
 import rebue.afc.withdraw.to.WithdrawDealTo;
 import rebue.afc.withdraw.to.WithdrawOkTo;
+import rebue.robotech.ro.IdRo;
+import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.MybatisBaseSvc;
 
 /**
@@ -25,7 +25,7 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
     /**
      * 申请提现
      */
-    WithdrawApplyRo apply(ApplyWithdrawTo to);
+	IdRo apply(ApplyWithdrawTo to);
 
     /**
      * 处理提现
@@ -35,7 +35,7 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
     /**
      * 确认提现成功（手动）
      */
-    WithdrawOkRo ok(WithdrawOkTo to);
+    Ro ok(WithdrawOkTo to);
 
     /**
      * 作废提现

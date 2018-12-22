@@ -1,7 +1,5 @@
 package rebue.afc.ro;
 
-import java.math.BigDecimal;
-
 import lombok.Data;
 
 @Data
@@ -19,5 +17,5 @@ public class WithdrawNumberForMonthRo {
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private BigDecimal seviceCharge;
+    private Integer seviceCharge;
 }

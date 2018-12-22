@@ -21,7 +21,7 @@
 		<module>afc-bll</module>
 		<module>afc-svr</module>
 		<module>afc-svr-feign</module>
-		<module>afc-scheduler-svr</module> 
+		<module>afc-scheduler-svr</module>
 	</modules>
 
 	<dependencyManagement>
@@ -50,6 +50,18 @@
 			<dependency>
 				<groupId>com.github.rebue.wxx</groupId>
 				<artifactId>wxx-api</artifactId>
+				<version>1.0.9</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.rebue.rna</groupId>
+				<artifactId>rna-svr-feign</artifactId>
+				<version>1.0.8</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.rebue.pnt</groupId>
+				<artifactId>pnt-svr-feign</artifactId>
 				<version>1.0.9</version>
 			</dependency>
 		</dependencies>

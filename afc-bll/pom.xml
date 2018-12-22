@@ -19,11 +19,17 @@
 			<groupId>com.github.rebue.suc</groupId>
 			<artifactId>suc-svr-feign</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.github.rebue.rna</groupId>
 			<artifactId>rna-svr-feign</artifactId>
-			<version>1.0.8</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.rebue.pnt</groupId>
+			<artifactId>pnt-svr-feign</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.github.rebue.wxx</groupId>
 			<artifactId>wxx-api</artifactId>
