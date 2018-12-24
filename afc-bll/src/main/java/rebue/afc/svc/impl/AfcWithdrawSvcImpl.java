@@ -46,7 +46,7 @@ import rebue.afc.withdraw.to.WithdrawOkTo;
 import rebue.pnt.dic.PointLogTypeDic;
 import rebue.pnt.mo.PntAccountMo;
 import rebue.pnt.svr.feign.PntAccountSvc;
-import rebue.pnt.svr.feign.PntPointsSvc;
+import rebue.pnt.svr.feign.PntPointSvc;
 import rebue.pnt.to.AddPointTradeTo;
 import rebue.rna.mo.RnaRealnameMo;
 import rebue.rna.svr.feign.RnaSvc;
@@ -122,7 +122,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 	private RnaSvc rnaSvc;
 
 	@Resource
-	private PntPointsSvc pntPointsSvc;
+	private PntPointSvc pntPointSvc;
 
 	@Resource
 	private PntAccountSvc pntAccountSvc;
@@ -204,7 +204,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			return ro;
 		}
 
-		if ((pntAccountMo.getPoints().subtract(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge())))
+		if ((pntAccountMo.getPoint().subtract(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge())))
 				.compareTo(BigDecimal.ZERO) < 0) {
 			_log.error("申请提现时发现该账号的积分不足以抵扣本次提现，申请的信息为：{}", to);
 			ro.setResult(ResultDic.FAIL);
@@ -553,9 +553,9 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		addPointTradeTo.setChangedTitile("大卖网络-用户提现");
 		addPointTradeTo.setOrderId(to.getId());
 		addPointTradeTo.setModifiedTimestamp(modifiedTimestamp);
-		addPointTradeTo.setChangedPoints(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge()).negate());
+		addPointTradeTo.setChangedPoint(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge()).negate());
 		_log.info("确认提现添加一笔积分交易的参数为：{}", addPointTradeTo);
-		Ro addPointTradeRo = pntPointsSvc.addPointTrade(addPointTradeTo);
+		Ro addPointTradeRo = pntPointSvc.addPointTrade(addPointTradeTo);
 		_log.info("确认提现添加一笔积分交易的返回值为：{}", addPointTradeRo);
 		if (addPointTradeRo == null) {
 			_log.error("确认提现添加一笔积分交易出现异常，请求的参数为：{}", to);
