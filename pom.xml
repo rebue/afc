@@ -64,6 +64,11 @@
 				<artifactId>pnt-svr-feign</artifactId>
 				<version>1.0.9</version>
 			</dependency>
+			<dependency>
+				<groupId>rebue.damai</groupId>
+				<artifactId>damai-pnt</artifactId>
+				<version>1.0.9</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>

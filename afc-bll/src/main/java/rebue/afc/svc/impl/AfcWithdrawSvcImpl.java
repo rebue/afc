@@ -549,10 +549,9 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 
 		AddPointTradeTo addPointTradeTo = new AddPointTradeTo();
 		addPointTradeTo.setAccountId(to.getAccountId());
-		addPointTradeTo.setPointsLogType((byte) PointLogTypeDic.VPAY_WITHDRAW.getCode());
+		addPointTradeTo.setPointLogType((byte) PointLogTypeDic.VPAY_WITHDRAW.getCode());
 		addPointTradeTo.setChangedTitile("大卖网络-用户提现");
 		addPointTradeTo.setOrderId(to.getId());
-		addPointTradeTo.setModifiedTimestamp(modifiedTimestamp);
 		addPointTradeTo.setChangedPoint(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge()).negate());
 		_log.info("确认提现添加一笔积分交易的参数为：{}", addPointTradeTo);
 		Ro addPointTradeRo = pntPointSvc.addPointTrade(addPointTradeTo);
