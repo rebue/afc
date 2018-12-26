@@ -415,8 +415,9 @@
 	    select 
 	  	  <include refid="Base_Column_List" />
 	    from AFC_TRADE 
-		     where 	 ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
 		<where>
+				   	 ACCOUNT_ID = #{accountId,jdbcType=BIGINT}
+		
 	      <if test="tradeTimeStart != null  ">
 			and TRADE_TIME &gt;= #{tradeTimeStart,jdbcType=TIMESTAMP}
 		  </if>

@@ -1,23 +1,24 @@
 [
+
 	{
-		"templateName": "svc.btl",
-		"targetDir": "../afc-api/src/main/java/${modulePath}/svc/",
-		"targetFile": "${entityName}Svc.java",
-		"isGenTargetOnMiddleTable": true,
+		"templateName": "test.btl",
+		"targetDir": "../afc-svr/src/test/java/${modulePath}/test/",
+		"targetFile": "${entityName}Tests.java",
+		"isGenTargetOnMiddleTable": false,
 		"backup": false
 	},
 	{
-		"templateName": "svc-impl.btl",
-		"targetDir": "../afc-bll/src/main/java/${modulePath}/svc/impl/",
-		"targetFile": "${entityName}SvcImpl.java",
-		"isGenTargetOnMiddleTable": true,
+		"templateName": "dao.btl",
+		"targetDir": "../afc-bll/src/main/java/${modulePath}/dao/",
+		"targetFile": "${entityName}Dao.java",
+		"isGenTargetOnMiddleTable": false,
 		"backup": false
 	},
 	{
-		"templateName": "ctrl.btl",
-		"targetDir": "../afc-svr/src/main/java/${modulePath}/ctrl/",
-		"targetFile": "${entityName}Ctrl.java",
-		"isGenTargetOnMiddleTable": true,
+		"templateName": "jo.btl",
+		"targetDir": "../afc-api/src/main/java/${modulePath}/jo/",
+		"targetFile": "${entityName}Jo.java",
+		"isGenTargetOnMiddleTable": false,
 		"backup": false
 	}
 ]

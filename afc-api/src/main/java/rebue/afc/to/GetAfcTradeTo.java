@@ -14,6 +14,11 @@ import lombok.Data;
 public class GetAfcTradeTo {
 	
 	/**
+	 * 账号ID
+	 */
+	Long accountId ;
+	
+	/**
 	 * 交易开始时间
 	 */
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
