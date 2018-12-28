@@ -15,7 +15,7 @@ import rebue.wheel.baseintf.EnumBase;
  */
 @ApiModel(value = "充值类型", description = "充值类型的字典(1.余额充值;2.返现金充值;)")
 public enum ChargeTypeDic implements EnumBase {
-	/**
+    /**
      * 1: V支付
      */
     @ApiModelProperty(value = "余额充值")
@@ -25,14 +25,14 @@ public enum ChargeTypeDic implements EnumBase {
      */
     @ApiModelProperty(value = "返现金充值")
     CASHBACKCHARGE(2);
-	/**
+    /**
      * 枚举的所有项，注意这个变量是静态单例的
      */
     private static Map<Integer, EnumBase> valueMap;
     // 初始化map，保存枚举的所有项到map中以方便通过code查找
     static {
         valueMap = new HashMap<>();
-        for (EnumBase item : values()) {
+        for (final EnumBase item : values()) {
             valueMap.put(item.getCode(), item);
         }
     }
@@ -43,8 +43,8 @@ public enum ChargeTypeDic implements EnumBase {
      * 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static PayAndRefundTypeDic getItem(int code) {
-        EnumBase result = valueMap.get(code);
+    public static PayAndRefundTypeDic getItem(final int code) {
+        final EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
@@ -56,7 +56,7 @@ public enum ChargeTypeDic implements EnumBase {
     /**
      * 构造器，传入code
      */
-    ChargeTypeDic(int code) {
+    ChargeTypeDic(final int code) {
         this.code = code;
     }
 
@@ -67,4 +67,10 @@ public enum ChargeTypeDic implements EnumBase {
     public int getCode() {
         return code;
     }
+
+    @Override
+    public String getName() {
+        return name();
+    }
+
 }
