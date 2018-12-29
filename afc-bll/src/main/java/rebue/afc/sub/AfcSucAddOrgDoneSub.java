@@ -54,7 +54,6 @@ public class AfcSucAddOrgDoneSub implements ApplicationListener<ContextRefreshed
                 accountMo.setAccountType((byte) AccountTypeDic.ORG.getCode());
                 final Date now = new Date();
                 accountMo.setSettleTime(now);
-                accountMo.setModifiedTimestamp(now.getTime());
                 accountSvc.add(accountMo);
                 return true;
             } catch (final DuplicateKeyException e) {

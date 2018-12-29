@@ -54,7 +54,6 @@ public class AfcSucAddUserDoneSub implements ApplicationListener<ContextRefreshe
                 accountMo.setAccountType((byte) AccountTypeDic.USER.getCode());
                 final Date now = new Date();
                 accountMo.setSettleTime(now);
-                accountMo.setModifiedTimestamp(now.getTime());
                 accountSvc.add(accountMo);
                 return true;
             } catch (final DuplicateKeyException e) {

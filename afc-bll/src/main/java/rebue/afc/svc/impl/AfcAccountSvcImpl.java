@@ -1,11 +1,13 @@
 package rebue.afc.svc.impl;
 
 import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import rebue.afc.mapper.AfcAccountMapper;
 import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.svc.AfcAccountSvc;
@@ -30,16 +32,16 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 public class AfcAccountSvcImpl extends MybatisBaseSvcImpl<AfcAccountMo, java.lang.Long, AfcAccountMapper> implements AfcAccountSvc {
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public int add(AfcAccountMo mo) {
+    public int add(final AfcAccountMo mo) {
         _log.info("添加账户信息");
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
             mo.setId(_idWorker.getId());
         }
+        mo.setModifiedTimestamp(mo.getId());
         return super.add(mo);
     }
 
@@ -52,10 +54,10 @@ public class AfcAccountSvcImpl extends MybatisBaseSvcImpl<AfcAccountMo, java.lan
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void modifyAmount(HashMap<String, ?> map) {
+    public void modifyAmount(final HashMap<String, ?> map) {
         _log.info("修改金额-产生了一笔交易(影响余额/返现金/货款)，修改相应的字段及记录时间戳: {}", map);
         if (_mapper.modifyAmount(map) != 1) {
-            String msg = "修改账户的金额不成功: 出现并发问题";
+            final String msg = "修改账户的金额不成功: 出现并发问题";
             _log.error("{}-{}", msg, map);
             throw new RuntimeException(msg);
         }

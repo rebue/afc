@@ -116,7 +116,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         }
         final AfcAccountMo newAccountMo = new AfcAccountMo();
         newAccountMo.setId(accountId);
-        newAccountMo.setModifiedTimestamp(now.getTime());
+        newAccountMo.setModifiedTimestamp(_idWorker.getId());
         // 判断交易类型
         switch (TradeTypeDic.getItem(tradeMo.getTradeType())) {
         case PAY: // XXX AFC : 交易 : （ 返现金-，余额-，优先扣减返现金 ）V支付-支付
@@ -476,12 +476,12 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         }
         return tradeListResult;
     }
-    
+
     /**
      * 获取组织信息
      */
-	@Override
-	public PageInfo<AfcTradeMo> getOrgTradeList(GetAfcTradeTo to, int pageNum, int pageSize) {
-		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.getTrade(to));
-	}
+    @Override
+    public PageInfo<AfcTradeMo> getOrgTradeList(final GetAfcTradeTo to, final int pageNum, final int pageSize) {
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.getTrade(to));
+    }
 }
