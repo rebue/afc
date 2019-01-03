@@ -263,7 +263,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		final RnaRealnameMo rnaRealnameMo = rnaSvc.getById(to.getApplicantId());
 		if (rnaRealnameMo == null) {
 			if (to.getIdCard() == null || to.getIdCard().equals("") || to.getIdCard().equals("null")) {
-				throw new RuntimeException("身份证号不正确");
+				throw new RuntimeException("身份证号不能为空");
 			}
 			// 验证身份证号
 			if (!IdCardValidator.validate(to.getIdCard())) {
