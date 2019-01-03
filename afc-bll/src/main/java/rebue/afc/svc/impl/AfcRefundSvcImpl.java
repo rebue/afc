@@ -25,8 +25,8 @@ import rebue.afc.platform.svc.AfcPlatformTradeSvc;
 import rebue.afc.svc.AfcPaySvc;
 import rebue.afc.svc.AfcRefundSvc;
 import rebue.afc.svc.AfcTradeSvc;
-import rebue.afc.to.RefundImmediateTo;
 import rebue.afc.to.RefundApprovedTo;
+import rebue.afc.to.RefundImmediateTo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
@@ -201,6 +201,10 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
                 payCashbackTotal = payCashbackTotal.add(pay.getPayAmount1());
                 payBalanceTotal = payBalanceTotal.add(pay.getPayAmount2());
             }
+            // 支付类型如果是除V支付之外的其它支付类型(微信支付)，支付金额计算入支付余额总额 FIXME 改为直接退款的时候要改过来
+            else {
+                payBalanceTotal = payBalanceTotal.add(pay.getPayAmount());
+            }
         }
         _log.debug("计算支付总额: 支付总额-{}，支付V支付的返现金总额-{}，支付V支付的余额总额-{}", paidTotal, payCashbackTotal, payBalanceTotal);
 
@@ -284,7 +288,7 @@ public class AfcRefundSvcImpl extends MybatisBaseSvcImpl<AfcRefundMo, java.lang.
             tradeSvc.addTrade(tradeMo);
         }
 
-        if (to.getReturnCompensationToSeller().compareTo(BigDecimal.ZERO) == 0) {
+        if (to.getReturnCompensationToSeller().compareTo(BigDecimal.ZERO) > 0) {
             _log.info("退款补偿金到卖家账户（ 余额+ ）");
             final AfcTradeMo tradeMo = dozerMapper.map(to, AfcTradeMo.class);
             // 交易类型: 退款到家
