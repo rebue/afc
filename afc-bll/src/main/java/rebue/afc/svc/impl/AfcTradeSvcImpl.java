@@ -23,6 +23,7 @@ import rebue.afc.mo.AfcAccountMo;
 import rebue.afc.mo.AfcFlowMo;
 import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.AfcTradeListRo;
+import rebue.afc.ro.OrgWithdrawRo;
 import rebue.afc.svc.AfcAccountSvc;
 import rebue.afc.svc.AfcFlowSvc;
 import rebue.afc.svc.AfcTradeSvc;
@@ -484,4 +485,16 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
     public PageInfo<AfcTradeMo> getOrgTradeList(final GetAfcTradeTo to, final int pageNum, final int pageSize) {
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.getTrade(to));
     }
+    
+    /**
+     * 获取组织提现总额
+     */
+	@Override
+	public OrgWithdrawRo getOrgWithdrawTotal(Long accountId) {
+        _log.info("获取组织提现总额参数:{}", accountId);
+        OrgWithdrawRo result=new OrgWithdrawRo();
+        _log.info("获取组织提现总额结算:{}", result);
+		 result=_mapper.getOrgWithdrawTotal(accountId);
+		 return result;
+	}
 }

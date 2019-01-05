@@ -1,9 +1,13 @@
 package rebue.afc.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
 import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.AfcTradeListRo;
+import rebue.afc.ro.OrgWithdrawRo;
 import rebue.afc.to.AfcTradeTo;
 import rebue.afc.to.GetAfcTradeTo;
 import rebue.robotech.mapper.MybatisBaseMapper;
@@ -86,4 +90,12 @@ public interface AfcTradeMapper extends MybatisBaseMapper<AfcTradeMo, Long> {
      * 获取组织流水信息
      */
     List<AfcTradeMo> getTrade(GetAfcTradeTo to);
+    
+    /**
+     * 获取组织提现总额
+     * @param accountId
+     * @return
+     */
+    @Select("SELECT sum(TRADE_AMOUNT) as withdrawTotal FROM afc.AFC_TRADE  where ACCOUNT_ID=#{accountId}  and TRADE_TYPE =31")
+    OrgWithdrawRo getOrgWithdrawTotal(Long accountId);
 }

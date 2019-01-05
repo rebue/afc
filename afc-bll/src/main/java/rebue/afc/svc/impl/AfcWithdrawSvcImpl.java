@@ -167,11 +167,22 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			ro.setMsg("您已被锁定，请解锁后再重试。。。");
 			return ro;
 		}
+		
+		 AfcAccountMo accountMo=new AfcAccountMo();
+		if(to.getAccountType() ==null ||to.getAccountType() !=2) {
+			// 查询申请人账户信息
+			_log.info("申请提现查询申请人账户信息的参数为：{}", to.getApplicantId());
+			
+			 accountMo = accountSvc.getById(to.getApplicantId());
+			_log.info("申请提现查询申请人账户信息的返回值为：{}", accountMo);
+		}else {
+			// 查询申请人账户信息
+			_log.info("申请提现查询申请人组织账户信息的参数为：{}", to.getApplicantOrgId());
+			
+			 accountMo = accountSvc.getById(to.getApplicantOrgId());
+			_log.info("申请提现查询申请人组织账户信息的返回值为：{}", accountMo);
+		}
 
-		// 查询申请人账户信息
-		_log.info("申请提现查询申请人账户信息的参数为：{}", to.getApplicantId());
-		final AfcAccountMo accountMo = accountSvc.getById(to.getApplicantId());
-		_log.info("申请提现查询申请人账户信息的返回值为：{}", accountMo);
 		if (accountMo == null) {
 			_log.error("申请提现查询申请人账户信息时发现该申请人不存在提现账户，申请人id为：{}", to.getApplicantId());
 			ro.setResult(ResultDic.FAIL);
@@ -181,7 +192,12 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 
 		// 查询本月已提现次数
 		final AfcWithdrawMo afcWithdrawMo = new AfcWithdrawMo();
-		afcWithdrawMo.setAccountId(to.getApplicantId());
+		if(to.getAccountType() ==null ||to.getAccountType() !=2) {
+			afcWithdrawMo.setAccountId(to.getApplicantId());
+		}else {
+			afcWithdrawMo.setAccountId(to.getApplicantOrgId());
+		}
+
 		_log.info("申请提现查询本月已提现次数的参数为：{}", afcWithdrawMo);
 		WithdrawNumberForMonthRo withdrawNumberForMonthRo = afcWithdrawSvc.getWithdrawNumberForMonth(afcWithdrawMo);
 		_log.info("申请提现查询本月已提现次数的返回值为：{}", withdrawNumberForMonthRo);
@@ -193,28 +209,29 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			ro.setMsg("您的余额不足");
 			return ro;
 		}
+		//判断是否是供应商提现1是个人2是供应商
+		if(to.getAccountType() ==null ||to.getAccountType() !=2) {
+			_log.info("申请提现查询积分账号信息的参数为：{}", to.getApplicantId());
+			PntAccountMo pntAccountMo = pntAccountSvc.getById(to.getApplicantId());
+			_log.info("申请提现查询积分账号信息的参数为：{}", pntAccountMo);
+			if (pntAccountMo == null) {
+				_log.error("申请提现查询积分账号时发现没有积分账号信息，申请的参数为：{}", to);
+				ro.setResult(ResultDic.FAIL);
+				ro.setMsg("没有发现积分账号信息");
+				return ro;
+			}
 
-		_log.info("申请提现查询积分账号信息的参数为：{}", to.getApplicantId());
-		PntAccountMo pntAccountMo = pntAccountSvc.getById(to.getApplicantId());
-		_log.info("申请提现查询积分账号信息的参数为：{}", pntAccountMo);
-		if (pntAccountMo == null) {
-			_log.error("申请提现查询积分账号时发现没有积分账号信息，申请的参数为：{}", to);
-			ro.setResult(ResultDic.FAIL);
-			ro.setMsg("没有发现积分账号信息");
-			return ro;
-		}
-
-		if ((pntAccountMo.getPoint().subtract(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge())))
-				.compareTo(BigDecimal.ZERO) < 0) {
-			_log.error("申请提现时发现该账号的积分不足以抵扣本次提现，申请的信息为：{}", to);
-			ro.setResult(ResultDic.FAIL);
-			ro.setMsg("积分不足");
-			return ro;
+			if ((pntAccountMo.getPoint().subtract(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge())))
+					.compareTo(BigDecimal.ZERO) < 0) {
+				_log.error("申请提现时发现该账号的积分不足以抵扣本次提现，申请的信息为：{}", to);
+				ro.setResult(ResultDic.FAIL);
+				ro.setMsg("积分不足");
+				return ro;
+			}
 		}
 
 		// 添加申请提现信息
 		final AfcWithdrawMo withdrawMo = new AfcWithdrawMo();
-		withdrawMo.setAccountId(to.getApplicantId());
 		withdrawMo.setOrderId(to.getOrderId());
 		withdrawMo.setWithdrawState((byte) 1);
 		withdrawMo.setTradeTitle(to.getTradeTitle());
@@ -222,7 +239,11 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		withdrawMo.setAmount(to.getWithdrawAmount());
 		withdrawMo.setRealAmount(to.getWithdrawAmount());
 		withdrawMo.setSeviceCharge(new BigDecimal("0"));
-		withdrawMo.setAccountId(to.getApplicantId());
+		if(to.getAccountType() ==null ||to.getAccountType() !=2) {
+			withdrawMo.setAccountId(to.getApplicantId());
+		}else {
+			withdrawMo.setAccountId(to.getApplicantOrgId());
+		}
 		withdrawMo.setApplicantId(to.getApplicantId());
 		withdrawMo.setApplyTime(new Date());
 		withdrawMo.setApplicantMac("不再获取mac地址");
@@ -244,7 +265,11 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 
 		// 添加一笔账户交易
 		final AfcTradeMo tradeMo = new AfcTradeMo();
-		tradeMo.setAccountId(to.getApplicantId());
+		if(to.getAccountType() ==null ||to.getAccountType() !=2) {
+			tradeMo.setAccountId(to.getApplicantId());
+		}else {
+			tradeMo.setAccountId(to.getApplicantOrgId());
+		}
 		tradeMo.setTradeType((byte) TradeTypeDic.WITHDRAW_APPLY.getCode());
 		tradeMo.setTradeTime(new Date());
 		tradeMo.setTradeAmount(to.getWithdrawAmount());
@@ -257,10 +282,15 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		tradeMo.setOpId(to.getApplicantId());
 		tradeMo.setMac("不再获取mac地址");
 		tradeMo.setIp(to.getIp());
-		_log.info("确认提现添加提现服务费账户交易信息的参数为：{}", tradeMo);
+		_log.info("确认提现添加提现交易信息的参数为：{}", tradeMo);
 		tradeSvc.addTrade(tradeMo);
-
-		final RnaRealnameMo rnaRealnameMo = rnaSvc.getById(to.getApplicantId());
+		//获取实名认证信息
+		RnaRealnameMo rnaRealnameMo=new RnaRealnameMo();
+		if(to.getAccountType() ==null ||to.getAccountType() !=2) {
+			 rnaRealnameMo = rnaSvc.getById(to.getApplicantId());
+		}else {
+			rnaRealnameMo = rnaSvc.getById(to.getApplicantOrgId());
+		}
 		if (rnaRealnameMo == null) {
 			if (to.getIdCard() == null || to.getIdCard().equals("") || to.getIdCard().equals("null")) {
 				throw new RuntimeException("身份证号不能为空");
@@ -272,7 +302,11 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			}
 
 			final RnaRealnameMo realnameMo = new RnaRealnameMo();
-			realnameMo.setId(to.getApplicantId());
+			if(to.getAccountType() ==null ||to.getAccountType() !=2) {
+				realnameMo.setId(to.getApplicantId());
+			}else {
+				realnameMo.setId(to.getApplicantOrgId());
+			}
 			realnameMo.setRealName(to.getBankAccountName());
 			realnameMo.setIdCard(to.getIdCard());
 			realnameMo.setIsCorrect(false);
@@ -510,7 +544,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		_log.info("确认提现添加提现账户交易信息的参数为：{}", tradeMo);
 		tradeSvc.addTrade(tradeMo);
 
-		// 添加一笔交易
+		// 添加一笔交易,提现服务费
 		tradeMo = new AfcTradeMo();
 		tradeMo.setAccountId(withdrawMo.getAccountId());
 		tradeMo.setTradeType((byte) TradeTypeDic.WITHDRAW_SEVICE_CHARGE.getCode());
@@ -526,7 +560,10 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 		tradeMo.setMac(to.getMac());
 		tradeMo.setIp(to.getIp());
 		_log.info("确认提现添加提现服务费账户交易信息的参数为：{}", tradeMo);
-		tradeSvc.addTrade(tradeMo);
+		if(tradeMo.getTradeAmount().compareTo(BigDecimal.ZERO) !=0) {
+			tradeSvc.addTrade(tradeMo);
+		}
+
 
 		final AfcPlatformTradeMo platformTradeMo = new AfcPlatformTradeMo();
 		platformTradeMo.setPlatformTradeType((byte) PlatformTradeTypeDic.WITHDRAW_SEVICE_CHARGE.getCode());
@@ -547,27 +584,33 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			throw new RuntimeException("操作出错");
 		}
 
-		AddPointTradeTo addPointTradeTo = new AddPointTradeTo();
-		addPointTradeTo.setAccountId(to.getAccountId());
-		addPointTradeTo.setPointLogType((byte) PointLogTypeDic.VPAY_WITHDRAW.getCode());
-		addPointTradeTo.setChangedTitile("大卖网络-用户提现");
-		addPointTradeTo.setOrderId(to.getId());
-		addPointTradeTo.setChangedPoint(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge()).negate());
-		_log.info("确认提现添加一笔积分交易的参数为：{}", addPointTradeTo);
-		Ro addPointTradeRo = pntPointSvc.addPointTrade(addPointTradeTo);
-		_log.info("确认提现添加一笔积分交易的返回值为：{}", addPointTradeRo);
-		if (addPointTradeRo == null) {
-			_log.error("确认提现添加一笔积分交易出现异常，请求的参数为：{}", to);
-			ro.setResult(ResultDic.FAIL);
-			ro.setMsg("扣减服务费出现异常");
-			return ro;
-		}
+		// 查询提现帐号类型属于是组织还是个人，组织不需要扣除积分
+		_log.info("查询提现帐号是组织还是个人的参数为：{}", to.getAccountId());
+		AfcAccountMo afcAccountMo = accountSvc.getById(to.getAccountId());
+		_log.info("查询提现帐号是组织还是个人的结果为：afcAccountMo-{}",afcAccountMo);
+		if (afcAccountMo.getAccountType() == 1) {
 
-		if (addPointTradeRo.getResult() != ResultDic.SUCCESS) {
-			_log.error("确认提现添加一笔积分交易时出现错误，请求的参数为：{}", to);
-			return addPointTradeRo;
-		}
+			AddPointTradeTo addPointTradeTo = new AddPointTradeTo();
+			addPointTradeTo.setAccountId(to.getAccountId());
+			addPointTradeTo.setPointLogType((byte) PointLogTypeDic.VPAY_WITHDRAW.getCode());
+			addPointTradeTo.setChangedTitile("大卖网络-用户提现");
+			addPointTradeTo.setOrderId(to.getId());
+			addPointTradeTo.setChangedPoint(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge()).negate());
+			_log.info("确认提现添加一笔积分交易的参数为：{}", addPointTradeTo);
+			Ro addPointTradeRo = pntPointSvc.addPointTrade(addPointTradeTo);
+			_log.info("确认提现添加一笔积分交易的返回值为：{}", addPointTradeRo);
+			if (addPointTradeRo == null) {
+				_log.error("确认提现添加一笔积分交易出现异常，请求的参数为：{}", to);
+				ro.setResult(ResultDic.FAIL);
+				ro.setMsg("扣减服务费出现异常");
+				return ro;
+			}
 
+			if (addPointTradeRo.getResult() != ResultDic.SUCCESS) {
+				_log.error("确认提现添加一笔积分交易时出现错误，请求的参数为：{}", to);
+				return addPointTradeRo;
+			}
+		}
 		// 返回成功
 		_log.info("确认提现成功（手动）成功: {}", to);
 		ro.setResult(ResultDic.SUCCESS);
@@ -705,7 +748,12 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 			_log.info("查询申请提现账号记录查询用户信息的参数为：{}", afcWithdrawMo.getApplicantId());
 			final SucUserMo sucUserMo = sucUserSvc.getById(afcWithdrawMo.getApplicantId());
 			_log.info("查询申请提现账号记录查询用户信息的返回值为：{}", sucUserMo);
-			afcWithdrawRo.setApplicantName(sucUserMo.getWxNickname());
+			if(sucUserMo.getWxNickname() !=null) {
+				afcWithdrawRo.setApplicantName(sucUserMo.getWxNickname());
+			}else if(sucUserMo.getLoginName() !=null) {
+				afcWithdrawRo.setApplicantName(sucUserMo.getLoginName());
+			}
+
 			listEx.add(afcWithdrawRo);
 		}
 		doSelectPageInfoEx = dozerMapper.map(doSelectPageInfo, PageInfo.class);

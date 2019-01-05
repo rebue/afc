@@ -202,8 +202,11 @@ public class AfcWithdrawCtrl {
 	 * @return
 	 */
 	@PostMapping("/withdraw/apply")
-	IdRo apply(@RequestBody ApplyWithdrawTo to) {
+	IdRo apply(@RequestBody ApplyWithdrawTo to,HttpServletRequest req) {
 		_log.info("申请提现： {}", to);
+		if(to.getIp()==null) {
+			to.setIp(AgentUtils.getIpAddr(req, "nginx"));
+		}
 		try {
 			return svc.apply(to);
 		} catch (Exception e) {

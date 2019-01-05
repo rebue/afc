@@ -37,6 +37,11 @@ public class ApplyWithdrawTo {
 	private Byte withdrawType;
 	
 	/**
+	 * 账户类型，1为个人申请提现，2为供应商申请提现
+	 * 个人扣除积分，供应商不扣除
+	 */
+	private Byte accountType;
+	/**
 	 * 开户银行
 	 */
 	private String openAccountBank;
@@ -55,6 +60,11 @@ public class ApplyWithdrawTo {
 	 * 申请人id
 	 */
 	private Long applicantId;
+	
+	/**
+	 * 申请人组织id，目前用于组织提现
+	 */
+	private Long applicantOrgId;
 	
 	/**
 	 * 申请人ip地址

@@ -1,9 +1,11 @@
 package rebue.afc.svc;
 
+
 import com.github.pagehelper.PageInfo;
 
 import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.AfcTradeListRo;
+import rebue.afc.ro.OrgWithdrawRo;
 import rebue.afc.to.AfcTradeTo;
 import rebue.afc.to.GetAfcTradeTo;
 import rebue.robotech.svc.MybatisBaseSvc;
@@ -62,5 +64,8 @@ public interface AfcTradeSvc extends MybatisBaseSvc<AfcTradeMo, java.lang.Long> 
      */
     PageInfo<AfcTradeMo> getOrgTradeList(GetAfcTradeTo to, int pageNum, int pageSize);
     
-   
+   /**
+    * 获取组织已提现总额
+    */
+    OrgWithdrawRo getOrgWithdrawTotal(Long accountId);
 }

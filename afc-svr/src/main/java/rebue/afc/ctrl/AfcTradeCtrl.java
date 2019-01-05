@@ -23,6 +23,7 @@ import com.github.pagehelper.PageInfo;
 
 import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.AfcTradeListRo;
+import rebue.afc.ro.OrgWithdrawRo;
 import rebue.afc.svc.AfcTradeSvc;
 import rebue.afc.to.AfcTradeTo;
 import rebue.afc.to.GetAfcTradeTo;
@@ -315,5 +316,16 @@ public class AfcTradeCtrl {
             final String msg = "重复添加交易";
             _log.error(msg, e);
         }
+    }
+    
+    /**
+     * 获取组织已经提现总额
+     * @param accountId
+     * @return
+     */
+    @GetMapping("/afc/orgWithdrawTotal")
+    OrgWithdrawRo getOrgWithdrawTotal(Long accountId) {
+        _log.info("获取组织已经提现总额参数为accountId: {}",accountId);
+        return svc.getOrgWithdrawTotal(accountId);
     }
 }
