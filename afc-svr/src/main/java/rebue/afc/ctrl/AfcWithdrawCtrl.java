@@ -278,6 +278,9 @@ public class AfcWithdrawCtrl {
 	@PutMapping("/withdraw/cancel")
 	WithdrawCancelRo cancel(@RequestBody WithdrawCancelTo to, HttpServletRequest req) throws NumberFormatException, ParseException {
 		_log.info("作废提现： {}", to);
+		if(to.getIp()==null) {
+			to.setIp(AgentUtils.getIpAddr(req, "nginx"));
+		}
 		// 获取当前登录用户id
 		Long loginId = 521912602410876932L;
 		if (!isDebug) {

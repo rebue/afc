@@ -324,7 +324,7 @@ public class AfcTradeCtrl {
      * @return
      */
     @GetMapping("/afc/orgWithdrawTotal")
-    OrgWithdrawRo getOrgWithdrawTotal(Long accountId) {
+    OrgWithdrawRo getOrgWithdrawTotal(@RequestParam("accountId") Long accountId) {
         _log.info("获取组织已经提现总额参数为accountId: {}",accountId);
         return svc.getOrgWithdrawTotal(accountId);
     }
