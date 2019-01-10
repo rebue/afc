@@ -173,6 +173,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         case SETTLE_SUPPLIER: // XXX AFC : 交易 : （ 余额+ ）结算-结算成本(将成本打到供应商的余额);
         case SETTLE_SELLER: // XXX AFC : 交易 : （ 余额+ ）结算-结算卖家利润(将利润打到卖家的余额);
         case REFUND_COMPENSATION_TO_SELLER: // XXX AFC : 交易 : （ 余额+ ）退款补偿金-退款补偿金给卖家（补偿到卖家的余额）
+        case POINT_INCOME_WITHDRAW: // XXX AFC : 积分收益提现（余额+）
         case CHARGE_BALANCE: // XXX AFC : 交易 : （ 余额+ ）余额充值或扣款
             newAccountMo.setBalance(oldAccountMo.getBalance().add(tradeAmount));
             break;
