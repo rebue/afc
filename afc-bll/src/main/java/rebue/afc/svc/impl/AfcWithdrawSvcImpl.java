@@ -18,6 +18,7 @@ import com.github.dozermapper.core.Mapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import damai.pnt.dic.PointLogTypeDic;
 import rebue.afc.dic.TradeTypeDic;
 import rebue.afc.mapper.AfcWithdrawMapper;
 import rebue.afc.mo.AfcAccountMo;
@@ -43,7 +44,6 @@ import rebue.afc.withdraw.ro.WithdrawDealRo;
 import rebue.afc.withdraw.to.WithdrawCancelTo;
 import rebue.afc.withdraw.to.WithdrawDealTo;
 import rebue.afc.withdraw.to.WithdrawOkTo;
-import rebue.pnt.dic.PointLogTypeDic;
 import rebue.pnt.mo.PntAccountMo;
 import rebue.pnt.svr.feign.PntAccountSvc;
 import rebue.pnt.svr.feign.PntPointSvc;
