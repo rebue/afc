@@ -221,7 +221,7 @@ public class AfcWithdrawSvcImpl extends MybatisBaseSvcImpl<AfcWithdrawMo, java.l
 				return ro;
 			}
 
-			if ((pntAccountMo.getPoint().subtract(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge())))
+			if (withdrawNumberForMonthRo.getWithdrawNumber() >0 && (pntAccountMo.getPoint().subtract(BigDecimal.valueOf(withdrawNumberForMonthRo.getSeviceCharge())))
 					.compareTo(BigDecimal.ZERO) < 0) {
 				_log.error("申请提现时发现该账号的积分不足以抵扣本次提现，申请的信息为：{}", to);
 				ro.setResult(ResultDic.FAIL);
