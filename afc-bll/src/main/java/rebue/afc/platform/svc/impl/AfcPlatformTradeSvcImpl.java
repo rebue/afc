@@ -31,7 +31,8 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
  * </pre>
  */
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-public class AfcPlatformTradeSvcImpl extends MybatisBaseSvcImpl<AfcPlatformTradeMo, java.lang.Long, AfcPlatformTradeMapper> implements AfcPlatformTradeSvc {
+public class AfcPlatformTradeSvcImpl extends
+        MybatisBaseSvcImpl<AfcPlatformTradeMo, java.lang.Long, AfcPlatformTradeMapper> implements AfcPlatformTradeSvc {
 
     private final static Logger _log = LoggerFactory.getLogger(AfcPlatformTradeSvcImpl.class);
 
@@ -83,13 +84,17 @@ public class AfcPlatformTradeSvcImpl extends MybatisBaseSvcImpl<AfcPlatformTrade
         case GETBACK_SEVICE_FEE:
             newBalance = oldBalance.subtract(tradeAmount);
             break;
-         // XXX AFC : 交易 : （ 余额+ ）结算-结算平台服务费(将交易结算的服务费打到平台的余额)
+        // XXX AFC : 交易 : （ 余额+ ）结算-结算平台服务费(将交易结算的服务费打到平台的余额)
         case WITHDRAW_SEVICE_CHARGE:
             newBalance = oldBalance.add(tradeAmount);
             break;
         // XXX AFC : 交易 : （ 余额+ ）平台充值或扣款
         case CHARGE_BALANCE:
-        	newBalance = oldBalance.add(tradeAmount);
+            newBalance = oldBalance.add(tradeAmount);
+            break;
+        // XXX AFC : 交易 : （ 余额+ ）结算-结算给平台的利润(全返商品实际成交价格的二分之一)
+        case PROFIT_TO_PLATFORM:
+            newBalance = oldBalance.add(tradeAmount);
             break;
         default:
             String msg = "不支持此平台交易类型";
@@ -104,7 +109,8 @@ public class AfcPlatformTradeSvcImpl extends MybatisBaseSvcImpl<AfcPlatformTrade
         thisSvc.add(tradeMo);      // 如果重复提交，会抛出DuplicateKeyException运行时异常
 
         // 修改平台余额
-        platformSvc.modifyBalance(newBalance, tradeMo.getModifiedTimestamp(), oldPlatfromMo.getBalance(), oldPlatfromMo.getModifiedTimestamp(), oldPlatfromMo.getId());
+        platformSvc.modifyBalance(newBalance, tradeMo.getModifiedTimestamp(), oldPlatfromMo.getBalance(),
+                oldPlatfromMo.getModifiedTimestamp(), oldPlatfromMo.getId());
 
     }
 }

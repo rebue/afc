@@ -29,7 +29,12 @@ public enum PlatformTradeTypeDic implements EnumBase {
     /**
      * 平台充值
      */
-    CHARGE_BALANCE(4);
+    CHARGE_BALANCE(4),
+
+    /**
+     * 平台利润，全返商品实际成交价格的二分之一
+     */
+    PROFIT_TO_PLATFORM(5);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的
@@ -44,7 +49,8 @@ public enum PlatformTradeTypeDic implements EnumBase {
     }
 
     /**
-     * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase 否则jackson将调用默认的反序列化方法，而不会调用本方法
+     * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase
+     * 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
     public static PlatformTradeTypeDic getItem(final int code) {

@@ -28,6 +28,8 @@ import rebue.wheel.baseintf.EnumBase;
  * 55: 结算-结算平台服务费
  * 56: 结算-结算返佣金(将返佣中的金额移到余额，注意是上家在本次交易中应获得的返佣金金额，而不是上家的全部返佣中的金额)
  * 57: 结算-结算返佣中金额(打到上家的返佣中金额)
+ * 58: 结算-结算平台利润
+ * 59: 结算-扣除平台利润(在订单详情得到全返的时候，全返的金额由平台出)
  * 60: 退货-买家退货（退到买家的余额和返现金）
  * 61: 退货-买家退货（扣减买家的返现金）
  * 63: 退款-收回卖家款项(结算给卖家利润的金额)
@@ -117,6 +119,14 @@ public enum TradeTypeDic implements EnumBase {
      */
     SETTLE_COMMISSIONING(57),
     /**
+     * 58: 结算-结算平台利润
+     */
+    SETTLE_PLATFORM(58),
+    /**
+     * 59: 结算-扣除平台利润(在订单详情得到全返的时候，全返的金额由平台出)
+     */
+    SETTLE_DEDUCT_PLATFORM(59),
+    /**
      * 60: 退款-退款给买家（退到买家的余额和返现金）
      */
     REFUND_TO_BUYER(60),
@@ -168,7 +178,8 @@ public enum TradeTypeDic implements EnumBase {
     }
 
     /**
-     * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase 否则jackson将调用默认的反序列化方法，而不会调用本方法
+     * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase
+     * 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
     public static TradeTypeDic getItem(final int code) {
