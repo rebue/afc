@@ -34,7 +34,12 @@ public enum PlatformTradeTypeDic implements EnumBase {
     /**
      * 平台利润，全返商品实际成交价格的二分之一
      */
-    PROFIT_TO_PLATFORM(5);
+    PROFIT_TO_PLATFORM(5),
+
+    /**
+     * 平台返现给用户
+     */
+    PLATFORM_RETURN_TO_USER(6);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的

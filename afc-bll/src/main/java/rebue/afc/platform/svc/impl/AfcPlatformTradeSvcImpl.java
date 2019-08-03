@@ -96,6 +96,10 @@ public class AfcPlatformTradeSvcImpl extends
         case PROFIT_TO_PLATFORM:
             newBalance = oldBalance.add(tradeAmount);
             break;
+        case PLATFORM_RETURN_TO_USER:
+        // XXX AFC :交易 ： （ 余额- ）结算-结算给用户的返现金(全返商品实际成交价格的二分之一)
+            newBalance = oldBalance.subtract(tradeAmount);
+            break;
         default:
             String msg = "不支持此平台交易类型";
             _log.error("{}: {}", msg, tradeMo.getPlatformTradeType());

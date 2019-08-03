@@ -124,6 +124,8 @@ public enum TradeTypeDic implements EnumBase {
     SETTLE_PLATFORM(58),
     /**
      * 59: 结算-扣除平台利润(在订单详情得到全返的时候，全返的金额由平台出)
+     * 
+     * @deprecated
      */
     SETTLE_DEDUCT_PLATFORM(59),
     /**

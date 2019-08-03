@@ -49,7 +49,8 @@ import rebue.suc.svr.feign.SucUserSvc;
  */
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 @Service
-public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Long, AfcTradeMapper> implements AfcTradeSvc {
+public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Long, AfcTradeMapper>
+        implements AfcTradeSvc {
 
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
@@ -68,22 +69,22 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
     private static final Logger _log = LoggerFactory.getLogger(AfcTradeSvcImpl.class);
 
     @Resource
-    private AfcTradeSvc         thisSvc;
+    private AfcTradeSvc thisSvc;
 
     @Resource
-    private AfcAccountSvc       accountSvc;
+    private AfcAccountSvc accountSvc;
 
     @Resource
-    private AfcFlowSvc          flowSvc;
+    private AfcFlowSvc flowSvc;
 
     @Resource
-    private Mapper              dozerMapper;
+    private Mapper dozerMapper;
 
     @Resource
-    private SucUserSvc          sucUserSvc;
+    private SucUserSvc sucUserSvc;
 
     @Resource
-    private SucOrgSvc           sucOrgSvc;
+    private SucOrgSvc sucOrgSvc;
 
     // /**
     // * 计算此订单的退款总额(通过订单ID)
@@ -216,7 +217,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             // 如果返现金不够扣，剩余的从余额中扣(退款时，原本要返现的返现金会相应收回，所以会有不够扣的情况)
             if (newCashbackAmount.compareTo(BigDecimal.ZERO) < 0) {
                 _log.info("返现金不够扣，剩余的从余额中扣");
-                newBalanceAmount = newBalanceAmount.add(newCashbackAmount);
+                newBalanceAmount  = newBalanceAmount.add(newCashbackAmount);
                 newCashbackAmount = BigDecimal.ZERO;
             }
             // 设置交易后的返现金和余额
@@ -289,27 +290,33 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         thisSvc.add(tradeMo);
         // 2. 修改账户相应的金额字段
         final HashMap<String, Object> map = new HashMap<>();
-        if (newAccountMo.getBalance() != null && (newAccountMo.getBalance().compareTo(oldAccountMo.getBalance()) != 0)) {
+        if (newAccountMo.getBalance() != null
+                && (newAccountMo.getBalance().compareTo(oldAccountMo.getBalance()) != 0)) {
             map.put("balance", newAccountMo.getBalance());
             map.put("oldBalance", oldAccountMo.getBalance());
         }
-        if (newAccountMo.getCashback() != null && (newAccountMo.getCashback().compareTo(oldAccountMo.getCashback()) != 0)) {
+        if (newAccountMo.getCashback() != null
+                && (newAccountMo.getCashback().compareTo(oldAccountMo.getCashback()) != 0)) {
             map.put("cashback", newAccountMo.getCashback());
             map.put("oldCashback", oldAccountMo.getCashback());
         }
-        if (newAccountMo.getCommissionTotal() != null && (newAccountMo.getCommissionTotal().compareTo(oldAccountMo.getCommissionTotal()) != 0)) {
+        if (newAccountMo.getCommissionTotal() != null
+                && (newAccountMo.getCommissionTotal().compareTo(oldAccountMo.getCommissionTotal()) != 0)) {
             map.put("commissionTotal", newAccountMo.getCommissionTotal());
             map.put("oldCommissionTotal", oldAccountMo.getCommissionTotal());
         }
-        if (newAccountMo.getDeposit() != null && (newAccountMo.getDeposit().compareTo(oldAccountMo.getDeposit()) != 0)) {
+        if (newAccountMo.getDeposit() != null
+                && (newAccountMo.getDeposit().compareTo(oldAccountMo.getDeposit()) != 0)) {
             map.put("deposit", newAccountMo.getDeposit());
             map.put("oldDeposit", oldAccountMo.getDeposit());
         }
-        if (newAccountMo.getDepositUsed() != null && (newAccountMo.getDepositUsed().compareTo(oldAccountMo.getDepositUsed()) != 0)) {
+        if (newAccountMo.getDepositUsed() != null
+                && (newAccountMo.getDepositUsed().compareTo(oldAccountMo.getDepositUsed()) != 0)) {
             map.put("depositUsed", newAccountMo.getDepositUsed());
             map.put("oldDepositUsed", oldAccountMo.getDepositUsed());
         }
-        if (newAccountMo.getWithdrawing() != null && newAccountMo.getWithdrawing().compareTo(oldAccountMo.getWithdrawing()) != 0) {
+        if (newAccountMo.getWithdrawing() != null
+                && newAccountMo.getWithdrawing().compareTo(oldAccountMo.getWithdrawing()) != 0) {
             map.put("withdrawing", newAccountMo.getWithdrawing());
             map.put("oldWithdrawing", oldAccountMo.getWithdrawing());
         }
@@ -339,7 +346,8 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      * @return
      */
     @Override
-    public PageInfo<AfcTradeMo> listCashbackTrade(final AfcTradeMo qo, final int pageNum, final int pageSize, final String orderBy) {
+    public PageInfo<AfcTradeMo> listCashbackTrade(final AfcTradeMo qo, final int pageNum, final int pageSize,
+            final String orderBy) {
         _log.info("list: qo-{}; pageNum-{}; orderBy-{}; pageSize-{}", qo, pageNum, pageSize, orderBy);
         return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectCashbackTrade(qo));
     }
@@ -354,7 +362,8 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
      * @return
      */
     @Override
-    public PageInfo<AfcTradeMo> listBalanceTrade(final AfcTradeMo qo, final int pageNum, final int pageSize, final String orderBy) {
+    public PageInfo<AfcTradeMo> listBalanceTrade(final AfcTradeMo qo, final int pageNum, final int pageSize,
+            final String orderBy) {
         _log.info("list: qo-{}; pageNum-{}; orderBy-{}; pageSize-{}", qo, pageNum, pageSize, orderBy);
         return PageHelper.startPage(pageNum, pageSize, orderBy).doSelectPageInfo(() -> _mapper.selectBalanceTrade(qo));
     }
@@ -379,7 +388,7 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             _log.info("tradeTypeString：{}", tradeTypeString);
         }
         if (to.getAccountName() != null) {
-            String accountIdStr = "(";
+            String                accountIdStr     = "(";
             final List<SucUserMo> userMoResultList = sucUserSvc.getByWxNick(to.getAccountName());
             _log.info("根据微信昵称查找用户信息为：{}", userMoResultList);
             if (userMoResultList.size() == 0) {
@@ -404,8 +413,8 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
         _log.info("查找用户交易流水返回结果:{}", tradeListResult);
         final List<AfcTradeListRo> tradeList = tradeListResult.getList();
         for (int i = 0; i < tradeList.size(); i++) {
-            final AfcTradeListRo ro = tradeList.get(i);
-            final SucUserMo sucMo = sucUserSvc.getById(ro.getAccountId());
+            final AfcTradeListRo ro    = tradeList.get(i);
+            final SucUserMo      sucMo = sucUserSvc.getById(ro.getAccountId());
             if (sucMo != null) {
                 tradeList.get(i).setAccountName(sucMo.getWxNickname());
             } else {
@@ -441,8 +450,8 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
             _log.info("tradeTypeString：{}", tradeTypeString);
         }
         if (to.getAccountName() != null) {
-            String accountIdStr = "(";
-            final SucOrgMo sucOrgMo = sucOrgSvc.getOne(to.getAccountName());
+            String         accountIdStr = "(";
+            final SucOrgMo sucOrgMo     = sucOrgSvc.getOne(to.getAccountName());
             _log.info("根据组织名称查找组织信息为：{}", sucOrgMo);
             if (sucOrgMo == null) {
                 // 如果用户查询为空则设置账号的ID为0，这样使查询结果为空
@@ -486,16 +495,16 @@ public class AfcTradeSvcImpl extends MybatisBaseSvcImpl<AfcTradeMo, java.lang.Lo
     public PageInfo<AfcTradeMo> getOrgTradeList(final GetAfcTradeTo to, final int pageNum, final int pageSize) {
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.getTrade(to));
     }
-    
+
     /**
      * 获取组织提现总额
      */
-	@Override
-	public OrgWithdrawRo getOrgWithdrawTotal(Long accountId) {
+    @Override
+    public OrgWithdrawRo getOrgWithdrawTotal(Long accountId) {
         _log.info("获取组织提现总额参数:{}", accountId);
-        OrgWithdrawRo result=new OrgWithdrawRo();
+        OrgWithdrawRo result = new OrgWithdrawRo();
         _log.info("获取组织提现总额结算:{}", result);
-		 result=_mapper.getOrgWithdrawTotal(accountId);
-		 return result;
-	}
+        result = _mapper.getOrgWithdrawTotal(accountId);
+        return result;
+    }
 }

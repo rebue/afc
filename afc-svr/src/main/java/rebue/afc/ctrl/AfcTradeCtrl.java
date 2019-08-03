@@ -3,6 +3,7 @@ package rebue.afc.ctrl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -42,20 +43,20 @@ public class AfcTradeCtrl {
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private static final Logger _log             = LoggerFactory.getLogger(AfcTradeCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(AfcTradeCtrl.class);
 
     /**
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Resource
-    private AfcTradeSvc         svc;
+    private AfcTradeSvc svc;
 
     /**
      * 有唯一约束的字段名称
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private final String        _uniqueFilesName = "某字段内容";
+    private final String _uniqueFilesName = "某字段内容";
 
     /**
      * 添加账户交易
@@ -89,7 +90,7 @@ public class AfcTradeCtrl {
             return ro;
         } catch (final RuntimeException e) {
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            final String msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
+            final String           msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
@@ -128,7 +129,7 @@ public class AfcTradeCtrl {
             return ro;
         } catch (final RuntimeException e) {
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            final String msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
+            final String           msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
@@ -145,7 +146,7 @@ public class AfcTradeCtrl {
     Ro del(@RequestParam("id") final java.lang.Long id) {
         _log.info("save AfcTradeMo:" + id);
         final int result = svc.del(id);
-        final Ro ro = new Ro();
+        final Ro  ro     = new Ro();
         if (result == 1) {
             final String msg = "删除成功";
             _log.info("{}: id-{}", msg, id);
@@ -167,7 +168,8 @@ public class AfcTradeCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @GetMapping("/afc/trade")
-    PageInfo<AfcTradeMo> list(final AfcTradeMo mo, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+    PageInfo<AfcTradeMo> list(final AfcTradeMo mo, @RequestParam("pageNum") final int pageNum,
+            @RequestParam("pageSize") final int pageSize) {
         _log.info("list AfcTradeMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
@@ -178,14 +180,15 @@ public class AfcTradeCtrl {
         _log.info("result: " + result);
         return result;
     }
-    
+
     /**
      * 查询组织交易
      *
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @GetMapping("/afc/orgTrade")
-    PageInfo<AfcTradeMo> orgTrade(final GetAfcTradeTo to, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+    PageInfo<AfcTradeMo> orgTrade(final GetAfcTradeTo to, @RequestParam("pageNum") final int pageNum,
+            @RequestParam("pageSize") final int pageSize) {
         _log.info("list AfcTradeMo:" + to + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
@@ -218,7 +221,7 @@ public class AfcTradeCtrl {
      * 前面经过的代理
      */
     @Value("${afc.passProxy:noproxy}")
-    private String  passProxy;
+    private String passProxy;
 
     /**
      * 查询用户返现金交易信息
@@ -229,7 +232,8 @@ public class AfcTradeCtrl {
      * @return
      */
     @GetMapping("/afc/trade/cashbacklist")
-    PageInfo<AfcTradeMo> cashbackTradeList(final AfcTradeMo mo, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+    PageInfo<AfcTradeMo> cashbackTradeList(final AfcTradeMo mo, @RequestParam("pageNum") final int pageNum,
+            @RequestParam("pageSize") final int pageSize) {
         _log.info("list AfcTradeMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
@@ -250,7 +254,8 @@ public class AfcTradeCtrl {
      * @return
      */
     @GetMapping("/afc/trade/balancelist")
-    PageInfo<AfcTradeMo> balanceTradeList(final AfcTradeMo mo, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+    PageInfo<AfcTradeMo> balanceTradeList(final AfcTradeMo mo, @RequestParam("pageNum") final int pageNum,
+            @RequestParam("pageSize") final int pageSize) {
         _log.info("list AfcTradeMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
@@ -267,7 +272,8 @@ public class AfcTradeCtrl {
      *
      */
     @GetMapping("/afc/personTradeList")
-    PageInfo<AfcTradeListRo> personTradeList(final AfcTradeTo to, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+    PageInfo<AfcTradeListRo> personTradeList(final AfcTradeTo to, @RequestParam("pageNum") final int pageNum,
+            @RequestParam("pageSize") final int pageSize) {
         _log.info("list AfcTradeTo:" + to + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
@@ -284,7 +290,8 @@ public class AfcTradeCtrl {
      *
      */
     @GetMapping("/afc/orgTradeList")
-    PageInfo<AfcTradeListRo> orgTradeList(final AfcTradeTo to, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
+    PageInfo<AfcTradeListRo> orgTradeList(final AfcTradeTo to, @RequestParam("pageNum") final int pageNum,
+            @RequestParam("pageSize") final int pageSize) {
         _log.info("list AfcTradeTo:" + to + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
@@ -300,7 +307,8 @@ public class AfcTradeCtrl {
      * 添加一笔交易
      */
     @PostMapping("/afc/trade/addex")
-    public void addTrade(@RequestBody final AfcTradeMo mo, final HttpServletRequest req) throws NumberFormatException, ParseException {
+    public void addTrade(@RequestBody final AfcTradeMo mo, final HttpServletRequest req)
+            throws NumberFormatException, ParseException {
         _log.info("addTrade: {}", mo);
         // 暂时不获取当前用户ID和IP地址，由参数传过来
 //        if (!isDebug || mo.getOpId() == null) {
@@ -317,15 +325,26 @@ public class AfcTradeCtrl {
             _log.error(msg, e);
         }
     }
-    
+
     /**
      * 获取组织已经提现总额
+     * 
      * @param accountId
      * @return
      */
     @GetMapping("/afc/orgWithdrawTotal")
     OrgWithdrawRo getOrgWithdrawTotal(@RequestParam("accountId") Long accountId) {
-        _log.info("获取组织已经提现总额参数为accountId: {}",accountId);
+        _log.info("获取组织已经提现总额参数为accountId: {}", accountId);
         return svc.getOrgWithdrawTotal(accountId);
+    }
+
+    /**
+     * 不分页查询账户交易
+     *
+     */
+    @GetMapping("/afc/trade/list")
+    List<AfcTradeMo> listEx(@RequestBody final AfcTradeMo mo) {
+        _log.info("不分页查询 AfcTradeMo:" + mo);
+        return svc.list(mo);
     }
 }
