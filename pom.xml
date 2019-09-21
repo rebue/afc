@@ -5,13 +5,12 @@
 	<parent>
 		<groupId>com.github.rebue.common-pom</groupId>
 		<artifactId>sb-parent</artifactId>
-		<version>1.0.9</version>
+		<version>1.1.0</version>
 		<relativePath />
 	</parent>
 
 	<groupId>com.github.rebue.afc</groupId>
 	<artifactId>afc</artifactId>
-	<version>1.0.9</version>
 	<packaging>pom</packaging>
 	<description>账户财务中心</description>
 
@@ -29,23 +28,23 @@
 			<dependency>
 				<groupId>com.github.rebue.afc</groupId>
 				<artifactId>afc-api</artifactId>
-				<version>1.0.9</version>
+				<version>1.1.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.rebue.afc</groupId>
 				<artifactId>afc-svr-feign</artifactId>
-				<version>1.0.9</version>
+				<version>1.1.0</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.github.rebue.suc</groupId>
 				<artifactId>suc-api</artifactId>
-				<version>1.0.8</version>
+				<version>1.1.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.rebue.suc</groupId>
 				<artifactId>suc-svr-feign</artifactId>
-				<version>1.0.8</version>
+				<version>1.1.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.rebue.wxx</groupId>
@@ -62,12 +61,12 @@
 			<dependency>
 				<groupId>com.github.rebue.pnt</groupId>
 				<artifactId>pnt-svr-feign</artifactId>
-				<version>1.0.9</version>
+				<version>1.1.0</version>
 			</dependency>
 			<dependency>
 				<groupId>rebue.damai</groupId>
 				<artifactId>damai-pnt</artifactId>
-				<version>1.0.9</version>
+				<version>1.1.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

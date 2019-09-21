@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import rebue.afc.mo.AfcPlatformTradeMo;
 import rebue.sbs.feign.FeignConfig;
 
-@FeignClient(name = "afc-svr", configuration = FeignConfig.class)
+@FeignClient(name = "afc-svr", configuration = FeignConfig.class, contextId = "afc-svr-platform-trade")
 public interface AfcPlatformTradeTradeSvc {
 
     /**

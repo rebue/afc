@@ -10,7 +10,7 @@ import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.ro.OrgWithdrawRo;
 import rebue.sbs.feign.FeignConfig;
 
-@FeignClient(name = "afc-svr", configuration = FeignConfig.class)
+@FeignClient(name = "afc-svr", configuration = FeignConfig.class, contextId = "afc-svr-trade")
 public interface AfcTradeSvc {
 
     /**
@@ -20,11 +20,10 @@ public interface AfcTradeSvc {
      */
     @PostMapping("/afc/trade/addex")
     void addTrade(@RequestBody AfcTradeMo mo);
-    
-    
+
     /**
      * 获取组织已经提现总额
-
+     * 
      */
     @GetMapping("/afc/orgWithdrawTotal")
     OrgWithdrawRo getOrgWithdrawTotal(@RequestParam("accountId") Long accountId);

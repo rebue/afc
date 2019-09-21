@@ -10,7 +10,7 @@ import rebue.afc.mo.AfcAccountMo;
 import rebue.robotech.ro.Ro;
 import rebue.sbs.feign.FeignConfig;
 
-@FeignClient(name = "afc-svr", configuration = FeignConfig.class)
+@FeignClient(name = "afc-svr", configuration = FeignConfig.class, contextId = "afc-svr-account")
 public interface AfcAccountSvc {
 
     /**

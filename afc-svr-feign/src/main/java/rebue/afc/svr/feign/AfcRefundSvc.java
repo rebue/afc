@@ -19,7 +19,7 @@ import rebue.sbs.feign.FeignConfig;
  *        文件名称：AfcReturnGoodsSvr.java
  *        类说明： v支付退货退款内部接口
  */
-@FeignClient(name = "afc-svr", configuration = FeignConfig.class)
+@FeignClient(name = "afc-svr", configuration = FeignConfig.class, contextId = "afc-svr-refund")
 public interface AfcRefundSvc {
 
     /**

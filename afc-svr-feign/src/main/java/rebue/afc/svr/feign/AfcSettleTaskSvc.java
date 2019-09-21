@@ -18,7 +18,7 @@ import rebue.sbs.feign.FeignConfig;
  * @deprecated
  */
 @Deprecated
-@FeignClient(name = "afc-svr", configuration = FeignConfig.class)
+@FeignClient(name = "afc-svr", configuration = FeignConfig.class, contextId = "afc-svr-settle-task")
 public interface AfcSettleTaskSvc {
     /**
      * 添加结算任务
@@ -37,7 +37,7 @@ public interface AfcSettleTaskSvc {
      * 执行结算任务
      * 
      * @param taskMo
-     *            要执行的任务
+     *               要执行的任务
      */
     @PostMapping("/settle/task/execute")
     void executeTask(@RequestParam("id") Long id);
