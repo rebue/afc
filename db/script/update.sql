@@ -1,3 +1,5 @@
+-- 2019.09.26
+alter table AFC_PAY           add                 SGJZ_OP_ID           bigint comment '手工记账的操作人ID';
 
 
 

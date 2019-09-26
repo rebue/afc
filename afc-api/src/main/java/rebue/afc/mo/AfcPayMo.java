@@ -9,7 +9,7 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- * 支付信息
+ * 支付日志
  *
  * 数据库表: AFC_PAY
  *
@@ -37,7 +37,7 @@ public class AfcPayMo implements Serializable {
     private Long accountId;
 
     /**
-     *    订单ID(销售订单ID)
+     *    订单ID(支付订单ID)
      *
      *    数据库字段: AFC_PAY.ORDER_ID
      *
@@ -46,7 +46,7 @@ public class AfcPayMo implements Serializable {
     private String orderId;
 
     /**
-     *    支付类型ID(1.V支付;2.微信支付;3.支付宝;4.银联)
+     *    支付去向类型(0.手工记账;1.V支付;2.微信支付;3.支付宝;4.银联)
      *
      *    数据库字段: AFC_PAY.PAY_TYPE_ID
      *
@@ -55,7 +55,7 @@ public class AfcPayMo implements Serializable {
     private Byte payTypeId;
 
     /**
-     *    支付账户ID(例如微信ID，支付宝ID，V支付的账户ID也就是本系统的用户ID)
+     *    支付账户ID(例如微信ID，支付宝ID，而手工记账、V支付的账户ID也就是本系统的用户ID)
      *
      *    数据库字段: AFC_PAY.PAY_ACCOUNT_ID
      *
@@ -75,15 +75,6 @@ public class AfcPayMo implements Serializable {
     private String tradeId;
 
     /**
-     *    支付金额
-     *
-     *    数据库字段: AFC_PAY.PAY_AMOUNT
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    private BigDecimal payAmount;
-
-    /**
      *    支付时间
      *
      *    数据库字段: AFC_PAY.PAY_TIME
@@ -95,7 +86,16 @@ public class AfcPayMo implements Serializable {
     private Date payTime;
 
     /**
-     *    支付金额1，在交易类型是V支付时代表返现金支付了多少
+     *    支付金额总额
+     *
+     *    数据库字段: AFC_PAY.PAY_AMOUNT
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private BigDecimal payAmount;
+
+    /**
+     *    支付金额1，在支付去向类型是V支付时代表支付了多少返现金
      *
      *    数据库字段: AFC_PAY.PAY_AMOUNT1
      *
@@ -104,13 +104,22 @@ public class AfcPayMo implements Serializable {
     private BigDecimal payAmount1;
 
     /**
-     *    支付金额2，在交易类型是V支付时代表余额支付了多少
+     *    支付金额2，在支付去向类型是V支付时代表支付了多少余额
      *
      *    数据库字段: AFC_PAY.PAY_AMOUNT2
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private BigDecimal payAmount2;
+
+    /**
+     *    手工记账的操作人ID
+     *
+     *    数据库字段: AFC_PAY.SGJZ_OP_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Long sgjzOpId;
 
     /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -162,7 +171,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    订单ID(销售订单ID)
+     *    订单ID(支付订单ID)
      *
      *    数据库字段: AFC_PAY.ORDER_ID
      *
@@ -173,7 +182,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    订单ID(销售订单ID)
+     *    订单ID(支付订单ID)
      *
      *    数据库字段: AFC_PAY.ORDER_ID
      *
@@ -184,7 +193,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付类型ID(1.V支付;2.微信支付;3.支付宝;4.银联)
+     *    支付去向类型(0.手工记账;1.V支付;2.微信支付;3.支付宝;4.银联)
      *
      *    数据库字段: AFC_PAY.PAY_TYPE_ID
      *
@@ -195,7 +204,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付类型ID(1.V支付;2.微信支付;3.支付宝;4.银联)
+     *    支付去向类型(0.手工记账;1.V支付;2.微信支付;3.支付宝;4.银联)
      *
      *    数据库字段: AFC_PAY.PAY_TYPE_ID
      *
@@ -206,7 +215,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付账户ID(例如微信ID，支付宝ID，V支付的账户ID也就是本系统的用户ID)
+     *    支付账户ID(例如微信ID，支付宝ID，而手工记账、V支付的账户ID也就是本系统的用户ID)
      *
      *    数据库字段: AFC_PAY.PAY_ACCOUNT_ID
      *
@@ -217,7 +226,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付账户ID(例如微信ID，支付宝ID，V支付的账户ID也就是本系统的用户ID)
+     *    支付账户ID(例如微信ID，支付宝ID，而手工记账、V支付的账户ID也就是本系统的用户ID)
      *
      *    数据库字段: AFC_PAY.PAY_ACCOUNT_ID
      *
@@ -254,28 +263,6 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付金额
-     *
-     *    数据库字段: AFC_PAY.PAY_AMOUNT
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public BigDecimal getPayAmount() {
-        return payAmount;
-    }
-
-    /**
-     *    支付金额
-     *
-     *    数据库字段: AFC_PAY.PAY_AMOUNT
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setPayAmount(BigDecimal payAmount) {
-        this.payAmount = payAmount;
-    }
-
-    /**
      *    支付时间
      *
      *    数据库字段: AFC_PAY.PAY_TIME
@@ -298,7 +285,29 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付金额1，在交易类型是V支付时代表返现金支付了多少
+     *    支付金额总额
+     *
+     *    数据库字段: AFC_PAY.PAY_AMOUNT
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public BigDecimal getPayAmount() {
+        return payAmount;
+    }
+
+    /**
+     *    支付金额总额
+     *
+     *    数据库字段: AFC_PAY.PAY_AMOUNT
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setPayAmount(BigDecimal payAmount) {
+        this.payAmount = payAmount;
+    }
+
+    /**
+     *    支付金额1，在支付去向类型是V支付时代表支付了多少返现金
      *
      *    数据库字段: AFC_PAY.PAY_AMOUNT1
      *
@@ -309,7 +318,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付金额1，在交易类型是V支付时代表返现金支付了多少
+     *    支付金额1，在支付去向类型是V支付时代表支付了多少返现金
      *
      *    数据库字段: AFC_PAY.PAY_AMOUNT1
      *
@@ -320,7 +329,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付金额2，在交易类型是V支付时代表余额支付了多少
+     *    支付金额2，在支付去向类型是V支付时代表支付了多少余额
      *
      *    数据库字段: AFC_PAY.PAY_AMOUNT2
      *
@@ -331,7 +340,7 @@ public class AfcPayMo implements Serializable {
     }
 
     /**
-     *    支付金额2，在交易类型是V支付时代表余额支付了多少
+     *    支付金额2，在支付去向类型是V支付时代表支付了多少余额
      *
      *    数据库字段: AFC_PAY.PAY_AMOUNT2
      *
@@ -339,6 +348,28 @@ public class AfcPayMo implements Serializable {
      */
     public void setPayAmount2(BigDecimal payAmount2) {
         this.payAmount2 = payAmount2;
+    }
+
+    /**
+     *    手工记账的操作人ID
+     *
+     *    数据库字段: AFC_PAY.SGJZ_OP_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Long getSgjzOpId() {
+        return sgjzOpId;
+    }
+
+    /**
+     *    手工记账的操作人ID
+     *
+     *    数据库字段: AFC_PAY.SGJZ_OP_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setSgjzOpId(Long sgjzOpId) {
+        this.sgjzOpId = sgjzOpId;
     }
 
     /**
@@ -356,10 +387,11 @@ public class AfcPayMo implements Serializable {
         sb.append(", payTypeId=").append(payTypeId);
         sb.append(", payAccountId=").append(payAccountId);
         sb.append(", tradeId=").append(tradeId);
-        sb.append(", payAmount=").append(payAmount);
         sb.append(", payTime=").append(payTime);
+        sb.append(", payAmount=").append(payAmount);
         sb.append(", payAmount1=").append(payAmount1);
         sb.append(", payAmount2=").append(payAmount2);
+        sb.append(", sgjzOpId=").append(sgjzOpId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

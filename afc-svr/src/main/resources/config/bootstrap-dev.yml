@@ -1,7 +1,7 @@
 debug: true
 
 server:
-  port: 9300
+  port: 9500
 
 eureka:
   client:
