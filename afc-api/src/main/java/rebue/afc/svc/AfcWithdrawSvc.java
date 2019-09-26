@@ -25,7 +25,7 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
     /**
      * 申请提现
      */
-	IdRo apply(ApplyWithdrawTo to);
+    IdRo apply(ApplyWithdrawTo to);
 
     /**
      * 处理提现
@@ -44,28 +44,31 @@ public interface AfcWithdrawSvc extends MybatisBaseSvc<AfcWithdrawMo, java.lang.
 
     /**
      * 获取用户提现次数和手续费
+     * 
      * @param accountId
      * @return
      */
-	WithdrawNumberForMonthRo getWithdrawNumberForMonth(AfcWithdrawMo mo);
+    WithdrawNumberForMonthRo getWithdrawNumberForMonth(AfcWithdrawMo mo);
 
-	/**
-	 * 重写查询提现信息
-	 * @param mo
-	 * @param pageNum
-	 * @param pageSize
-	 * @param orderBy
-	 * @return
-	 */
-	PageInfo<AfcWithdrawRo> lisrEx(AfcWithdrawMo mo, int pageNum, int pageSize, String orderBy);
+    /**
+     * 重写查询提现信息
+     * 
+     * @param mo
+     * @param pageNum
+     * @param pageSize
+     * @param orderBy
+     * @return
+     */
+    PageInfo<AfcWithdrawRo> lisrEx(AfcWithdrawMo mo, int pageNum, int pageSize, String orderBy);
 
-	/**
-	 * 查询用户提现中的信息
-	 * @param accountId
-	 * @param pageNum
-	 * @param pageSize
-	 * @param orderBy
-	 * @return
-	 */
-	PageInfo<AfcWithdrawMo> selectWithdrawApplying(Long accountId, int pageNum, int pageSize, String orderBy);
+    /**
+     * 查询用户提现中的信息
+     * 
+     * @param accountId
+     * @param pageNum
+     * @param pageSize
+     * @param orderBy
+     * @return
+     */
+    PageInfo<AfcWithdrawMo> selectWithdrawApplying(Long accountId, int pageNum, int pageSize, String orderBy);
 }
