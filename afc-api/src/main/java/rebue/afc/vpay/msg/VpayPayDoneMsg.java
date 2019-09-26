@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 
 /**
- * V支付的支付完成通知的解析结果
+ * V支付的支付完成通知的消息体
  */
 @JsonInclude(Include.NON_NULL)
 @Data
