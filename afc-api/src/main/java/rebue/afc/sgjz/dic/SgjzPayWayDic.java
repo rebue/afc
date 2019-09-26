@@ -1,4 +1,4 @@
-package rebue.afc.dic;
+package rebue.afc.sgjz.dic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,33 +8,29 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import rebue.wheel.baseintf.EnumBase;
 
 /**
- * 支付与退款去向类型字典
- * 1. V支付
- * 2. 微信支付
- * 3. 支付宝
- * 4. 银联
+ * 手工记账支付方式的字典类型
+ * 1: 手工记账-现金支付
+ * 2: 手工记账-微信支付
+ * 3: 手工记账-支付宝支付
+ * 9: 手工记账-其它支付方式
  */
-public enum PayAndRefundTypeDic implements EnumBase {
+public enum SgjzPayWayDic implements EnumBase {
     /**
-     * 0: 手工记账
+     * 1: 手工记账-现金支付
      */
-    SGJZ(0),
+    CASH(1),
     /**
-     * 1: V支付
-     */
-    VPAY(1),
-    /**
-     * 2: 微信支付
+     * 2: 手工记账-微信支付
      */
     WXPAY(2),
     /**
-     * 3: 支付宝
+     * 3: 手工记账-支付宝支付
      */
     ALIPAY(3),
     /**
-     * 4: 银联
+     * 99: 手工记账-其它支付方式
      */
-    UNIONPAY(4);
+    OTHER(99);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的
@@ -49,17 +45,16 @@ public enum PayAndRefundTypeDic implements EnumBase {
     }
 
     /**
-     * jackson反序列化时，通过code得到枚举的实例
-     * 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase
+     * jackson反序列化时，通过code得到枚举的实例 注意：此方法必须是static的方法，且返回类型必须是本枚举类，而不能是接口EnumBase
      * 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static PayAndRefundTypeDic getItem(final int code) {
+    public static SgjzPayWayDic getItem(final int code) {
         final EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
-        return (PayAndRefundTypeDic) result;
+        return (SgjzPayWayDic) result;
     }
 
     private int code;
@@ -67,7 +62,7 @@ public enum PayAndRefundTypeDic implements EnumBase {
     /**
      * 构造器，传入code
      */
-    PayAndRefundTypeDic(final int code) {
+    SgjzPayWayDic(final int code) {
         this.code = code;
     }
 

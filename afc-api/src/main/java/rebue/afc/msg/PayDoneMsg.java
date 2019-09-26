@@ -22,34 +22,38 @@ public class PayDoneMsg {
     /**
      * 用户ID
      */
-    private Long       userId;
+    private Long                userId;
     /**
      * 支付账户ID
      */
-    private String     payAccountId;
+    private String              payAccountId;
     /**
      * 支付交易的金额(单位为元)
      */
-    private BigDecimal payAmount;
+    private BigDecimal          payAmount;
     /**
      * 支付金额1，在交易类型是V支付时代表返现金支付了多少
      */
-    private BigDecimal payAmount1;
+    private BigDecimal          payAmount1;
     /**
      * 支付金额2，在交易类型是V支付时代表余额支付了多少
      */
-    private BigDecimal payAmount2;
+    private BigDecimal          payAmount2;
     /**
      * V支付、微信、支付宝等支付的交易ID
      */
-    private String     tradeId;
+    private String              tradeId;
     /**
      * 订单ID(XXX 在ord-svr中实际上是payOrderId)
      */
-    private String     orderId;
+    private String              orderId;
     /**
      * 支付完成时间
      */
-    private Date       payTime;
+    private Date                payTime;
+    /**
+     * 手工记账的操作人ID
+     */
+    private Long                sgjzOpId;
 
 }
