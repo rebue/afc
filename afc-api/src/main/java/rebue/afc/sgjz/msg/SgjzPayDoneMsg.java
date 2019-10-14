@@ -16,7 +16,7 @@ import rebue.afc.sgjz.dic.SgjzPayWayDic;
 @Data
 public class SgjzPayDoneMsg {
     /**
-     * 用户ID(买家的用户ID，如果没有绑定买家，可以为null)
+     * 用户ID(买家的用户ID，如果没有绑定买家，那么买家id将为suc/suc-svr/co中的静态用户id -1(负1))
      */
     private Long          userId;
     /**
@@ -36,7 +36,7 @@ public class SgjzPayDoneMsg {
      */
     private Date          payTime;
     /**
-     * 手工记账的操作人ID
+     * 手工记账的操作人ID(在前期没有登录功能没有做好之前，这个同样是suc/suc-svr/co中的静态用户id -1(负1)
      */
     private Long          sgjzOpId;
 }
