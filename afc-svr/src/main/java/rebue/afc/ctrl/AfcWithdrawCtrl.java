@@ -257,7 +257,7 @@ public class AfcWithdrawCtrl {
 //        }
         to.setIp("111111");
         to.setMac("不再获取MAC地址");
-        to.setOpId(12345l);
+        to.setOpId(620162675766198278l);// 线上汤延富的sucId，登录名称为小奶牛，因为这里是damai调用的所以request没有从哪里传过来
         try {
             return svc.ok(to);
         } catch (Exception e) {
