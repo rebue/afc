@@ -256,8 +256,8 @@ public class AfcWithdrawCtrl {
 //            loginId = JwtUtils.getJwtUserIdInCookie(req);
 //        }
 //        to.setIp(AgentUtils.getIpAddr(req, "nginx"));
-//        to.setMac("不再获取MAC地址");
-//        to.setOpId(loginId);
+        to.setMac("不再获取MAC地址");
+        to.setOpId(12345l);
         try {
             return svc.ok(to);
         } catch (Exception e) {
