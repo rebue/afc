@@ -90,7 +90,7 @@ public class AfcTradeCtrl {
             return ro;
         } catch (final RuntimeException e) {
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            final String           msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
+            final String msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
@@ -129,7 +129,7 @@ public class AfcTradeCtrl {
             return ro;
         } catch (final RuntimeException e) {
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            final String           msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
+            final String msg = "修改失败，出现运行时异常(" + sdf.format(new Date()) + ")";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
@@ -146,7 +146,7 @@ public class AfcTradeCtrl {
     Ro del(@RequestParam("id") final java.lang.Long id) {
         _log.info("save AfcTradeMo:" + id);
         final int result = svc.del(id);
-        final Ro  ro     = new Ro();
+        final Ro ro = new Ro();
         if (result == 1) {
             final String msg = "删除成功";
             _log.info("{}: id-{}", msg, id);
@@ -316,7 +316,7 @@ public class AfcTradeCtrl {
 //            mo.setIp(AgentUtils.getIpAddr(req, passProxy));
 //        }
         mo.setIp(AgentUtils.getIpAddr(req, passProxy));
-        _log.debug("获取当前用户ID: {}", mo.getOpId());
+        _log.debug("获取当前用户ID: {}", mo.getAccountId());
         mo.setMac("不再获取MAC地址");
         try {
             svc.addTrade(mo);
