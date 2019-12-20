@@ -39,7 +39,12 @@ public enum PlatformTradeTypeDic implements EnumBase {
     /**
      * 平台返现给用户
      */
-    PLATFORM_RETURN_TO_USER(6);
+    PLATFORM_RETURN_TO_USER(6),
+
+    /**
+     * 平台返还积分给用户
+     */
+    PLATFORM_RETURN_POINT_TO_USER(7);
 
     /**
      * 枚举的所有项，注意这个变量是静态单例的
