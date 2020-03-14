@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rebue.afc.mo.AfcPayMo;
+import rebue.afc.mo.AfcTradeMo;
 import rebue.afc.svc.AfcPaySvc;
+import rebue.afc.svc.AfcTradeSvc;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 
@@ -37,6 +41,9 @@ public class AfcPayCtrl {
      */
     @Resource
     private AfcPaySvc svc;
+
+    @Resource
+    private AfcTradeSvc afcTradeSvc;
 
     /**
      * 有唯一约束的字段名称
@@ -176,5 +183,38 @@ public class AfcPayCtrl {
     AfcPayMo getById(@RequestParam("id") java.lang.Long id) {
         _log.info("get AfcPayMo by id: " + id);
         return svc.getById(id);
+    }
+
+    /**
+     * 删除支付信息
+     *
+     */
+    @DeleteMapping("/afc/pay/deleteByOrderId")
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    Ro deleteByOrderId(@RequestParam("orderId") java.lang.Long orderId) {
+        _log.info(" deleteByOrderId:" + orderId);
+        AfcPayMo getPayMo = new AfcPayMo();
+        getPayMo.setOrderId(String.valueOf(orderId));
+        AfcPayMo resultMO = svc.getOne(getPayMo);
+
+        AfcTradeMo getTradeMo = new AfcTradeMo();
+        getTradeMo.setOrderId(String.valueOf(orderId));
+        AfcTradeMo getradeResult = afcTradeSvc.getOne(getTradeMo);
+
+        try {
+            if (resultMO != null) {
+                svc.del(resultMO.getId());
+            }
+
+            if (getradeResult != null) {
+                afcTradeSvc.del(getradeResult.getId());
+            }
+            return new Ro(ResultDic.SUCCESS, "删除成功");
+        } catch (Exception e) {
+            _log.info("删除失败-{}", e);
+        }
+
+        return new Ro(ResultDic.FAIL, "删除失败，找不到该记录");
+
     }
 }
